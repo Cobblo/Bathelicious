@@ -20,7 +20,7 @@ def calculate_shipping_charge(state):
 
 
 def generate_invoice_pdf(order, payment, order_products):
-    logo_path = os.path.join(settings.BASE_DIR, 'static', 'images', 'zafrocop_logo.jpg')
+    logo_path = os.path.join(settings.BASE_DIR, 'static', 'images', 'new_logo1.png')
     assert os.path.exists(logo_path), f"Logo file not found at: {logo_path}"
     logo_url = 'file:///' + logo_path.replace('\\', '/')
 

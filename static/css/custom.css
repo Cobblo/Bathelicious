@@ -62,7 +62,7 @@ ul.thumb li img{
 
 /* --- Footer Styling --- */
 .site-footer {
-    background-color: #2a2727;
+    background-color: #B87333;
     color: #f5f5f5;
     padding: 40px 20px;
     font-family: 'Segoe UI', sans-serif;
@@ -200,3 +200,265 @@ ul.thumb li img{
 .scroll-top:hover {
     background: #0056b3;
 }
+
+body {
+    background: #fffaf2;
+    margin: 0;
+    padding: 0;
+    font-family: "Segoe UI", sans-serif;
+}
+
+.navbar {
+    background-color: #d7edc0;
+}
+
+.navbar-brand {
+    font-weight: bold;
+    font-size: 30px;
+    color: #396c26;
+}
+
+.nav-link {
+    font-weight: 600;
+    color: #2f4f2f;
+}
+
+.product-section {
+    margin: 40px auto;
+    max-width: 1200px;
+    padding: 0 15px;
+}
+
+.product-card {
+    width: 250px;
+    border: 1px solid #eee;
+    padding: 15px;
+    border-radius: 10px;
+    text-align: center;
+    background-color: #fff;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
+    transition: transform 0.2s ease;
+}
+
+.product-card:hover {
+    transform: translateY(-5px);
+}
+
+.product-card img {
+    width: 100%;
+    height: 200px;
+    object-fit: cover;
+    margin-bottom: 10px;
+}
+
+.product-card h5 {
+    font-size: 16px;
+    font-weight: 600;
+    color: #333;
+    margin-bottom: 5px;
+}
+
+.product-card p {
+    font-size: 15px;
+    color: #cc3300;
+    font-weight: bold;
+}
+
+.add-to-cart {
+    background-color: #B87333;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    margin-top: 10px;
+    transition: background-color 0.3s;
+}
+
+.add-to-cart:hover {
+    background-color: #9f592a;
+}
+
+.badge-new {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    background: red;
+    color: white;
+    font-size: 12px;
+    padding: 3px 6px;
+    border-radius: 3px;
+}
+
+.product-card {
+    position: relative;
+    width: 250px;
+    border: 1px solid #eee;
+    padding: 15px;
+    border-radius: 10px;
+    text-align: center;
+    background-color: #fff;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
+}
+
+.product-card img {
+    width: 100%;
+    height: 200px;
+    object-fit: cover;
+    margin-bottom: 10px;
+}
+
+.product-card button {
+    background-color: #B87333;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+}
+
+.custom-arrow {
+    background: none;
+    border: none;
+    font-size: 24px;
+    color: #fff;
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: 10;
+}
+
+.carousel-control-prev.custom-arrow {
+    left: 10px;
+}
+
+.carousel-control-next.custom-arrow {
+    right: 10px;
+}
+
+.custom-arrow i:hover {
+    color: #ccc;
+}
+
+:root {
+    --bs-primary: #B87333;
+}
+
+/* For Bootstrap 4 if you're not using CSS variables */
+.btn-primary,
+.btn-outline-primary,
+.bg-primary,
+.text-primary,
+.border-primary {
+    background-color: #B87333 !important;
+    border-color: #B87333 !important;
+    color: #fff !important;
+}
+
+.btn-outline-primary {
+    background-color: transparent !important;
+    color: #B87333 !important;
+}
+
+.btn-outline-primary:hover {
+    background-color: #B87333 !important;
+    color: white !important;
+}
+
+/* Change search button color */
+.input-group-append .btn {
+    background-color: #B87333 !important;
+    border-color: #B87333 !important;
+}
+
+.btn-remove {
+  background-color: #B87333;
+  color: #fff;
+  border: none;
+}
+
+.btn-remove:hover {
+  background-color: #a65f2b; /* Optional: darker on hover */
+}
+
+.btn-white {
+  background-color: #ffffff !important;
+  border: 1px solid #ccc;
+  color: #000;
+}
+
+.btn.btn-light {
+    background-color: white !important;
+    border-color: #ccc !important;
+    color: black !important;
+}
+
+.btn.btn-light i {
+    color: black !important;
+}
+
+.list-group-item.active {
+    background-color: #B87333 !important;
+    border-color: #B87333 !important;
+    color: white !important;
+}
+
+.list-group-item {
+    color: black !important;
+}
+
+.list-group-item.active {
+    background-color: #B87333 !important;
+    border-color: #B87333 !important;
+    color: black !important;
+    font-weight: 500;
+}
+
+body {
+      font-family: 'Arial', sans-serif;
+      font-size: 14px;
+      color: #333;
+      padding: 20px;
+    }
+    .header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+    }
+    .logo {
+      height: 80px;
+    }
+    h2 {
+      margin-bottom: 5px;
+      color: #000;
+    }
+    .section {
+      margin-top: 20px;
+    }
+    .section h3 {
+      margin-bottom: 5px;
+      color: #0d47a1;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 10px;
+    }
+    th, td {
+      border: 1px solid #ccc;
+      padding: 8px;
+      vertical-align: top;
+    }
+    th {
+      background-color: #f2f2f2;
+    }
+    .right {
+      text-align: right;
+    }
+    .total-row td {
+      font-weight: bold;
+      background-color: #fafafa;
+    }
+    .footer-note {
+      margin-top: 30px;
+      font-size: 12px;
+      color: #555;
+    }

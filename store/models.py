@@ -1,54 +1,74 @@
 from django.db import models
 from category.models import Category
 from django.urls import reverse
+from django.utils.text import slugify
 from accounts.models import Account
-from django.contrib.auth.models import User
 
-# Create your models here.
 
 class Product(models.Model):
     product_name = models.CharField(max_length=200, unique=True)
-    slug         = models.SlugField(max_length=200, unique=True)
-    description  = models.TextField(max_length=500, blank=True)
-    price        = models.IntegerField()
-    images       = models.ImageField(upload_to='photo/products')
-    stock        = models.IntegerField()
+    slug = models.SlugField(max_length=200, unique=True, blank=True)
+    description = models.TextField(max_length=500, blank=True)
+    price = models.IntegerField()
+    images = models.ImageField(upload_to='photo/products')
+    stock = models.IntegerField()
     is_available = models.BooleanField(default=True)
-    category     = models.ForeignKey(Category, on_delete=models.CASCADE)
+    is_new_arrival = models.BooleanField(default=False)
+    is_featured = models.BooleanField(default=False)
+    category = models.ForeignKey(Category, on_delete=models.CASCADE)
     created_date = models.DateTimeField(auto_now_add=True)
-    modified_date= models.DateTimeField(auto_now=True)
+    modified_date = models.DateTimeField(auto_now=True)
+    highlights = models.TextField(blank=True, help_text="Enter one highlight per line")
+    is_combo = models.BooleanField(default=False)
+    is_bestseller = models.BooleanField(default=False)
+
+    def save(self, *args, **kwargs):
+        if not self.slug:
+            base_slug = slugify(self.product_name)
+            slug = base_slug
+            counter = 1
+            while Product.objects.filter(slug=slug).exclude(pk=self.pk).exists():
+                slug = f"{base_slug}-{counter}"
+                counter += 1
+            self.slug = slug
+        super().save(*args, **kwargs)
 
     def get_url(self):
         return reverse('product_detail', args=[self.category.slug, self.slug])
 
+    def get_highlights_list(self):
+        return self.highlights.strip().split('\n') if self.highlights else []
+
     def __str__(self):
         return self.product_name
 
-
-class VariationManager(models.Manager):
-    def colors(self):
-        return super(VariationManager, self).filter(variation_category='color', is_active=True)
-
-    def sizes(self):
-        return super(VariationManager, self).filter(variation_category='size', is_active=True)            
 
 variation_category_choice = (
     ('color', 'color'),
     ('size', 'size'),
 )
 
+
+class VariationManager(models.Manager):
+    def colors(self):
+        return super().filter(variation_category='color', is_active=True)
+
+    def sizes(self):
+        return super().filter(variation_category='size', is_active=True)
+
+
 class Variation(models.Model):
     product = models.ForeignKey(Product, on_delete=models.CASCADE)
-    variation_category = models.CharField(max_length=100, choices=variation_category_choice)        
-    variation_value    = models.CharField(max_length=100)
-    is_active          = models.BooleanField(default=True)
-    created_date       = models.DateTimeField(auto_now=True)
-
+    variation_category = models.CharField(max_length=100, choices=variation_category_choice)
+    variation_value = models.CharField(max_length=100)
+    is_active = models.BooleanField(default=True)
+    created_date = models.DateTimeField(auto_now=True)
 
     objects = VariationManager()
 
     def __str__(self):
         return self.variation_value
+
 
 class ReviewRating(models.Model):
     product = models.ForeignKey(Product, on_delete=models.CASCADE)
@@ -65,19 +85,18 @@ class ReviewRating(models.Model):
         return self.subject
 
 
-
 class ProductGallery(models.Model):
     product = models.ForeignKey(Product, default=None, on_delete=models.CASCADE)
     image = models.ImageField(upload_to='store/products', max_length=255)
-
 
     def __str__(self):
         return self.product.product_name
 
     class Meta:
-        verbose_name = 'productgallery'
+        verbose_name = 'product gallery'
         verbose_name_plural = 'product gallery'
-            
+
+
 class Wishlist(models.Model):
     user = models.ForeignKey(Account, on_delete=models.CASCADE)
     product = models.ForeignKey(Product, on_delete=models.CASCADE)
@@ -87,5 +106,11 @@ class Wishlist(models.Model):
         unique_together = ('user', 'product')
 
     def __str__(self):
-        return f"{self.user.email} - {self.product.product_name}"            
+        return f"{self.user.email} - {self.product.product_name}"
 
+class SmallBanner(models.Model):
+    video = models.FileField(upload_to='small_banners/')
+    is_active = models.BooleanField(default=True)
+
+    def __str__(self):
+        return f"Small Banner {self.id}"

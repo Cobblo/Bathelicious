@@ -21,8 +21,7 @@ from django.conf import settings
 from store import views
 
 urlpatterns = [
-    path('secureadmin/', admin.site.urls),  # Real admin login here
-    path('admin/', include('admin_honeypot.urls', namespace='admin_honeypot')),  # Fake admin
+    path('secureadmin/', admin.site.urls),  
     path('', views.home, name='home'),
     path('store/', include('store.urls')),
     path('cart/', include('carts.urls')),
