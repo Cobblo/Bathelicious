@@ -38,22 +38,21 @@
     </div>
 </section>
 
-<!-- Full-width Carousel Banners with Image Only -->
+<!-- Full-width Carousel Banners -->
 <div id="bannerCarousel" class="carousel slide mb-5" data-bs-ride="carousel">
-    <div class="carousel-inner">
-        {% for banner in banners %}
-        <div class="carousel-item {% if forloop.first %}active{% endif %}">
-            <img src="{{ banner.image.url }}" class="d-block w-100" alt="Banner" style="height: 100vh; object-fit: cover;">
-        </div>
-        {% endfor %}
-    </div>
-    <button class="carousel-control-prev custom-arrow" type="button" data-bs-target="#bannerCarousel" data-bs-slide="prev">
-      <i class="fas fa-chevron-left"></i>
-    </button>
-    <button class="carousel-control-next custom-arrow" type="button" data-bs-target="#bannerCarousel" data-bs-slide="next">
-      <i class="fas fa-chevron-right"></i>
-    </button>
-
+  <div class="carousel-inner">
+    {% for banner in banners %}
+      <div class="carousel-item {% if forloop.first %}active{% endif %}">
+        <img src="{{ banner.image.url }}" class="d-block w-100 banner-img" alt="Banner">
+      </div>
+    {% endfor %}
+  </div>
+  <button class="carousel-control-prev custom-arrow" type="button" data-bs-target="#bannerCarousel" data-bs-slide="prev">
+    <i class="fas fa-chevron-left"></i>
+  </button>
+  <button class="carousel-control-next custom-arrow" type="button" data-bs-target="#bannerCarousel" data-bs-slide="next">
+    <i class="fas fa-chevron-right"></i>
+  </button>
 </div>
 
 
@@ -71,15 +70,12 @@
                 <h5>{{ product.product_name }}</h5>
                 <p>₹{{ product.price }}</p>
             </a>
-            {% if user.is_authenticated %}
             <form method="POST" action="{% url 'add_cart' product.id %}">
                 {% csrf_token %}
                 <input type="hidden" name="quantity" value="1">
                 <button type="submit" style="background-color: #B87333; color: white; border: none; padding: 10px 20px; border-radius: 5px;">Add to Cart</button>
             </form>
-            {% else %}
-            <p class="text-muted" style="font-size: 0.9rem;">Login to add to cart</p>
-            {% endif %}
+
         </div>
         {% endfor %}
     </div>

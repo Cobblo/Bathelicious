@@ -1,4 +1,8 @@
 asgiref==3.8.1
 Django==3.2
+django-admin-thumbnails==0.2.9
+python-decouple==3.8
 pytz==2025.2
+setuptools==80.9.0
+six==1.17.0
 sqlparse==0.5.3

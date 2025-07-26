@@ -137,9 +137,9 @@ document.getElementById('rzp-button').onclick = function(e) {
         "key": "{{ razorpay_key }}",
         "amount": "{{ razorpay_amount }}",
         "currency": "INR",
-        "name": "Zafrocop",
+        "name": "Bathelicious",
         "description": "Order Payment",
-        "image": "{% static 'images/logo.png' %}",
+        "image": "{% static 'images/new_logo.png' %}",
         "order_id": "{{ razorpay_order_id }}",
         "handler": function(response) {
             fetch("{% url 'payments' %}", {

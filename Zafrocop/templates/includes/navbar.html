@@ -29,23 +29,22 @@
         margin-left: 12px;
     }
 
-    .fa-user {
-        color: #2f4f2f;
-    }
-
-    .fa-heart {
-        color: #2f4f2f;
-    }
-
+    .fa-user,
+    .fa-heart,
     .fa-shopping-cart {
         color: #2f4f2f;
     }
 
     .navbar {
-    height: 100px;
-    align-items: center;
+        height: 100px;
+        align-items: center;
     }
 
+    #mobileMenu .nav-link,
+    #mobileMenu a {
+        font-size: 15px;
+        padding-left: 8px;
+    }
 </style>
 
 <!-- DESKTOP NAVBAR -->
@@ -65,7 +64,7 @@
                     <nav class="nav">
                         <a class="nav-link text-olive" href="{% url 'bestsellers' %}">Bestsellers</a>
                         <a class="nav-link text-olive" href="{% url 'combos' %}">Combos</a>
-                        <a class="nav-link text-olive" href="/aboutus/">About Us</a>
+                        <a class="nav-link text-olive" href="{% url 'aboutus' %}">About Us</a>
 
                         <div class="nav-item dropdown">
                             <a class="nav-link dropdown-toggle text-olive" href="#" id="categoryDropdown" data-bs-toggle="dropdown">
@@ -95,8 +94,6 @@
 
                 <!-- User, Wishlist, Cart -->
                 <div class="col-lg-2 d-flex justify-content-end align-items-center">
-
-                    <!-- Profile Dropdown -->
                     <div class="dropdown icon-wrapper">
                         <div class="icon rounded-circle border" role="button" id="profileDropdown" data-bs-toggle="dropdown" aria-expanded="false">
                             <i class="fa fa-user"></i>
@@ -112,7 +109,6 @@
                         </ul>
                     </div>
 
-                    <!-- Wishlist Icon -->
                     <a href="{% url 'wishlist' %}" class="position-relative icon-wrapper" title="Wishlist">
                         <div class="icon rounded-circle border">
                             <i class="fa fa-heart"></i>
@@ -122,7 +118,6 @@
                         {% endif %}
                     </a>
 
-                    <!-- Cart Icon -->
                     <a href="{% url 'cart' %}" class="position-relative icon-wrapper" title="Cart">
                         <div class="icon rounded-circle border">
                             <i class="fa fa-shopping-cart"></i>
@@ -131,7 +126,6 @@
                             <span class="badge bg-danger rounded-pill notify">{{ cart_count }}</span>
                         {% endif %}
                     </a>
-
                 </div>
 
             </div>
@@ -183,17 +177,21 @@
 
     <div class="collapse bg-light" id="mobileMenu">
         <div class="p-3">
-            <a class="nav-link text-olive" href="{% url 'bestsellers' %}">Bestsellers</a>
-            <a class="nav-link text-olive" href="{% url 'combos' %}">Combos</a>
-            <a class="nav-link text-olive" href="/aboutus/">About Us</a>
+            <a class="nav-link fw-medium text-olive py-1" href="{% url 'bestsellers' %}">Bestsellers</a>
+            <a class="nav-link fw-medium text-olive py-1" href="{% url 'combos' %}">Combos</a>
+            <a class="nav-link fw-medium text-olive py-1" href="{% url 'aboutus' %}">About Us</a>
 
-            <a class="d-block text-olive" data-bs-toggle="collapse" href="#mobileCategories">Categories</a>
-            <div class="collapse ps-3" id="mobileCategories">
-                {% for category in links %}
-                    <a href="{{ category.get_url }}" class="d-block text-olive">{{ category.category_name }}</a>
-                {% empty %}
-                    <span class="text-muted d-block">No categories found</span>
-                {% endfor %}
+            <div class="mb-2">
+                <a class="d-block fw-medium text-olive" data-bs-toggle="collapse" href="#mobileCategories" role="button" aria-expanded="false" aria-controls="mobileCategories">
+                    Categories
+                </a>
+                <div class="collapse ps-3 mt-1" id="mobileCategories">
+                    {% for category in links %}
+                        <a href="{{ category.get_url }}" class="d-block py-1 text-olive">{{ category.category_name }}</a>
+                    {% empty %}
+                        <span class="text-muted d-block">No categories found</span>
+                    {% endfor %}
+                </div>
             </div>
 
             <form action="{% url 'search' %}" method="GET" class="mt-3">

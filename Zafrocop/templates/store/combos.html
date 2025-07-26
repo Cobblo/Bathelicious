@@ -2,25 +2,6 @@
 {% load static %}
 
 {% block content %}
-<style>
-    .pagination .page-link {
-        background-color: #fff;
-        color: #B87333;
-        border: 1px solid #B87333;
-    }
-
-    .pagination .page-item.active .page-link {
-        background-color: #B87333;
-        border-color: #B87333;
-        color: white;
-    }
-
-    .pagination .page-link:hover {
-        background-color: #B87333;
-        color: white;
-        border-color: #B87333;
-    }
-</style>
 
 <div class="container">
     <h2 class="text-center my-4 text-3xl font-bold">Combos</h2>
@@ -42,15 +23,13 @@
                         <h5>{{ combo.product_name }}</h5>
                         <p>₹{{ combo.price }}</p>
                     </a>
-                    {% if user.is_authenticated %}
-                        <form method="POST" action="{% url 'add_cart' combo.id %}">
-                            {% csrf_token %}
-                            <input type="hidden" name="quantity" value="1">
-                            <button type="submit" style="background-color: #B87333; color: white; border: none; padding: 10px 20px; border-radius: 5px;">Add to Cart</button>
-                        </form>
-                    {% else %}
-                        <p class="text-muted" style="font-size: 0.9rem;">Login to add to cart</p>
-                    {% endif %}
+
+                    <!-- Always visible Add to Cart button -->
+                    <form method="POST" action="{% url 'add_cart' combo.id %}">
+                        {% csrf_token %}
+                        <input type="hidden" name="quantity" value="1">
+                        <button type="submit" style="background-color: #B87333; color: white; border: none; padding: 10px 20px; border-radius: 5px;">Add to Cart</button>
+                    </form>
                 </div>
             {% endfor %}
         {% else %}

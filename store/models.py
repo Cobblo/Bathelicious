@@ -8,8 +8,9 @@ from accounts.models import Account
 class Product(models.Model):
     product_name = models.CharField(max_length=200, unique=True)
     slug = models.SlugField(max_length=200, unique=True, blank=True)
-    description = models.TextField(max_length=500, blank=True)
+    description = models.TextField()
     price = models.IntegerField()
+    quantity = models.CharField(max_length=50, blank=True, null=True)
     images = models.ImageField(upload_to='photo/products')
     stock = models.IntegerField()
     is_available = models.BooleanField(default=True)
@@ -18,9 +19,18 @@ class Product(models.Model):
     category = models.ForeignKey(Category, on_delete=models.CASCADE)
     created_date = models.DateTimeField(auto_now_add=True)
     modified_date = models.DateTimeField(auto_now=True)
-    highlights = models.TextField(blank=True, help_text="Enter one highlight per line")
     is_combo = models.BooleanField(default=False)
     is_bestseller = models.BooleanField(default=False)
+    
+    # Existing fields
+    key_ingredient = models.TextField(blank=True, null=True)
+    all_ingredients = models.TextField(blank=True, null=True)
+
+    # ✅ Rename old how_to_use → packaging_details
+    packaging_details = models.TextField(blank=True, null=True)
+
+    # ✅ Add new how_to_use field
+    how_to_use = models.TextField(blank=True, null=True)
 
     def save(self, *args, **kwargs):
         if not self.slug:
@@ -41,6 +51,7 @@ class Product(models.Model):
 
     def __str__(self):
         return self.product_name
+
 
 
 variation_category_choice = (
@@ -114,3 +125,12 @@ class SmallBanner(models.Model):
 
     def __str__(self):
         return f"Small Banner {self.id}"
+    
+class Benefit(models.Model):
+    product = models.ForeignKey(Product, related_name='benefits', on_delete=models.CASCADE)
+    title = models.CharField(max_length=100)
+    description = models.TextField()
+    image = models.ImageField(upload_to='benefit_images/', blank=True, null=True)
+
+    def __str__(self):
+        return self.title

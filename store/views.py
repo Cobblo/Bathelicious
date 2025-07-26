@@ -65,7 +65,6 @@ def product_detail(request, category_slug, product_slug):
     reviews = ReviewRating.objects.filter(product_id=single_product.id, status=True)
     product_gallery = ProductGallery.objects.filter(product_id=single_product.id)
 
-    highlights = single_product.highlights.strip().split('\n') if single_product.highlights else []
 
     context = {
         'single_product': single_product,
@@ -73,7 +72,6 @@ def product_detail(request, category_slug, product_slug):
         'orderproduct': orderproduct,
         'reviews': reviews,
         'product_gallery': product_gallery,
-        'highlights': highlights,
     }
     return render(request, 'store/product_detail.html', context)
 
@@ -161,3 +159,5 @@ def combos_view(request):
 def bestsellers_view(request):
     bestsellers = Product.objects.filter(is_bestseller=True, is_available=True)
     return render(request, 'store/bestsellers.html', {'bestsellers': bestsellers})
+def aboutus(request):
+    return render(request, 'store/about_us.html')

@@ -1,0 +1,129 @@
+{% extends "base.html" %}
+{% load static %}
+{% block content %}
+
+<div class="container my-5">
+
+    <!-- Section 1: Our Story -->
+    <div class="row align-items-center mb-5">
+        <!-- Image Section -->
+        <div class="col-md-6 text-center">
+            <img src="{% static 'images/story.png' %}" alt="Founder" class="img-fluid rounded shadow w-50">
+        </div>
+
+        <!-- Text Section -->
+        <div class="col-md-6">
+            <h2 class="mb-4" style="color: #B87333; font-weight: bold;">🌿 Our Story</h2>
+
+            <h4 style="color: #333; font-size: 1.1rem; font-weight: 500; line-height: 1.6;">
+                “Bathelicious began with a simple mission to create skin and hair care products that are kind to your body and the planet, using the healing power of plants.”
+            </h4>
+
+            <p class="mt-4" style="color: #333; font-size: 1.05rem; font-weight: 500; line-height: 1.8;">
+                In today’s fast-paced world, our bodies and the planet are constantly exposed to harsh chemicals, pollutants, and unsustainable materials. Most personal care products available in the market are loaded with harsh and unwanted chemicals, synthetic additives, artificial fragrances, and non-biodegradable packaging—putting both our health and Earth at risk.
+            </p>
+
+            <p style="color: #333; font-size: 1.05rem; font-weight: 500; line-height: 1.8;">
+                <span style="font-weight: bold; color: #B87333; font-size: 1.1rem;">
+                    What if we could nourish your skin and hair without harming your health or the environment?
+                </span>
+                <br>
+                This question led us to research, experiment, and finally discover the true potential of plant-based formulations. 
+            </p>
+
+            <p style="color: #333; font-size: 1.05rem; font-weight: 500; line-height: 1.8;">
+                Our mission is to reconnect people with nature offering clean, effective, and sustainable skincare and haircare solutions that honor both your body and Mother Earth.
+            </p>
+        </div>
+    </div>
+
+    <!-- Section 2: Why Choose Bathelicious -->
+    <div class="row align-items-center mb-5 flex-md-row-reverse">
+        <div class="col-md-6 text-center">
+            <img src="{% static 'images/choose.png' %}" alt="Why Choose Us" class="img-fluid rounded shadow w-50">
+        </div>
+        <div class="col-md-6">
+            <h2 class="mb-3" style="color: #B87333;">💚 Why Choose Bathelicious?</h2>
+            <ul class="list-unstyled ps-3" style="line-height: 1.8; color: #333; font-weight: 500; font-size: 1.05rem;">
+                <li>
+                    <strong>• Plant-Based Formulations</strong><br>
+                    We harness the power of nature using herbs, essential oils, botanical extracts, and other plant-based ingredients zero harsh chemicals, parabens, sulfates, or artificial preservatives.
+                </li>
+                <li class="mt-3">
+                    <strong>• Gentle on Skin, Strong on Results</strong><br>
+                    Our products are formulated to suit all skin types, including sensitive skin. Each ingredient is chosen for its effectiveness, safety, and healing properties.
+                </li>
+                <li class="mt-3">
+                    <strong>• Eco-Friendly & Reusable Packaging</strong><br>
+                    All Bathelicious products come in reusable or recyclable packaging, helping reduce landfill waste and your carbon footprint.
+                </li>
+                <li class="mt-3">
+                    <strong>• Cruelty-Free & Ethical</strong><br>
+                    We love animals as much as we love nature. All our products are cruelty-free, and we never test on animals.
+                </li>
+                <li class="mt-3">
+                    <strong>• Handcrafted in Small Batches</strong><br>
+                    Every product is crafted with care in small batches to ensure freshness, potency, and minimal waste.
+                </li>
+            </ul>
+        </div>
+    </div>
+
+    <!-- Section 3: Our Impact -->
+    <div class="row align-items-center mb-5">
+        <div class="col-md-6 text-center">
+            <img src="{% static 'images/plastic.png' %}" alt="Sustainability"
+                class="img-fluid rounded shadow"
+                style="width: 50%; height: 350px; object-fit: cover;">
+        </div>
+        <div class="col-md-6">
+            <h2 class="mb-3" style="color: #B87333;">🌎 Our Impact</h2>
+            <h4 class="text-muted">“Reducing Plastic, Saving the Planet”</h4>
+
+            <p style="color: #333; font-size: 1.05rem; font-weight: 500;"><strong>💡 Did You Know?</strong></p>
+            <ul class="list-unstyled ps-3" style="color: #333; font-size: 1.05rem; font-weight: 500;">
+                <li>• Over <strong>120 billion</strong> cosmetic packaging units are produced every year</li>
+                <li>• <strong>79%</strong> end up in landfills, oceans, or are incinerated</li>
+                <li>• A single plastic bottle takes <strong>500–1000 years</strong> to decompose</li>
+            </ul>
+
+            <p style="color: #333; font-size: 1.05rem; font-weight: 500;"><strong>♻️ Our Contribution to the Planet</strong></p>
+            <ul class="list-unstyled ps-3" style="color: #333; font-size: 1.05rem; font-weight: 500;">
+                <li>• ~ <strong>40g</strong> of plastic waste saved per reused bottle</li>
+                <li>• ~ <strong>60g</strong> of CO₂ emissions prevented</li>
+                <li>• ~ <strong>2.5 liters</strong> of water conserved</li>
+            </ul>
+
+            <p style="color: #333; font-size: 1.05rem; font-weight: 500;"><strong>🌱 Scaled Impact</strong></p>
+            <ul class="list-unstyled ps-3" style="color: #333; font-size: 1.05rem; font-weight: 500;">
+                <li>• <strong>40 kg</strong> of plastic saved per 1,000 customers</li>
+                <li>• <strong>60 kg</strong> of CO₂ emissions reduced</li>
+                <li>• <strong>2,500 liters</strong> of water preserved</li>
+            </ul>
+
+            <p style="color: #333; font-size: 1.05rem; font-weight: 500;">
+                🌿 When you choose Bathelicious, you're not just caring for your skin and hair, you’re taking a stand for the planet.
+            </p>
+        </div>
+    </div>
+
+    <!-- Section 4: Join the Green Skincare Revolution (Bottom Centered) -->
+    <div class="text-center mt-5">
+    <h2 style="color: #B87333; font-weight: bold;">🌱 Join the Green Skin and Hair care Revolution</h2>
+    <p class="mt-3" style="
+        color: #333; 
+        font-size: 1.1rem; 
+        font-weight: 500; 
+        max-width: 800px; 
+        margin: 0 auto; 
+        line-height: 1.9;
+    ">
+        We believe skin and hair care is self-care and self-care should never come at the cost of your health or the Earth’s wellbeing. 
+        Choose <strong style="color: #000000;">Bathelicious</strong> to nourish your skin and hair naturally, and step into a lifestyle that’s clean, conscious, and kind.
+    </p>
+</div>
+
+
+</div>
+
+{% endblock %}
