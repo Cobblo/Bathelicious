@@ -1,0 +1,264 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load custom_filters %}
+
+{% block content %}
+<style>
+  .benefits-list {
+    padding-left: 20px;
+    color: #333;
+    line-height: 1.6;
+  }
+
+  .benefits-list li {
+    margin-bottom: 8px;
+    list-style-type: disc;
+  }
+
+  .toggle-card {
+    width: 100%;
+    background: #f9f9f9;
+    border-radius: 10px;
+    padding: 15px;
+    margin-bottom: 10px;
+  }
+
+  .toggle-content {
+    margin-top: 10px;
+    display: none;
+  }
+
+  .toggle-card.open .toggle-content {
+    display: block;
+  }
+
+  .toggle-btn.rotate::after {
+    transform: rotate(180deg);
+  }
+
+  .how-to-use-box {
+    width: 100%;
+    background-color: #f2f2f2;
+    padding: 15px;
+    border-radius: 10px;
+  }
+
+  .how-to-use-title {
+    font-weight: bold;
+    margin-bottom: 10px;
+  }
+
+  .rating-star i {
+    color: #ffc107;
+  }
+</style>
+
+<section class="section-content padding-y bg">
+  <div class="container">
+    <div class="card p-4" style="border: none; margin-bottom: 40px;">
+      <div class="d-flex flex-wrap" style="gap: 3rem;">
+        <!-- Product Image Section -->
+        <div style="flex: 1; min-width: 300px; max-width: 450px; position: relative;">
+          <img id="mainImage" src="{{ single_product.images.url }}" alt="{{ single_product.product_name }}"
+            style="width: 100%; max-height: 420px; border-radius: 10px; object-fit: contain; background: #f8f8f8; padding: 10px;">
+          <div style="display: flex; gap: 10px; margin-top: 12px; flex-wrap: wrap;">
+            <img src="{{ single_product.images.url }}" onclick="switchImage(this.src)" style="width: 60px; height: 60px; object-fit: cover; cursor: pointer; border-radius: 6px; border: 2px solid #ccc;">
+            {% for img in product_gallery %}
+              <img src="{{ img.image.url }}" onclick="switchImage(this.src)" style="width: 60px; height: 60px; object-fit: cover; cursor: pointer; border-radius: 6px; border: 2px solid #ccc;">
+            {% endfor %}
+          </div>
+        </div>
+
+        <!-- Product Info Section -->
+        <div style="flex: 1; min-width: 300px;">
+          <h2>{{ single_product.product_name }}</h2>
+          <h5 class="mb-0" style="color: #B87333;">
+              ₹ {{ single_product.price }}
+              {% if single_product.quantity %} / {{ single_product.quantity }}{% endif %}
+              <small style="color: #555; font-weight: normal;">(inclusive of all taxes)</small>
+          </h5>
+
+          <p class="mt-3">{{ single_product.description }}</p>
+
+          {% if single_product.benefits %}
+            <h5 class="mt-4">Benefits</h5>
+            <div class="benefits-content">
+              {{ single_product.benefits|safe }}
+            </div>
+          {% endif %}
+
+
+
+          <form action="{% url 'add_cart' single_product.id %}" method="POST" class="mt-4">
+            {% csrf_token %}
+            {% if single_product.stock > 0 %}
+              <div class="d-flex flex-wrap" style="gap: 20px;">
+                <button type="submit" class="btn text-white px-4" style="background-color: #B87333;">
+                  <i class="fas fa-shopping-cart text-white"></i> Add to Cart
+                </button>
+                {% if in_wishlist %}
+                  <a href="{% url 'remove_from_wishlist' single_product.id %}" class="btn text-white px-4" style="background-color: #B87333;">
+                    <i class="fas fa-heart-broken"></i> Remove from Wishlist
+                  </a>
+                {% else %}
+                  <a href="{% url 'add_to_wishlist' single_product.id %}" class="btn text-white px-4" style="background-color: #B87333;">
+                    <i class="fas fa-heart text-white"></i> Add to Wishlist
+                  </a>
+                {% endif %}
+              </div>
+            {% else %}
+              <h5 class="text-danger mt-3">Out of Stock</h5>
+            {% endif %}
+          </form>
+        </div>
+      </div>
+
+      {% if single_product.key_ingredients.all %}
+        <div class="key-ingredients-box mt-4">
+          <h5 class="key-ingredients-title mb-4">Key Ingredients</h5>
+
+          {% for ingredient in single_product.key_ingredients.all %}
+            <div class="d-flex flex-wrap align-items-center mb-4 p-3" style="background: #f8f8f8; border-radius: 10px;">
+              
+              <!-- Image -->
+              <div style="flex: 0 0 150px; text-align: center;">
+                {% if ingredient.image %}
+                  <img src="{{ ingredient.image.url }}" alt="{{ ingredient.name }}" 
+                      class="img-fluid rounded" 
+                      style="max-height: 120px; object-fit: cover;">
+                {% endif %}
+              </div>
+
+              <!-- Name & Description -->
+              <div style="flex: 1; padding-left: 20px;">
+                <h6 style="font-weight: bold; margin-bottom: 8px;">{{ ingredient.name }}</h6>
+                <p class="mb-0" style="color: #555;">{{ ingredient.description }}</p>
+              </div>
+
+            </div>
+          {% endfor %}
+        </div>
+      {% endif %}
+
+
+
+      <!-- Toggle Sections -->
+      <div class="d-flex flex-wrap mt-5" style="gap: 20px;">
+        {% if single_product.all_ingredients %}
+        <div class="toggle-card" data-toggle-box>
+          <div class="d-flex justify-content-between align-items-center">
+            <h6 style="font-weight: bold;">All Ingredients</h6>
+            <button type="button" class="btn btn-light btn-sm toggle-btn" data-target="allSection">▼</button>
+          </div>
+          <div id="allSection" class="toggle-content">
+            {{ single_product.all_ingredients|linebreaks }}
+          </div>
+        </div>
+        {% endif %}
+
+        {% if single_product.packaging_details %}
+        <div class="toggle-card" data-toggle-box>
+          <div class="d-flex justify-content-between align-items-center">
+            <h6 style="font-weight: bold;">About Our Packaging</h6>
+            <button type="button" class="btn btn-light btn-sm toggle-btn" data-target="packagingSection">▼</button>
+          </div>
+          <div id="packagingSection" class="toggle-content">
+            {{ single_product.packaging_details|linebreaks }}
+          </div>
+        </div>
+        {% endif %}
+
+        {% if single_product.how_to_use %}
+        <div class="toggle-card" data-toggle-box>
+          <div class="d-flex justify-content-between align-items-center">
+            <h6 style="font-weight: bold;">How to Use</h6>
+            <button type="button" class="btn btn-light btn-sm toggle-btn" data-target="howToUseSection">▼</button>
+          </div>
+          <div id="howToUseSection" class="toggle-content">
+            {{ single_product.how_to_use|linebreaks }}
+          </div>
+        </div>
+        {% endif %}
+
+      </div>
+
+      <!-- Review Form -->
+      <div class="mt-5">
+        <form action="{% url 'submit_review' single_product.id %}" method="POST">
+          {% csrf_token %}
+          <h5>Write Your Review</h5>
+          <label>Rate this product:</label><br>
+          <div class="rate mb-2">
+            {% for value in "54321" %}
+              <input type="radio" id="star{{ value }}" name="rating" value="{{ value }}" required />
+              <label for="star{{ value }}" title="{{ value }} stars"></label>
+            {% endfor %}
+          </div>
+          <textarea name="review" rows="4" class="form-control mb-3" placeholder="Your review..."></textarea>
+          {% if user.is_authenticated %}
+            {% if orderproduct %}
+              <button type="submit" class="btn btn-primary">Submit Review</button>
+            {% else %}
+              <p class="text-muted">You must purchase the product to post a review.</p>
+            {% endif %}
+          {% else %}
+            <p class="text-muted">You must be logged in to post a review. <a href="{% url 'login' %}">Login</a></p>
+          {% endif %}
+          {% include 'includes/alerts.html' %}
+        </form>
+      </div>
+
+      <!-- Customer Reviews -->
+      <div class="mt-4">
+        <h4>Customer Reviews</h4>
+        {% for review in reviews %}
+        <div class="border rounded p-3 mb-3">
+          <div class="d-flex justify-content-between">
+            <strong>{{ review.user.full_name }}</strong>
+            <small class="text-muted">{{ review.updated_at }}</small>
+          </div>
+          <div class="rating-star">
+            {% for i in 1|make_range:5 %}
+              <i class="fa fa-star{% if review.rating < i %}-o{% endif %}"></i>
+            {% endfor %}
+          </div>
+          <p class="mt-2">{{ review.review }}</p>
+        </div>
+        {% empty %}
+        <p>No reviews yet.</p>
+        {% endfor %}
+      </div>
+    </div>
+  </div>
+</section>
+
+<script>
+  // Switch product image on thumbnail click
+  function switchImage(src) {
+    document.getElementById("mainImage").src = src;
+  }
+
+  document.addEventListener("DOMContentLoaded", function () {
+    const toggleButtons = document.querySelectorAll(".toggle-btn");
+
+    toggleButtons.forEach(btn => {
+      btn.addEventListener("click", function () {
+        const targetBox = this.closest("[data-toggle-box]");
+        const isOpen = targetBox.classList.contains("open");
+
+        document.querySelectorAll("[data-toggle-box]").forEach(box => {
+          box.classList.remove("open");
+          const btn = box.querySelector(".toggle-btn");
+          if (btn) btn.classList.remove("rotate");
+        });
+
+        if (!isOpen) {
+          targetBox.classList.add("open");
+          this.classList.add("rotate");
+        }
+      });
+    });
+  });
+</script>
+
+{% endblock %}
