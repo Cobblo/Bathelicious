@@ -7,6 +7,8 @@ from django.contrib.auth.decorators import login_required
 from carts.models import Cart, CartItem
 from carts.views import _cart_id
 import requests
+from django.core.paginator import Paginator
+from .models import PointsLedger
 
 def register(request):
     if request.method == 'POST':
@@ -207,3 +209,15 @@ def order_detail(request, order_id):
         'subtotal': subtotal,
     }
     return render(request, 'accounts/order_detail.html', context)  
+
+@login_required
+def my_points(request):
+    wallet = request.user.points_wallet
+    qset = PointsLedger.objects.filter(user=request.user)
+    page = Paginator(qset, 20).get_page(request.GET.get("page"))
+
+    return render(request, "accounts/my_points.html", {
+        "balance": wallet.balance,
+        "entries": page,
+        "redeem_chunk": 500,
+    })    

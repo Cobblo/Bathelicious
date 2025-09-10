@@ -1,6 +1,7 @@
 import os
 from django.conf import settings
-
+from decimal import Decimal, ROUND_DOWN
+from accounts.models import PointsLedger, PointsWallet
 
 # Set GTK2 path manually (adjust path if different)
 os.environ["PATH"] = "C:\Program Files\GTK2-Runtime Win64\bin" + os.environ["PATH"]
@@ -79,3 +80,27 @@ def send_invoice_email(order, payment, order_products):
     email.attach(f"Invoice_{order.order_number}.pdf", pdf_file.read(), 'application/pdf')
     email.send()
 
+EARN_RATE = Decimal("0.05")  # 5%
+
+def credit_points_for_order(order):
+    user = order.user
+    eligible_amount = Decimal(order.get_eligible_amount())  # implement this on your model
+    if eligible_amount <= 0:
+        return
+
+    credit = (eligible_amount * EARN_RATE).quantize(Decimal("0.01"), rounding=ROUND_DOWN)
+
+    wallet = user.points_wallet
+    new_balance = wallet.balance + credit
+
+    # Ledger
+    PointsLedger.objects.create(
+        user=user,
+        entry_type=PointsLedger.EARN,
+        amount=credit,               # positive
+        balance_after=new_balance,
+        meta={"order_id": order.id, "note": "Points for purchase"},
+    )
+    # Wallet
+    wallet.balance = new_balance
+    wallet.save(update_fields=["balance"])

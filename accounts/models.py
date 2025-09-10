@@ -1,5 +1,8 @@
 from django.db import models
 from django.contrib.auth.models import AbstractBaseUser, BaseUserManager, PermissionsMixin
+from django.conf import settings
+from django.db.models import Sum
+from decimal import Decimal
 
 class MyAccountManager(BaseUserManager):
     def create_user(self, first_name, last_name, username, email, password=None):
@@ -79,3 +82,37 @@ class UserProfile(models.Model):
 
     def full_address(self):
         return f'{self.address_line_1} {self.address_line_2}'    
+
+
+class PointsLedger(models.Model):
+    EARN = "EARN"
+    REDEEM = "REDEEM"
+    ADJUST = "ADJUST"
+
+    ENTRY_TYPES = [
+        (EARN, "Earn"),
+        (REDEEM, "Redeem"),
+        (ADJUST, "Adjust"),
+    ]
+
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="points_ledger")
+    entry_type = models.CharField(max_length=10, choices=ENTRY_TYPES)
+    amount = models.DecimalField(max_digits=10, decimal_places=2)  # store **rupees**
+    balance_after = models.DecimalField(max_digits=10, decimal_places=2)
+    meta = models.JSONField(blank=True, null=True)  # order_id, note, etc.
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        ordering = ["-created_at"]
+
+class PointsWallet(models.Model):
+    user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="points_wallet")
+    balance = models.DecimalField(max_digits=10, decimal_places=2, default=0)
+
+    def refresh_from_ledger(self):
+        total = self.user.points_ledger.aggregate(
+            s=Sum(models.F("amount"))
+        )["s"] or Decimal("0.00")
+        self.balance = total
+        self.save(update_fields=["balance"])
+        return self.balance

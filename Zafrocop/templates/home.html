@@ -5,8 +5,9 @@
 
 <!-- Small Video Banner -->
 {% if small_banner %}
-<div class="container my-5 text-center">
-    <video autoplay muted loop playsinline style="max-width: 100%; height: auto; border-radius: 10px; box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);">
+<div class="mb-5" style="max-width: 90%; margin: 0 auto;">
+    <video autoplay loop playsinline controls 
+        style="width: 100%; height: auto; border-radius: 10px; box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);">
         <source src="{{ small_banner.video.url }}" type="video/mp4">
         Your browser does not support the video tag.
     </video>
@@ -55,7 +56,6 @@
   </button>
 </div>
 
-
 <!-- New Arrivals -->
 <section style="margin: 80px auto 40px auto; max-width: 1200px;">
     <h2 class="text-center mb-4 text-3xl font-bold">New Arrivals</h2>
@@ -75,7 +75,6 @@
                 <input type="hidden" name="quantity" value="1">
                 <button type="submit" style="background-color: #B87333; color: white; border: none; padding: 10px 20px; border-radius: 5px;">Add to Cart</button>
             </form>
-
         </div>
         {% endfor %}
     </div>
