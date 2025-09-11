@@ -46,7 +46,7 @@ INSTALLED_APPS = [
     'carts',
     'orders',
     'banners',
-    'ckeditor',
+    'django_ckeditor_5',
 ]
 
 MIDDLEWARE = [
@@ -59,12 +59,12 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
-ROOT_URLCONF = 'Zafrocop.urls'
+ROOT_URLCONF = 'Bathelicious.urls'
 
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': ['Zafrocop/templates/'],
+        'DIRS': ['Bathelicious/templates/'],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -80,7 +80,7 @@ TEMPLATES = [
     },
 ]
 
-WSGI_APPLICATION = 'Zafrocop.wsgi.application'
+WSGI_APPLICATION = 'Bathelicious.wsgi.application'
 
 AUTH_USER_MODEL = 'accounts.Account'
 
