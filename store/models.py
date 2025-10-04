@@ -1,9 +1,11 @@
 from django.db import models
-from category.models import Category
 from django.urls import reverse
 from django.utils.text import slugify
+
+from category.models import Category
 from accounts.models import Account
-from django_ckeditor_5.fields import CKEditor5Field  # Optional if you want rich formatting
+from django_ckeditor_5.fields import CKEditor5Field
+
 
 class Product(models.Model):
     product_name = models.CharField(max_length=200, unique=True)
@@ -19,9 +21,7 @@ class Product(models.Model):
     is_combo = models.BooleanField(default=False)
     is_bestseller = models.BooleanField(default=False)
 
-    # ❌ Remove this: key_ingredient = models.TextField(blank=True, null=True)
-    # ✅ We now manage key ingredients via the KeyIngredient model
-
+    # key_ingredients managed via KeyIngredient.related_name = 'key_ingredients'
     all_ingredients = models.TextField(blank=True, null=True)
     packaging_details = models.TextField(blank=True, null=True)
     how_to_use = models.TextField(blank=True, null=True)
@@ -45,18 +45,17 @@ class Product(models.Model):
     def get_url(self):
         return reverse('product_detail', args=[self.category.slug, self.slug])
 
-    def __str__(self):
+    def _str_(self):
         return self.product_name
 
 
-# ✅ NEW: KeyIngredient Model
 class KeyIngredient(models.Model):
     product = models.ForeignKey(Product, related_name='key_ingredients', on_delete=models.CASCADE)
     name = models.CharField(max_length=100)
     description = models.TextField(blank=True)
     image = models.ImageField(upload_to='ingredients/')
 
-    def __str__(self):
+    def _str_(self):
         return f"{self.name} ({self.product.product_name})"
 
 
@@ -65,12 +64,14 @@ variation_category_choice = (
     ('size', 'Size'),
 )
 
+
 class VariationManager(models.Manager):
     def colors(self):
         return super().filter(variation_category='color', is_active=True)
 
     def sizes(self):
         return super().filter(variation_category='size', is_active=True)
+
 
 class Variation(models.Model):
     product = models.ForeignKey(Product, on_delete=models.CASCADE)
@@ -81,7 +82,7 @@ class Variation(models.Model):
 
     objects = VariationManager()
 
-    def __str__(self):
+    def _str_(self):
         return self.variation_value
 
 
@@ -96,15 +97,15 @@ class ReviewRating(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
-    def __str__(self):
-        return self.subject
+    def _str_(self):
+        return self.subject or f"Review #{self.pk}"
 
 
 class ProductGallery(models.Model):
     product = models.ForeignKey(Product, default=None, on_delete=models.CASCADE)
     image = models.ImageField(upload_to='store/products', max_length=255)
 
-    def __str__(self):
+    def _str_(self):
         return self.product.product_name
 
     class Meta:
@@ -120,7 +121,7 @@ class Wishlist(models.Model):
     class Meta:
         unique_together = ('user', 'product')
 
-    def __str__(self):
+    def _str_(self):
         return f"{self.user.email} - {self.product.product_name}"
 
 
@@ -128,5 +129,24 @@ class SmallBanner(models.Model):
     video = models.FileField(upload_to='small_banners/')
     is_active = models.BooleanField(default=True)
 
-    def __str__(self):
+    def _str_(self):
         return f"Small Banner {self.id}"
+
+
+# NEW: About page images manageable via Admin
+def upload_to_about(instance, filename):
+    return f"about/{filename}"
+
+
+class AboutSettings(models.Model):
+    story_image = models.ImageField(upload_to=upload_to_about, blank=True, null=True)
+    choose_image = models.ImageField(upload_to=upload_to_about, blank=True, null=True)
+    impact_image = models.ImageField(upload_to=upload_to_about, blank=True, null=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        verbose_name = "About Page Settings"
+        verbose_name_plural = "About Page Settings"
+
+    def _str_(self):
+        return "About Page Settings"

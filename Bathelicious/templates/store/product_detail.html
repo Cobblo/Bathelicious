@@ -4,6 +4,43 @@
 
 {% block content %}
 
+<style>
+  /* Toggle/dropdown cards */
+  .toggle-card{
+    flex:1;
+    min-width:280px;
+    background:#fff;
+    border:1px solid #eee;
+    border-radius:10px;
+    padding:16px;
+  }
+  .toggle-content{ display:none; margin-top:12px; }
+  [data-toggle-box].open .toggle-content{ display:block; }
+  .toggle-btn.rotate{ transform: rotate(180deg); }
+
+  /* Mobile spacing for Key Ingredients image/name */
+  @media (max-width: 576px) {
+    .ingredient-block img {
+      margin-bottom: 10px; /* space under photo on small screens */
+    }
+    .ingredient-block h6 {
+      margin-top: 6px; /* space above ingredient name */
+    }
+  }
+
+  /* Fix: show full ingredients list, no clipping */
+  #keyIngredientsBox,
+  #keyIngredientsList {
+    overflow: visible !important;
+    max-height: none !important;
+  }
+  #keyIngredientsList { padding-bottom: 20px; }
+  #keyIngredientsList .ingredient-block:last-child { margin-bottom: 0; }
+
+  @media (max-width: 576px) {
+    #keyIngredientsList { padding-bottom: 72px; } /* leave space for floating buttons */
+  }
+</style>
 
 <section class="section-content padding-y bg">
   <div class="container">
@@ -39,8 +76,6 @@
             </div>
           {% endif %}
 
-
-
           <form action="{% url 'add_cart' single_product.id %}" method="POST" class="mt-4">
             {% csrf_token %}
             {% if single_product.stock > 0 %}
@@ -65,34 +100,39 @@
         </div>
       </div>
 
+      {# ---------- SINGLE DROPDOWN: Key Ingredients ---------- #}
       {% if single_product.key_ingredients.all %}
-        <div class="key-ingredients-box mt-4">
-          <h5 class="key-ingredients-title mb-4">Key Ingredients</h5>
+        <div class="toggle-card mt-4" data-toggle-box id="keyIngredientsBox">
+          <div class="d-flex justify-content-between align-items-center">
+            <h5 class="mb-0" style="font-weight:700;">Key Ingredients</h5>
+            <button type="button" class="btn btn-light btn-sm toggle-btn" data-target="keyIngredientsList">▼</button>
+          </div>
 
-          {% for ingredient in single_product.key_ingredients.all %}
-            <div class="d-flex flex-wrap align-items-center mb-4 p-3" style="background: #f8f8f8; border-radius: 10px;">
-              
-              <!-- Image -->
-              <div style="flex: 0 0 150px; text-align: center;">
-                {% if ingredient.image %}
-                  <img src="{{ ingredient.image.url }}" alt="{{ ingredient.name }}" 
-                      class="img-fluid rounded" 
-                      style="max-height: 120px; object-fit: cover;">
-                {% endif %}
+          <div id="keyIngredientsList" class="toggle-content">
+            {% for ingredient in single_product.key_ingredients.all %}
+              <div class="d-flex flex-wrap align-items-center mb-3 p-3 ingredient-block"
+                   style="background:#f8f8f8;border-radius:10px;">
+                <!-- Image -->
+                <div style="flex:0 0 150px;text-align:center;">
+                  {% if ingredient.image %}
+                    <img src="{{ ingredient.image.url }}" alt="{{ ingredient.name }}"
+                         class="img-fluid rounded"
+                         style="max-height:120px;object-fit:cover;">
+                  {% endif %}
+                </div>
+                <!-- Text -->
+                <div style="flex:1; padding-left:20px; margin-top:10px;">
+                  <h6 style="font-weight:700;margin-bottom:8px;">{{ ingredient.name }}</h6>
+                  <p class="mb-0" style="color:#555;">{{ ingredient.description }}</p>
+                </div>
               </div>
-
-              <!-- Name & Description -->
-              <div style="flex: 1; padding-left: 20px;">
-                <h6 style="font-weight: bold; margin-bottom: 8px;">{{ ingredient.name }}</h6>
-                <p class="mb-0" style="color: #555;">{{ ingredient.description }}</p>
-              </div>
-
-            </div>
-          {% endfor %}
+            {% empty %}
+              <p class="text-muted mb-0">No key ingredients added.</p>
+            {% endfor %}
+          </div>
         </div>
       {% endif %}
-
-
+      {# ---------- /Key Ingredients ---------- #}
 
       <!-- Toggle Sections -->
       <div class="d-flex flex-wrap mt-5" style="gap: 20px;">
@@ -131,7 +171,6 @@
           </div>
         </div>
         {% endif %}
-
       </div>
 
       <!-- Review Form -->
@@ -190,6 +229,7 @@
     document.getElementById("mainImage").src = src;
   }
 
+  // Generic toggle handler for any .toggle-btn inside [data-toggle-box]
   document.addEventListener("DOMContentLoaded", function () {
     const toggleButtons = document.querySelectorAll(".toggle-btn");
 
@@ -198,12 +238,14 @@
         const targetBox = this.closest("[data-toggle-box]");
         const isOpen = targetBox.classList.contains("open");
 
+        // close all
         document.querySelectorAll("[data-toggle-box]").forEach(box => {
           box.classList.remove("open");
-          const btn = box.querySelector(".toggle-btn");
-          if (btn) btn.classList.remove("rotate");
+          const b = box.querySelector(".toggle-btn");
+          if (b) b.classList.remove("rotate");
         });
 
+        // open clicked
         if (!isOpen) {
           targetBox.classList.add("open");
           this.classList.add("rotate");

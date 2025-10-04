@@ -34,4 +34,5 @@ urlpatterns = [
     path('terms-and-conditions/', views.terms_and_conditions, name='terms_and_conditions'),
     path('policy/', views.privacy_policy, name='privacy_policy'),
     path('return-and-refund/', views.return_and_refund, name='return_and_refund'),
+    path("ckeditor5/", include('django_ckeditor_5.urls')),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

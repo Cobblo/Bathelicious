@@ -851,5 +851,58 @@ body {
   }
 
   
+  /* Ingredient card common styles */
+.ingredient-card {
+  background: #f8f8f8;
+  border-radius: 10px;
+}
+
+/* Image styling */
+.ingredient-img img {
+  max-height: 120px;
+  object-fit: cover;
+  border-radius: 8px;
+}
+
+/* Text block */
+.ingredient-info {
+  padding-left: 20px;
+  flex: 1;
+}
+
+/* ----- Desktop Layout ----- */
+@media (min-width: 768px) {
+  .ingredient-card {
+    display: flex;
+    align-items: center;
+  }
+  .ingredient-img {
+    flex: 0 0 150px;
+    text-align: center;
+  }
+  .ingredient-info h6 {
+    font-weight: bold;
+    margin-bottom: 8px;
+  }
+}
+
+/* ----- Mobile Layout ----- */
+@media (max-width: 767px) {
+  .ingredient-card {
+    display: block;
+    text-align: center;
+  }
+  .ingredient-img {
+    margin-bottom: 12px;
+  }
+  .ingredient-info {
+    padding-left: 0;
+  }
+  .ingredient-info h6 {
+    font-weight: bold;
+    margin-bottom: 6px;
+  }
+}
+
 
   
