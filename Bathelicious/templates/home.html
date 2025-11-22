@@ -3,10 +3,65 @@
 
 {% block content %}
 
+<style>
+  /* Small review videos row */
+  .review-videos-section {
+    margin: 60px auto 80px auto;
+    max-width: 1200px;
+  }
+
+  .review-videos-row {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 24px;
+  }
+
+  .review-video-card {
+    flex: 1 1 30%;
+    max-width: 30%;
+    display: flex;
+    justify-content: center;
+  }
+
+  .review-video-wrapper {
+    width: 100%;
+    max-width: 400px;
+    height: 550px; /* taller video like your 2nd screenshot */
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 6px 18px rgba(0,0,0,0.2);
+    background: #000;
+  }
+
+  .review-video-wrapper video {
+    width: 100%;
+    height: 100%;
+    display: block;
+    object-fit: cover;
+    border-radius: 12px;
+    background-color: #000;
+  }
+
+  @media (max-width: 992px) {
+    .review-video-card {
+      max-width: 45%;
+      flex-basis: 45%;
+    }
+  }
+
+  @media (max-width: 576px) {
+    .review-video-card {
+      max-width: 100%;
+      flex-basis: 100%;
+    }
+  }
+</style>
+
 <!-- Small Video Banner -->
 {% if small_banner %}
 <div class="mb-5" style="max-width: 90%; margin: 0 auto;">
-    <video autoplay loop playsinline controls 
+    <video autoplay loop playsinline controls
         style="width: 100%; height: auto; border-radius: 10px; box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);">
         <source src="{{ small_banner.video.url }}" type="video/mp4">
         Your browser does not support the video tag.
@@ -79,5 +134,27 @@
         {% endfor %}
     </div>
 </section>
+
+{% if review_videos %}
+<section class="review-videos-section">
+    <h2 class="text-center mb-4 text-3xl font-bold">Customer Review Videos</h2>
+    <div class="review-videos-row">
+        {% for video in review_videos %}
+        <div class="review-video-card">
+            <div class="review-video-wrapper">
+                <video
+                    controls
+                    preload="metadata"
+                    controlsList="nodownload"
+                    oncontextmenu="return false">
+                    <source src="{{ video.video.url }}" type="video/mp4">
+                    Your browser does not support the video tag.
+                </video>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</section>
+{% endif %}
 
 {% endblock %}

@@ -5,7 +5,13 @@ from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 
 from .models import (
-    Product, ReviewRating, ProductGallery, Wishlist, SmallBanner, AboutSettings
+    Product,
+    ReviewRating,
+    ProductGallery,
+    Wishlist,
+    SmallBanner,
+    AboutSettings,
+    ReviewVideo,   # ✅ added
 )
 from category.models import Category
 from carts.models import CartItem
@@ -21,6 +27,7 @@ def home(request):
     banners = Banner.objects.all()
     categories = Category.objects.all()
     small_banner = SmallBanner.objects.filter(is_active=True).first()
+    review_videos = ReviewVideo.objects.filter(is_active=True)[:3]  # ✅ pick max 3 active
 
     return render(request, 'home.html', {
         'featured_products': featured_products,
@@ -28,6 +35,7 @@ def home(request):
         'banners': banners,
         'categories': categories,
         'small_banner': small_banner,
+        'review_videos': review_videos,  # ✅ send to template
     })
 
 

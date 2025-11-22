@@ -45,7 +45,7 @@ class Product(models.Model):
     def get_url(self):
         return reverse('product_detail', args=[self.category.slug, self.slug])
 
-    def _str_(self):
+    def __str__(self):
         return self.product_name
 
 
@@ -55,7 +55,7 @@ class KeyIngredient(models.Model):
     description = models.TextField(blank=True)
     image = models.ImageField(upload_to='ingredients/')
 
-    def _str_(self):
+    def __str__(self):
         return f"{self.name} ({self.product.product_name})"
 
 
@@ -82,7 +82,7 @@ class Variation(models.Model):
 
     objects = VariationManager()
 
-    def _str_(self):
+    def __str__(self):
         return self.variation_value
 
 
@@ -97,7 +97,7 @@ class ReviewRating(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
-    def _str_(self):
+    def __str__(self):
         return self.subject or f"Review #{self.pk}"
 
 
@@ -105,7 +105,7 @@ class ProductGallery(models.Model):
     product = models.ForeignKey(Product, default=None, on_delete=models.CASCADE)
     image = models.ImageField(upload_to='store/products', max_length=255)
 
-    def _str_(self):
+    def __str__(self):
         return self.product.product_name
 
     class Meta:
@@ -121,7 +121,7 @@ class Wishlist(models.Model):
     class Meta:
         unique_together = ('user', 'product')
 
-    def _str_(self):
+    def __str__(self):
         return f"{self.user.email} - {self.product.product_name}"
 
 
@@ -129,7 +129,7 @@ class SmallBanner(models.Model):
     video = models.FileField(upload_to='small_banners/')
     is_active = models.BooleanField(default=True)
 
-    def _str_(self):
+    def __str__(self):
         return f"Small Banner {self.id}"
 
 
@@ -148,5 +148,18 @@ class AboutSettings(models.Model):
         verbose_name = "About Page Settings"
         verbose_name_plural = "About Page Settings"
 
-    def _str_(self):
+    def __str__(self):
         return "About Page Settings"
+
+
+class ReviewVideo(models.Model):
+    video = models.FileField(upload_to='review_videos/')
+    order = models.PositiveIntegerField(default=0, help_text="Lower number = appears first")
+    is_active = models.BooleanField(default=True)
+
+    class Meta:
+        ordering = ['order']  # ✅ automatically sorts in ascending order
+
+    def __str__(self):
+        return str(self.video.name).split('/')[-1] if self.video else "Review Video"
+

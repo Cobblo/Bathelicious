@@ -11,6 +11,7 @@
                 <th>Order Number</th>
                 <th>Status</th>
                 <th>Date</th>
+                <th>Courier</th>
             </tr>
         </thead>
         <tbody>
@@ -22,7 +23,7 @@
                             <span class="badge bg-warning text-dark">Pending</span>
                         {% elif order.status == 'Shipped' %}
                             <span class="badge bg-primary">Shipped</span>
-                        {% elif order.status == 'Delivered' %}
+                        {% elif order.status == 'Completed' %}
                             <span class="badge bg-success">Delivered</span>
                         {% elif order.status == 'Cancelled' %}
                             <span class="badge bg-danger">Cancelled</span>
@@ -31,10 +32,23 @@
                         {% endif %}
                     </td>
                     <td>{{ order.created_at|date:"Y-m-d H:i" }}</td>
+                    <td>
+                        {% if order.courier_tracking_url %}
+                            <a href="{{ order.courier_tracking_url }}" target="_blank" class="btn btn-outline-success btn-sm">
+                                {{ order.courier_tracking_id|default:"Track Order" }}
+                            </a><br>
+                            <small class="text-muted">{{ order.courier_name }}</small>
+                        {% elif order.courier_tracking_id %}
+                            <span>{{ order.courier_tracking_id }}</span><br>
+                            <small class="text-muted">{{ order.courier_name|default:"" }}</small>
+                        {% else %}
+                            <span class="text-muted">Not Available</span>
+                        {% endif %}
+                    </td>
                 </tr>
             {% empty %}
                 <tr>
-                    <td colspan="3" class="text-center">No orders found.</td>
+                    <td colspan="4" class="text-center">No orders found.</td>
                 </tr>
             {% endfor %}
         </tbody>

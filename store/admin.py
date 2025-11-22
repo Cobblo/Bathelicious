@@ -1,11 +1,9 @@
-# store/admin.py
 from django.contrib import admin
 from django.contrib.admin.sites import NotRegistered
 import admin_thumbnails
-
 from .models import (
     Product, Variation, ReviewRating, ProductGallery,
-    Wishlist, SmallBanner, KeyIngredient, AboutSettings
+    Wishlist, SmallBanner, KeyIngredient, AboutSettings, ReviewVideo
 )
 
 # --- helpers ---------------------------------------------------------------
@@ -51,10 +49,18 @@ class VariationAdmin(admin.ModelAdmin):
 class ReviewRatingAdmin(admin.ModelAdmin):
     list_display = ('product', 'user', 'rating', 'status', 'created_at')
     list_filter = ('status', 'created_at')
-    search_fields = ('product_product_name', 'user_email')
+    search_fields = ('product__product_name', 'user__email')
 
 class AboutSettingsAdmin(admin.ModelAdmin):
     list_display = ("id", "updated_at")
+
+@admin.register(ReviewVideo)
+class ReviewVideoAdmin(admin.ModelAdmin):
+    list_display = ('video', 'order', 'is_active')
+    list_editable = ('order', 'is_active')
+    ordering = ('order',)
+    list_per_page = 10
+
 
 # --- Safe registrations (no duplicates) -----------------------------------
 safe_register(Product, ProductAdmin)
