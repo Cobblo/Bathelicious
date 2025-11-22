@@ -4,43 +4,6 @@
 
 {% block content %}
 
-<style>
-  /* Toggle/dropdown cards */
-  .toggle-card{
-    flex:1;
-    min-width:280px;
-    background:#fff;
-    border:1px solid #eee;
-    border-radius:10px;
-    padding:16px;
-  }
-  .toggle-content{ display:none; margin-top:12px; }
-  [data-toggle-box].open .toggle-content{ display:block; }
-  .toggle-btn.rotate{ transform: rotate(180deg); }
-
-  /* Mobile spacing for Key Ingredients image/name */
-  @media (max-width: 576px) {
-    .ingredient-block img {
-      margin-bottom: 10px; /* space under photo on small screens */
-    }
-    .ingredient-block h6 {
-      margin-top: 6px; /* space above ingredient name */
-    }
-  }
-
-  /* Fix: show full ingredients list, no clipping */
-  #keyIngredientsBox,
-  #keyIngredientsList {
-    overflow: visible !important;
-    max-height: none !important;
-  }
-  #keyIngredientsList { padding-bottom: 20px; }
-  #keyIngredientsList .ingredient-block:last-child { margin-bottom: 0; }
-
-  @media (max-width: 576px) {
-    #keyIngredientsList { padding-bottom: 72px; } /* leave space for floating buttons */
-  }
-</style>
 
 <section class="section-content padding-y bg">
   <div class="container">
@@ -67,7 +30,8 @@
               <small style="color: #555; font-weight: normal;">(inclusive of all taxes)</small>
           </h5>
 
-          <p class="mt-3">{{ single_product.description }}</p>
+	  <p class="mt-3">{{ single_product.description|safe }}</p>
+
 
           {% if single_product.benefits %}
             <h5 class="mt-4">Benefits</h5>

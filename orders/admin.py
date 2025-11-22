@@ -41,9 +41,9 @@ class OrderDateRangeFilter(admin.SimpleListFilter):
             return queryset.filter(created_at__gte=last_30_days)
 
 class OrderAdmin(admin.ModelAdmin):
-    list_display = ['order_number', 'full_name', 'phone', 'email', 'city', 'order_total', 'tax', 'status', 'is_ordered', 'created_at']
+    list_display = ['order_number', 'full_name', 'phone', 'email', 'city', 'pincode', 'order_total', 'tax', 'status', 'is_ordered', 'created_at']
     list_filter = ['status', 'is_ordered', OrderDateRangeFilter]
-    search_fields = ['order_number', 'first_name', 'last_name', 'phone', 'email']
+    search_fields = ['order_number', 'first_name', 'last_name', 'phone', 'email', 'pincode']
     list_per_page = 25                         
 
 

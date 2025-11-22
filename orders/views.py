@@ -52,9 +52,7 @@ def place_order(request, total=0, quantity=0):
             # Determine shipping charge
             # If you want a *strict* ₹80 below threshold, replace the next line with:
             # shipping_charge = Decimal('0') if total >= FREE_SHIPPING_THRESHOLD else Decimal('80')
-            shipping_charge = Decimal('0') if total >= FREE_SHIPPING_THRESHOLD else Decimal(
-                str(calculate_shipping_charge(form.cleaned_data['state']))
-            )
+            shipping_charge = Decimal('0') if total >= FREE_SHIPPING_THRESHOLD else Decimal('80')
 
             grand_total = (total + shipping_charge).quantize(Decimal('1.00'))
 
@@ -67,7 +65,7 @@ def place_order(request, total=0, quantity=0):
             data.email = form.cleaned_data['email']
             data.address_line_1 = form.cleaned_data['address_line_1']
             data.address_line_2 = form.cleaned_data['address_line_2']
-            data.country = form.cleaned_data['country']
+            data.pincode = form.cleaned_data['pincode']
             data.state = form.cleaned_data['state']
             data.city = form.cleaned_data['city']
             data.order_note = form.cleaned_data['order_note']
