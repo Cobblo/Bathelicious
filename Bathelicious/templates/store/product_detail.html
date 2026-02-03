@@ -13,10 +13,13 @@
         <div style="flex: 1; min-width: 300px; max-width: 450px; position: relative;">
           <img id="mainImage" src="{{ single_product.images.url }}" alt="{{ single_product.product_name }}"
             style="width: 100%; max-height: 420px; border-radius: 10px; object-fit: contain; background: #f8f8f8; padding: 10px;">
+          
           <div style="display: flex; gap: 10px; margin-top: 12px; flex-wrap: wrap;">
-            <img src="{{ single_product.images.url }}" onclick="switchImage(this.src)" style="width: 60px; height: 60px; object-fit: cover; cursor: pointer; border-radius: 6px; border: 2px solid #ccc;">
+            <img src="{{ single_product.images.url }}" onclick="switchImage(this.src)"
+                 style="width: 60px; height: 60px; object-fit: cover; cursor: pointer; border-radius: 6px; border: 2px solid #ccc;">
             {% for img in product_gallery %}
-              <img src="{{ img.image.url }}" onclick="switchImage(this.src)" style="width: 60px; height: 60px; object-fit: cover; cursor: pointer; border-radius: 6px; border: 2px solid #ccc;">
+              <img src="{{ img.image.url }}" onclick="switchImage(this.src)"
+                   style="width: 60px; height: 60px; object-fit: cover; cursor: pointer; border-radius: 6px; border: 2px solid #ccc;">
             {% endfor %}
           </div>
         </div>
@@ -24,12 +27,14 @@
         <!-- Product Info Section -->
         <div style="flex: 1; min-width: 300px;">
           <h2>{{ single_product.product_name }}</h2>
+
           <h5 class="mb-0" style="color: #B87333;">
-              ₹ {{ single_product.price }}
-              {% if single_product.quantity %} / {{ single_product.quantity }}{% endif %}
-              <small style="color: #555; font-weight: normal;">(inclusive of all taxes)</small>
+            ₹ {{ single_product.price }}
+            {% if single_product.quantity %} / {{ single_product.quantity }}{% endif %}
+            <small style="color: #555; font-weight: normal;">(inclusive of all taxes)</small>
           </h5>
 
+          <!-- Keep same behavior as first code -->
           <p class="mt-3">{{ single_product.description|safe }}</p>
 
           {% if single_product.benefits %}
@@ -46,6 +51,7 @@
                 <button type="submit" class="btn text-white px-4" style="background-color: #B87333;">
                   <i class="fas fa-shopping-cart text-white"></i> Add to Cart
                 </button>
+
                 {% if in_wishlist %}
                   <a href="{% url 'remove_from_wishlist' single_product.id %}" class="btn text-white px-4" style="background-color: #B87333;">
                     <i class="fas fa-heart-broken"></i> Remove from Wishlist
@@ -62,6 +68,80 @@
           </form>
         </div>
       </div>
+
+      
+      {% if single_product.key_ingredients.all %}
+        <div class="toggle-card mt-4" data-toggle-box id="keyIngredientsBox">
+          <div class="d-flex justify-content-between align-items-center">
+            <h5 class="mb-0" style="font-weight:700;">Key Ingredients</h5>
+            <button type="button" class="btn btn-light btn-sm toggle-btn" data-target="keyIngredientsList">▼</button>
+          </div>
+
+          <div id="keyIngredientsList" class="toggle-content">
+            {% for ingredient in single_product.key_ingredients.all %}
+              <div class="d-flex flex-wrap align-items-center mb-3 p-3 ingredient-block"
+                   style="background:#f8f8f8;border-radius:10px;">
+                <!-- Image -->
+                <div style="flex:0 0 150px;text-align:center;">
+                  {% if ingredient.image %}
+                    <img src="{{ ingredient.image.url }}" alt="{{ ingredient.name }}"
+                         class="img-fluid rounded"
+                         style="max-height:120px;object-fit:cover;">
+                  {% endif %}
+                </div>
+
+                <!-- Text -->
+                <div style="flex:1; padding-left:20px; margin-top:10px;">
+                  <h6 style="font-weight:700;margin-bottom:8px;">{{ ingredient.name }}</h6>
+                  <p class="mb-0" style="color:#555;">{{ ingredient.description }}</p>
+                </div>
+              </div>
+            {% empty %}
+              <p class="text-muted mb-0">No key ingredients added.</p>
+            {% endfor %}
+          </div>
+        </div>
+      {% endif %}
+      
+      <div class="d-flex flex-wrap mt-5" style="gap: 20px;">
+
+        {% if single_product.all_ingredients %}
+          <div class="toggle-card" data-toggle-box>
+            <div class="d-flex justify-content-between align-items-center">
+              <h6 style="font-weight: bold;">All Ingredients</h6>
+              <button type="button" class="btn btn-light btn-sm toggle-btn" data-target="allSection">▼</button>
+            </div>
+            <div id="allSection" class="toggle-content">
+              {{ single_product.all_ingredients|linebreaks }}
+            </div>
+          </div>
+        {% endif %}
+
+        {% if single_product.packaging_details %}
+          <div class="toggle-card" data-toggle-box>
+            <div class="d-flex justify-content-between align-items-center">
+              <h6 style="font-weight: bold;">About Our Packaging</h6>
+              <button type="button" class="btn btn-light btn-sm toggle-btn" data-target="packagingSection">▼</button>
+            </div>
+            <div id="packagingSection" class="toggle-content">
+              {{ single_product.packaging_details|linebreaks }}
+            </div>
+          </div>
+        {% endif %}
+
+        {% if single_product.how_to_use %}
+          <div class="toggle-card" data-toggle-box>
+            <div class="d-flex justify-content-between align-items-center">
+              <h6 style="font-weight: bold;">How to Use</h6>
+              <button type="button" class="btn btn-light btn-sm toggle-btn" data-target="howToUseSection">▼</button>
+            </div>
+            <div id="howToUseSection" class="toggle-content">
+              {{ single_product.how_to_use|linebreaks }}
+            </div>
+          </div>
+        {% endif %}
+      </div>
+
 
       <!-- Review Form -->
       <div class="mt-5">
@@ -80,18 +160,18 @@
           <textarea name="review" rows="4" class="form-control mb-3" placeholder="Your review..."></textarea>
 
           {% if user.is_authenticated %}
+            {% if orderproduct %}
               <button type="submit" class="btn text-white px-4" style="background-color: #B87333;">
                 Submit Review
               </button>
-
-              {% if not orderproduct %}
-                <p class="text-muted mt-2">You must purchase the product to post a review.</p>
-              {% endif %}
+            {% else %}
+              <p class="text-muted mt-2">You must purchase the product to post a review.</p>
+            {% endif %}
           {% else %}
-              <p class="text-muted">
-                You must be logged in to post a review.
-                <a href="{% url 'login' %}">Login</a>
-              </p>
+            <p class="text-muted">
+              You must be logged in to post a review.
+              <a href="{% url 'login' %}">Login</a>
+            </p>
           {% endif %}
 
           {% include 'includes/alerts.html' %}
@@ -102,30 +182,56 @@
       <div class="mt-4">
         <h4>Customer Reviews</h4>
         {% for review in reviews %}
-        <div class="border rounded p-3 mb-3">
-          <div class="d-flex justify-content-between">
-            <strong>{{ review.user.full_name }}</strong>
-            <small class="text-muted">{{ review.updated_at }}</small>
+          <div class="border rounded p-3 mb-3">
+            <div class="d-flex justify-content-between">
+              <strong>{{ review.user.full_name }}</strong>
+              <small class="text-muted">{{ review.updated_at }}</small>
+            </div>
+            <div class="rating-star">
+              {% for i in 1|make_range:5 %}
+                <i class="fa fa-star{% if review.rating < i %}-o{% endif %}"></i>
+              {% endfor %}
+            </div>
+            <p class="mt-2">{{ review.review }}</p>
           </div>
-          <div class="rating-star">
-            {% for i in 1|make_range:5 %}
-              <i class="fa fa-star{% if review.rating < i %}-o{% endif %}"></i>
-            {% endfor %}
-          </div>
-          <p class="mt-2">{{ review.review }}</p>
-        </div>
         {% empty %}
-        <p>No reviews yet.</p>
+          <p>No reviews yet.</p>
         {% endfor %}
       </div>
+
     </div>
   </div>
 </section>
 
 <script>
-function switchImage(src) {
-  document.getElementById("mainImage").src = src;
-}
+  function switchImage(src) {
+    document.getElementById("mainImage").src = src;
+  }
+
+  // Generic toggle handler for any .toggle-btn inside [data-toggle-box]
+  document.addEventListener("DOMContentLoaded", function () {
+    const toggleButtons = document.querySelectorAll(".toggle-btn");
+
+    toggleButtons.forEach(btn => {
+      btn.addEventListener("click", function () {
+        const targetBox = this.closest("[data-toggle-box]");
+        const isOpen = targetBox.classList.contains("open");
+
+        // close all
+        document.querySelectorAll("[data-toggle-box]").forEach(box => {
+          box.classList.remove("open");
+          const b = box.querySelector(".toggle-btn");
+          if (b) b.classList.remove("rotate");
+        });
+
+        // open clicked
+        if (!isOpen) {
+          targetBox.classList.add("open");
+          this.classList.add("rotate");
+        }
+      });
+    });
+  });
 </script>
 
 {% endblock %}
