@@ -5,6 +5,17 @@
 <section class="section-content padding-y bg">
   <div class="container">
 
+    {% if messages %}
+      {% for message in messages %}
+        <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+          {{ message }}
+          <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+      {% endfor %}
+    {% endif %}
+
     {% if not cart_items %}
       <h2 class="text-center">Your Shopping Cart is Empty</h2>
       <br>
@@ -106,15 +117,56 @@
       <aside class="col-lg-3">
         <div class="card">
           <div class="card-body">
+
+            <!-- Offer Code -->
+            <form action="{% url 'apply_coupon' %}" method="POST" class="mb-3">
+              {% csrf_token %}
+              <label for="coupon_code"><strong>Offer Code</strong></label>
+              <div class="input-group">
+                <input type="text"
+                       name="coupon_code"
+                       id="coupon_code"
+                       class="form-control"
+                       placeholder="Enter code"
+                       {% if coupon %}value="{{ coupon.code }}"{% endif %}>
+                <div class="input-group-append">
+                  <button type="submit" class="btn btn-primary">Apply</button>
+                </div>
+              </div>
+            </form>
+
+            {% if coupon %}
+              <div class="mb-3">
+                <small class="text-success">
+                  Applied: <strong>{{ coupon.code }}</strong> ({{ coupon.discount_percentage }}% OFF)
+                </small>
+                <br>
+                <a href="{% url 'remove_coupon' %}" class="btn btn-sm btn-outline-danger mt-2">
+                  Remove Code
+                </a>
+              </div>
+            {% endif %}
+
             <dl class="dlist-align">
               <dt>Total price:</dt>
               <dd class="text-right">₹ {{ total }}</dd>
             </dl>
 
+            {% if discount > 0 %}
+            <dl class="dlist-align">
+              <dt>Discount:</dt>
+              <dd class="text-right text-success">- ₹ {{ discount }}</dd>
+            </dl>
+            {% endif %}
+
             <dl class="dlist-align">
               <dt>Shipping:</dt>
               <dd class="text-right">
-                {% if shipping == 0 and total > 0 %}Free{% else %}₹ {{ shipping }}{% endif %}
+                {% if shipping == 0 and total > 0 %}
+                  Free
+                {% else %}
+                  ₹ {{ shipping }}
+                {% endif %}
               </dd>
             </dl>
 

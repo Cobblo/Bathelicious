@@ -4,7 +4,9 @@
 {% block content %}
 
 <div class="container" style="margin-top: 50px;">
-  <center><i class="fas fa-check-circle" style="font-size:72px;margin-bottom:20px;color:#28A745;"></i></center>
+  <center>
+    <i class="fas fa-check-circle" style="font-size:72px;margin-bottom:20px;color:#28A745;"></i>
+  </center>
   <h2 class="text-center">Payment Successful</h2>
   <br>
   <div class="text-center">
@@ -80,6 +82,16 @@
                         <th colspan="2" class="text-right">Sub Total:</th>
                         <th class="text-center">₹ {{ subtotal }}</th>
                       </tr>
+
+                      {% if discount > 0 %}
+                      <tr>
+                        <th colspan="2" class="text-right">
+                          Discount{% if coupon_code %} ({{ coupon_code }}){% endif %}:
+                        </th>
+                        <th class="text-center text-success">- ₹ {{ discount }}</th>
+                      </tr>
+                      {% endif %}
+
                       <tr>
                         <th colspan="2" class="text-right">Shipping Charge:</th>
                         <th class="text-center">
@@ -90,23 +102,32 @@
                           {% endif %}
                         </th>
                       </tr>
+
                       <tr>
                         <th colspan="2" class="text-right"><strong>Grand Total:</strong></th>
-                        <th class="text-center"><strong>₹ {{ order.order_total }}</strong></th>
+                        <th class="text-center"><strong>₹ {{ grand_total }}</strong></th>
                       </tr>
                     </tfoot>
                   </table>
                 </div>
               </div>
 
+              {% if coupon_code %}
+              <div class="mt-3 text-center">
+                <p class="text-success mb-0">
+                  Offer Applied: <strong>{{ coupon_code }}</strong>
+                </p>
+              </div>
+              {% endif %}
+
               <div class="invoice-footer mt-4">
                 <p class="text-center mb-0">Thank you for shopping with us!</p>
               </div>
             </div>
 
-          </div><!-- End .row -->
-        </div><!-- End .panel-body -->
-      </div><!-- End .panel -->
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 </div>

@@ -89,7 +89,9 @@
                 <tr>
                   <td>
                     <figure class="itemside align-items-center">
-                      <div class="aside"><img src="{{ cart_item.product.images.url }}" class="img-sm"></div>
+                      <div class="aside">
+                        <img src="{{ cart_item.product.images.url }}" class="img-sm" alt="">
+                      </div>
                       <figcaption class="info">
                         <a href="{{ cart_item.product.get_url }}" class="title text-dark">
                           {{ cart_item.product.product_name }}
@@ -107,7 +109,7 @@
                   <td class="align-middle text-center">{{ cart_item.quantity }}</td>
                   <td class="align-middle">
                     <div class="price-wrap">
-                      <var class="price">₹ {{ cart_item.sub_total }}</var>
+                      <var class="price">₹ {{ cart_item.sub_total }}</var><br>
                       <small class="text-muted">₹ {{ cart_item.product.price }} each</small>
                     </div>
                   </td>
@@ -116,12 +118,20 @@
               </tbody>
             </table>
 
-            <!-- Summary lines -->
             <hr>
+
             <dl class="dlist-align">
               <dt>Total price:</dt>
               <dd class="text-right">₹ {{ total }}</dd>
             </dl>
+
+            {% if discount > 0 %}
+            <dl class="dlist-align">
+              <dt>Discount:</dt>
+              <dd class="text-right text-success">- ₹ {{ discount }}</dd>
+            </dl>
+            {% endif %}
+
             <dl class="dlist-align">
               <dt>Shipping:</dt>
               <dd class="text-right">
@@ -132,14 +142,29 @@
                 {% endif %}
               </dd>
             </dl>
+
+            {% if discount > 0 %}
+            <dl class="dlist-align">
+              <dt>Original Total:</dt>
+              <dd class="text-right" style="text-decoration: line-through;">
+                ₹ {{ total|add:shipping }}
+              </dd>
+            </dl>
+            {% endif %}
+
             <dl class="dlist-align">
               <dt>Grand Total:</dt>
               <dd class="text-right text-dark b"><strong>₹ {{ grand_total }}</strong></dd>
             </dl>
+
             {% if shipping == 0 and total > 0 %}
               <small class="text-success d-block">Free shipping applied.</small>
             {% elif total and total < 999 %}
               <small class="text-muted d-block">Free shipping on orders ₹999 and above.</small>
+            {% endif %}
+
+            {% if coupon %}
+              <small class="text-success d-block mb-2">Offer applied successfully.</small>
             {% endif %}
 
             <hr>

@@ -5,7 +5,9 @@ from django.utils.text import slugify
 from category.models import Category
 from accounts.models import Account
 from django_ckeditor_5.fields import CKEditor5Field
-
+from decimal import Decimal
+from django.conf import settings
+from django.utils import timezone
 
 class Product(models.Model):
     product_name = models.CharField(max_length=200, unique=True)
@@ -163,3 +165,80 @@ class ReviewVideo(models.Model):
     def __str__(self):
         return str(self.video.name).split('/')[-1] if self.video else "Review Video"
 
+
+class Coupon(models.Model):
+    code = models.CharField(max_length=50, unique=True)
+    discount_percentage = models.PositiveIntegerField()
+    is_active = models.BooleanField(default=True)
+
+    valid_from = models.DateTimeField(blank=True, null=True)
+    valid_to = models.DateTimeField(blank=True, null=True)
+
+    minimum_amount = models.DecimalField(max_digits=10, decimal_places=2, default=0)
+
+    one_time_per_user = models.BooleanField(default=False)
+    first_order_only = models.BooleanField(default=False)
+
+    categories = models.ManyToManyField(Category, blank=True)
+    products = models.ManyToManyField('Product', blank=True)
+
+    def __str__(self):
+        return self.code
+
+    def validate_coupon(self, user, cart_items, Order):
+        now = timezone.now()
+        eligible_total = Decimal('0.00')
+
+        for item in cart_items:
+            item_total = Decimal(str(item.product.price)) * item.quantity
+
+            if self.products.exists():
+                if self.products.filter(id=item.product.id).exists():
+                    eligible_total += item_total
+                continue
+
+            if self.categories.exists():
+                if self.categories.filter(id=item.product.category.id).exists():
+                    eligible_total += item_total
+                continue
+
+            eligible_total += item_total
+
+        if not self.is_active:
+            return False, "Coupon inactive", Decimal('0.00')
+
+        if self.valid_from and now < self.valid_from:
+            return False, "Coupon not started yet", Decimal('0.00')
+
+        if self.valid_to and now > self.valid_to:
+            return False, "Coupon expired", Decimal('0.00')
+
+        if eligible_total <= 0:
+            return False, "Not applicable for these products", Decimal('0.00')
+
+        if eligible_total < self.minimum_amount:
+            return False, f"Minimum ₹{self.minimum_amount} required", Decimal('0.00')
+
+        if self.first_order_only and user.is_authenticated:
+            if Order.objects.filter(user=user, is_ordered=True).exists():
+                return False, "Only for first order", Decimal('0.00')
+
+        if self.one_time_per_user and user.is_authenticated:
+            if CouponUsage.objects.filter(user=user, coupon=self).exists():
+                return False, "Already used", Decimal('0.00')
+
+        discount = (Decimal(self.discount_percentage) / Decimal('100')) * eligible_total
+        return True, "Coupon applied", discount.quantize(Decimal('0.01'))
+
+
+class CouponUsage(models.Model):
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    coupon = models.ForeignKey(Coupon, on_delete=models.CASCADE)
+    order_id = models.CharField(max_length=100, blank=True, null=True)
+    used_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        unique_together = ('user', 'coupon')
+
+    def __str__(self):
+        return f"{self.user} - {self.coupon.code}"

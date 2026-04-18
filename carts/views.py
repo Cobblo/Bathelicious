@@ -1,13 +1,13 @@
+from decimal import Decimal
 from django.shortcuts import render, redirect, get_object_or_404
 from django.core.exceptions import ObjectDoesNotExist
 from django.contrib.auth.decorators import login_required
-from django.http import HttpResponse
-
-from store.models import Product, Variation
-from .models import Cart, CartItem
-from decimal import Decimal
 from django.contrib import messages
+
+from store.models import Product, Variation, Coupon
+from .models import Cart, CartItem
 from .points import apply_redeem
+from orders.models import Order
 
 
 # ---------- Helpers ----------
@@ -17,51 +17,66 @@ def _cart_id(request):
         cart = request.session.create()
     return cart
 
+
 def _shipping_amount(total):
-    """
-    Shipping charge:
-      - ₹80 for orders below ₹999
-      - FREE (₹0) for orders ≥ ₹999
-    """
     if total >= 999:
-        return 0
-    return 80
+        return Decimal("0.00")
+    return Decimal("80.00")
+
+
+def get_user_cart(user):
+    """
+    Placeholder helper for redeem points flow.
+    """
+    return None
+
+
+def _get_cart_items(request):
+    if request.user.is_authenticated:
+        return CartItem.objects.filter(user=request.user, is_active=True)
+
+    try:
+        cart = Cart.objects.get(cart_id=_cart_id(request))
+        return CartItem.objects.filter(cart=cart, is_active=True)
+    except Cart.DoesNotExist:
+        return CartItem.objects.none()
 
 
 # ---------- Cart ops ----------
 def add_cart(request, product_id):
     current_user = request.user
-    product = Product.objects.get(id=product_id)  # get the product
+    product = Product.objects.get(id=product_id)
 
-    # If the user is authenticated
+    product_variation = []
+    if request.method == 'POST':
+        for item in request.POST:
+            key = item
+            value = request.POST[key]
+            try:
+                variation = Variation.objects.get(
+                    product=product,
+                    variation_category__iexact=key,
+                    variation_value__iexact=value
+                )
+                product_variation.append(variation)
+            except:
+                pass
+
+    # Logged-in user
     if current_user.is_authenticated:
-        product_variation = []
-        if request.method == 'POST':
-            for item in request.POST:
-                key = item
-                value = request.POST[key]
-                try:
-                    variation = Variation.objects.get(
-                        product=product,
-                        variation_category__iexact=key,
-                        variation_value__iexact=value
-                    )
-                    product_variation.append(variation)
-                except:
-                    pass
-
         is_cart_item_exists = CartItem.objects.filter(product=product, user=current_user).exists()
+
         if is_cart_item_exists:
             cart_item = CartItem.objects.filter(product=product, user=current_user)
             ex_var_list = []
             id_list = []
+
             for item in cart_item:
                 existing_variation = item.variations.all()
                 ex_var_list.append(list(existing_variation))
                 id_list.append(item.id)
 
             if product_variation in ex_var_list:
-                # Increase the cart item quantity
                 index = ex_var_list.index(product_variation)
                 item_id = id_list[index]
                 item = CartItem.objects.get(product=product, id=item_id)
@@ -83,43 +98,30 @@ def add_cart(request, product_id):
                 cart_item.variations.clear()
                 cart_item.variations.add(*product_variation)
             cart_item.save()
+
         return redirect('cart')
 
-    # If the user is not authenticated
+    # Guest user
     else:
-        product_variation = []
-        if request.method == 'POST':
-            for item in request.POST:
-                key = item
-                value = request.POST[key]
-                try:
-                    variation = Variation.objects.get(
-                        product=product,
-                        variation_category__iexact=key,
-                        variation_value__iexact=value
-                    )
-                    product_variation.append(variation)
-                except:
-                    pass
-
         try:
-            cart = Cart.objects.get(cart_id=_cart_id(request))  # get the cart using the cart_id in session
+            cart = Cart.objects.get(cart_id=_cart_id(request))
         except Cart.DoesNotExist:
             cart = Cart.objects.create(cart_id=_cart_id(request))
         cart.save()
 
         is_cart_item_exists = CartItem.objects.filter(product=product, cart=cart).exists()
+
         if is_cart_item_exists:
             cart_item = CartItem.objects.filter(product=product, cart=cart)
             ex_var_list = []
             id_list = []
+
             for item in cart_item:
                 existing_variation = item.variations.all()
                 ex_var_list.append(list(existing_variation))
                 id_list.append(item.id)
 
             if product_variation in ex_var_list:
-                # Increase the cart item quantity
                 index = ex_var_list.index(product_variation)
                 item_id = id_list[index]
                 item = CartItem.objects.get(product=product, id=item_id)
@@ -141,17 +143,20 @@ def add_cart(request, product_id):
                 cart_item.variations.clear()
                 cart_item.variations.add(*product_variation)
             cart_item.save()
+
         return redirect('cart')
 
 
 def remove_cart(request, product_id, cart_item_id):
     product = get_object_or_404(Product, id=product_id)
+
     try:
         if request.user.is_authenticated:
             cart_item = CartItem.objects.get(product=product, user=request.user, id=cart_item_id)
         else:
             cart = Cart.objects.get(cart_id=_cart_id(request))
             cart_item = CartItem.objects.get(product=product, cart=cart, id=cart_item_id)
+
         if cart_item.quantity > 1:
             cart_item.quantity -= 1
             cart_item.save()
@@ -159,6 +164,7 @@ def remove_cart(request, product_id, cart_item_id):
             cart_item.delete()
     except:
         pass
+
     return redirect('cart')
 
 
@@ -173,40 +179,69 @@ def remove_cart_item(request, product_id, cart_item_id):
                 cart = Cart.objects.get(cart_id=_cart_id(request))
                 cart_item = CartItem.objects.get(product=product, cart=cart, id=cart_item_id)
             except Cart.DoesNotExist:
-                return redirect('cart')  # Cart doesn't exist, so redirect gracefully
+                return redirect('cart')
 
         cart_item.delete()
     except CartItem.DoesNotExist:
-        pass  # Optional: handle if item is already deleted
+        pass
 
     return redirect('cart')
 
 
 # ---------- Pages ----------
 def cart(request, total=0, quantity=0, cart_items=None):
+    discount = Decimal("0.00")
+    coupon = None
+    shipping = Decimal("0.00")
+    original_total = Decimal("0.00")
+
     try:
-        if request.user.is_authenticated:
-            cart_items = CartItem.objects.filter(user=request.user, is_active=True)
-        else:
-            cart = Cart.objects.get(cart_id=_cart_id(request))
-            cart_items = CartItem.objects.filter(cart=cart, is_active=True)
+        cart_items = _get_cart_items(request)
 
         for cart_item in cart_items:
-            total += (cart_item.product.price * cart_item.quantity)
+            total += Decimal(str(cart_item.product.price)) * cart_item.quantity
             quantity += cart_item.quantity
 
-        shipping = _shipping_amount(total) if total > 0 else 0
-        grand_total = total + shipping
+        shipping = _shipping_amount(total) if total > 0 else Decimal("0.00")
+        original_total = total + shipping
+
+        coupon_id = request.session.get("coupon_id")
+        if coupon_id:
+            try:
+                coupon = Coupon.objects.get(id=coupon_id, is_active=True)
+                is_valid, message, discount = coupon.validate_coupon(
+                    user=request.user,
+                    cart_items=cart_items,
+                    Order=Order
+                )
+                if not is_valid:
+                    request.session.pop("coupon_id", None)
+                    coupon = None
+                    discount = Decimal("0.00")
+                    messages.error(request, message)
+            except Coupon.DoesNotExist:
+                request.session.pop("coupon_id", None)
+                coupon = None
+                discount = Decimal("0.00")
+
+        grand_total = total + shipping - discount
 
     except (ObjectDoesNotExist, Cart.DoesNotExist):
-        shipping = 0
-        grand_total = 0
+        shipping = Decimal("0.00")
+        grand_total = Decimal("0.00")
+        discount = Decimal("0.00")
+        coupon = None
+        original_total = Decimal("0.00")
+        cart_items = []
 
     context = {
         'total': total,
         'quantity': quantity,
         'cart_items': cart_items,
-        'shipping': shipping,        # use this in templates
+        'shipping': shipping,
+        'discount': discount,
+        'coupon': coupon,
+        'original_total': original_total,
         'grand_total': grand_total,
     }
     return render(request, 'store/cart.html', context)
@@ -214,32 +249,63 @@ def cart(request, total=0, quantity=0, cart_items=None):
 
 @login_required(login_url='login')
 def checkout(request, total=0, quantity=0, cart_items=None):
+    discount = Decimal("0.00")
+    coupon = None
+    shipping = Decimal("0.00")
+    original_total = Decimal("0.00")
+
     try:
-        if request.user.is_authenticated:
-            cart_items = CartItem.objects.filter(user=request.user, is_active=True)
-        else:
-            cart = Cart.objects.get(cart_id=_cart_id(request))
-            cart_items = CartItem.objects.filter(cart=cart, is_active=True)
+        cart_items = _get_cart_items(request)
 
         for cart_item in cart_items:
-            total += (cart_item.product.price * cart_item.quantity)
+            total += Decimal(str(cart_item.product.price)) * cart_item.quantity
             quantity += cart_item.quantity
 
-        shipping = _shipping_amount(total) if total > 0 else 0
-        grand_total = total + shipping
+        shipping = _shipping_amount(total) if total > 0 else Decimal("0.00")
+        original_total = total + shipping
+
+        coupon_id = request.session.get("coupon_id")
+        if coupon_id:
+            try:
+                coupon = Coupon.objects.get(id=coupon_id, is_active=True)
+                is_valid, message, discount = coupon.validate_coupon(
+                    user=request.user,
+                    cart_items=cart_items,
+                    Order=Order
+                )
+                if not is_valid:
+                    request.session.pop("coupon_id", None)
+                    coupon = None
+                    discount = Decimal("0.00")
+                    messages.error(request, message)
+            except Coupon.DoesNotExist:
+                request.session.pop("coupon_id", None)
+                coupon = None
+                discount = Decimal("0.00")
+
+        grand_total = total + shipping - discount
 
     except (ObjectDoesNotExist, Cart.DoesNotExist):
-        shipping = 0
-        grand_total = 0
+        shipping = Decimal("0.00")
+        grand_total = Decimal("0.00")
+        discount = Decimal("0.00")
+        coupon = None
+        original_total = Decimal("0.00")
+        cart_items = []
 
     context = {
         'total': total,
         'quantity': quantity,
         'cart_items': cart_items,
-        'shipping': shipping,        # use this in templates
+        'shipping': shipping,
+        'discount': discount,
+        'coupon': coupon,
+        'original_total': original_total,
         'grand_total': grand_total,
     }
     return render(request, 'store/checkout.html', context)
+
+
 @login_required
 def redeem_points(request):
     if request.method == "POST":
@@ -248,11 +314,64 @@ def redeem_points(request):
         except:
             requested = Decimal("0")
 
-        cart = get_user_cart(request.user)  # your helper
+        cart = get_user_cart(request.user)
         actual = apply_redeem(request.user, cart, requested)
 
         if actual > 0:
             messages.success(request, f"₹{actual} redeemed from your points.")
         else:
-            messages.warning(request, "Cannot redeem that amount. You can redeem only ₹500 per product, in ₹500 steps.")
-    return redirect("cart")    
+            messages.warning(request, "Cannot redeem that amount.")
+
+    return redirect("cart")
+
+
+def apply_coupon(request):
+    if request.method != "POST":
+        return redirect("cart")
+
+    coupon_code = request.POST.get("coupon_code", "").strip()
+
+    if not coupon_code:
+        request.session.pop("coupon_id", None)
+        messages.error(request, "Please enter an offer code.")
+        return redirect("cart")
+
+    cart_items = _get_cart_items(request)
+
+    if not cart_items.exists():
+        request.session.pop("coupon_id", None)
+        messages.error(request, "Your cart is empty.")
+        return redirect("cart")
+
+    try:
+        coupon = Coupon.objects.get(code__iexact=coupon_code)
+    except Coupon.DoesNotExist:
+        request.session.pop("coupon_id", None)
+        messages.error(request, "Invalid offer code.")
+        return redirect("cart")
+
+    if not coupon.is_active:
+        request.session.pop("coupon_id", None)
+        messages.error(request, "This coupon is inactive.")
+        return redirect("cart")
+
+    is_valid, message, discount = coupon.validate_coupon(
+        user=request.user,
+        cart_items=cart_items,
+        Order=Order
+    )
+
+    if not is_valid:
+        request.session.pop("coupon_id", None)
+        messages.error(request, message)
+        return redirect("cart")
+
+    request.session["coupon_id"] = coupon.id
+    messages.success(request, f"Offer code '{coupon.code}' applied successfully.")
+    return redirect("cart")
+
+
+def remove_coupon(request):
+    request.session.pop("coupon_id", None)
+    messages.success(request, "Coupon removed.")
+    return redirect("cart")

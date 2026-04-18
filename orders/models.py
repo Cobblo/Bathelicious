@@ -1,13 +1,13 @@
 from django.db import models
 from accounts.models import Account
 from store.models import Product, Variation
-from django.contrib.auth.models import User
+
 
 class Payment(models.Model):
     user = models.ForeignKey(Account, on_delete=models.CASCADE)
     payment_id = models.CharField(max_length=100)
     payment_method = models.CharField(max_length=100)
-    amount_paid = models.CharField(max_length=100) # this is the total amount paid
+    amount_paid = models.CharField(max_length=100)  # this is the total amount paid
     status = models.CharField(max_length=100)
     created_at = models.DateTimeField(auto_now_add=True)
 
@@ -43,12 +43,15 @@ class Order(models.Model):
     shipping_charge = models.DecimalField(max_digits=10, decimal_places=2, default=0)
     order_total = models.FloatField()
     tax = models.FloatField()
+    coupon_code = models.CharField(max_length=50, blank=True, null=True)
+    discount_amount = models.DecimalField(max_digits=10, decimal_places=2, default=0)
+
     ip = models.CharField(blank=True, max_length=20)
     is_ordered = models.BooleanField(default=False)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
-    # ✅ NEW: Courier Tracking Fields
+    # Courier Tracking Fields
     courier_name = models.CharField(max_length=100, blank=True, null=True)
     courier_tracking_id = models.CharField(max_length=100, blank=True, null=True)
     courier_tracking_url = models.URLField(blank=True, null=True)
@@ -60,9 +63,7 @@ class Order(models.Model):
         return f'{self.address_line_1} {self.address_line_2}'
 
     def __str__(self):
-        return self.user.first_name
-
-
+        return self.user.first_name if self.user else self.order_number
 
 
 class OrderProduct(models.Model):
@@ -70,7 +71,7 @@ class OrderProduct(models.Model):
     payment = models.ForeignKey(Payment, on_delete=models.SET_NULL, blank=True, null=True)
     user = models.ForeignKey(Account, on_delete=models.CASCADE)
     product = models.ForeignKey(Product, on_delete=models.CASCADE)
-    variations = models.ManyToManyField(Variation, blank=True)  # ✅ ManyToManyField
+    variations = models.ManyToManyField(Variation, blank=True)
     quantity = models.IntegerField()
     product_price = models.FloatField()
     ordered = models.BooleanField(default=False)
@@ -79,6 +80,3 @@ class OrderProduct(models.Model):
 
     def __str__(self):
         return self.product.product_name
-
-
-       

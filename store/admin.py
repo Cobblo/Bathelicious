@@ -3,7 +3,8 @@ from django.contrib.admin.sites import NotRegistered
 import admin_thumbnails
 from .models import (
     Product, Variation, ReviewRating, ProductGallery,
-    Wishlist, SmallBanner, KeyIngredient, AboutSettings, ReviewVideo
+    Wishlist, SmallBanner, KeyIngredient, AboutSettings, ReviewVideo,
+    Coupon, CouponUsage
 )
 
 # --- helpers ---------------------------------------------------------------
@@ -61,13 +62,33 @@ class ReviewVideoAdmin(admin.ModelAdmin):
     ordering = ('order',)
     list_per_page = 10
 
+class CouponAdmin(admin.ModelAdmin):
+    list_display = (
+        'code',
+        'discount_percentage',
+        'is_active',
+        'valid_from',
+        'valid_to',
+        'minimum_amount',
+        'one_time_per_user',
+        'first_order_only',
+    )
+    search_fields = ('code',)
+    list_filter = ('is_active', 'one_time_per_user', 'first_order_only')
+    filter_horizontal = ('categories', 'products')
+
+class CouponUsageAdmin(admin.ModelAdmin):
+    list_display = ('user', 'coupon', 'order_id', 'used_at')
+    search_fields = ('user__email', 'coupon__code', 'order_id')
 
 # --- Safe registrations (no duplicates) -----------------------------------
 safe_register(Product, ProductAdmin)
 safe_register(Variation, VariationAdmin)
 safe_register(ReviewRating, ReviewRatingAdmin)
-safe_register(ProductGallery)     # can be registered and also used as inline
+safe_register(ProductGallery)
 safe_register(Wishlist)
 safe_register(SmallBanner)
 safe_register(KeyIngredient)
 safe_register(AboutSettings, AboutSettingsAdmin)
+safe_register(Coupon, CouponAdmin)
+safe_register(CouponUsage, CouponUsageAdmin)

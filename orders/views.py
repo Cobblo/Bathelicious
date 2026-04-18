@@ -1,62 +1,66 @@
 from decimal import Decimal
 from django.shortcuts import render, redirect
-from django.http import HttpResponse, JsonResponse
+from django.http import JsonResponse
 from django.contrib.auth.decorators import login_required
 from django.conf import settings
-from django.core.mail import EmailMessage
-from django.template.loader import render_to_string
 
 import datetime
 import json
 import razorpay
 
 from carts.models import CartItem
-from store.models import Product
+from store.models import Product, Coupon, CouponUsage
 from .forms import OrderForm
 from .models import Order, Payment, OrderProduct
 from .utils import send_invoice_email
-from django.templatetags.static import static
-from orders.utils import calculate_shipping_charge
 
 # ---------- Shipping policy ----------
-FREE_SHIPPING_THRESHOLD = Decimal('999')   # Free at ₹999 and above
-# If you want to keep a central rate in calculate_shipping_charge(),
-# leave it there and we’ll only use it when total < threshold.
+FREE_SHIPPING_THRESHOLD = Decimal('999')
 
 
-# STEP 1: PLACE ORDER & CREATE RAZORPAY ORDER
 @login_required
 def place_order(request, total=0, quantity=0):
     current_user = request.user
     cart_items = CartItem.objects.filter(user=current_user, is_active=True)
+
     if cart_items.count() <= 0:
         return redirect('store')
 
-    # ---- compute totals (no tax) ----
-    total = Decimal('0')
+    total = Decimal('0.00')
     quantity = 0
+    discount = Decimal('0.00')
+    coupon = None
+
     for item in cart_items:
-        # assuming Product.price is a DecimalField
-        total += (item.product.price * item.quantity)
+        total += Decimal(str(item.product.price)) * item.quantity
         quantity += item.quantity
 
-    # shipping: Free if total >= 999, else use your per-state function (usually ₹80)
-    # we need state from the submitted form to compute a per-state rate;
-    # until form is submitted, show the flat policy on the next page.
     if request.method == 'POST':
         form = OrderForm(request.POST)
         if form.is_valid():
-            # No tax
-            tax = Decimal('0')
+            tax = Decimal('0.00')
+            shipping_charge = Decimal('0.00') if total >= FREE_SHIPPING_THRESHOLD else Decimal('80.00')
 
-            # Determine shipping charge
-            # If you want a *strict* ₹80 below threshold, replace the next line with:
-            # shipping_charge = Decimal('0') if total >= FREE_SHIPPING_THRESHOLD else Decimal('80')
-            shipping_charge = Decimal('0') if total >= FREE_SHIPPING_THRESHOLD else Decimal('80')
+            coupon_id = request.session.get("coupon_id")
+            if coupon_id:
+                try:
+                    coupon = Coupon.objects.get(id=coupon_id)
+                    is_valid, message, discount = coupon.validate_coupon(
+                        user=request.user,
+                        cart_items=cart_items,
+                        Order=Order
+                    )
+                    if not is_valid:
+                        request.session.pop("coupon_id", None)
+                        coupon = None
+                        discount = Decimal('0.00')
+                except Coupon.DoesNotExist:
+                    request.session.pop("coupon_id", None)
+                    coupon = None
+                    discount = Decimal('0.00')
 
-            grand_total = (total + shipping_charge).quantize(Decimal('1.00'))
+            grand_total = (total + shipping_charge - discount).quantize(Decimal('1.00'))
 
-            # ---- Save Order (not yet ordered) ----
             data = Order()
             data.user = current_user
             data.first_name = form.cleaned_data['first_name']
@@ -69,21 +73,21 @@ def place_order(request, total=0, quantity=0):
             data.state = form.cleaned_data['state']
             data.city = form.cleaned_data['city']
             data.order_note = form.cleaned_data['order_note']
-            data.order_total = grand_total
+            data.order_total = float(grand_total)
             data.shipping_charge = shipping_charge
-            data.tax = tax  # keep field for compatibility, value is 0
+            data.discount_amount = discount
+            data.coupon_code = coupon.code if coupon else ""
+            data.tax = float(tax)
             data.ip = request.META.get('REMOTE_ADDR')
             data.save()
 
-            # Generate order number: YYYYMMDD + id
             current_date = datetime.date.today().strftime("%Y%m%d")
             order_number = current_date + str(data.id)
             data.order_number = order_number
             data.save()
 
-            # ---- Razorpay Order ----
             client = razorpay.Client(auth=(settings.RAZORPAY_KEY_ID, settings.RAZORPAY_KEY_SECRET))
-            amount_paise = int((grand_total * 100).to_integral_value())  # paise
+            amount_paise = int((grand_total * 100).to_integral_value())
 
             razorpay_order = client.order.create({
                 'amount': amount_paise,
@@ -100,23 +104,23 @@ def place_order(request, total=0, quantity=0):
                 'order': order,
                 'cart_items': cart_items,
                 'total': total,
-                'tax': tax,  # always 0 now
+                'tax': tax,
                 'shipping': shipping_charge,
+                'discount': discount,
+                'coupon': coupon,
                 'grand_total': grand_total,
+                'original_total': total + shipping_charge,
                 'razorpay_order_id': razorpay_order['id'],
                 'razorpay_key': settings.RAZORPAY_KEY_ID,
-                'razorpay_amount': amount_paise,  # integer paise
+                'razorpay_amount': amount_paise,
             }
             return render(request, 'orders/payments.html', context)
         else:
-            # invalid form -> back to checkout
             return redirect('checkout')
     else:
-        # Only accept POST to create the order
         return redirect('checkout')
 
 
-# STEP 2: HANDLE PAYMENT RESPONSE & SAVE ORDER
 @login_required
 def payments(request):
     body = json.loads(request.body)
@@ -126,7 +130,7 @@ def payments(request):
         user=request.user,
         payment_id=body['transID'],
         payment_method=body['payment_method'],
-        amount_paid=order.order_total,  # this is total + shipping (no tax)
+        amount_paid=order.order_total,
         status=body['status'],
     )
     payment.save()
@@ -147,16 +151,26 @@ def payments(request):
         orderproduct.ordered = True
         orderproduct.save()
 
-        # Set variations
         orderproduct.variations.set(item.variations.all())
         orderproduct.save()
 
-        # Decrease stock
         product = item.product
         product.stock -= item.quantity
         product.save()
 
-    # Clear cart
+    coupon_id = request.session.get("coupon_id")
+    if coupon_id and request.user.is_authenticated:
+        try:
+            coupon = Coupon.objects.get(id=coupon_id)
+            CouponUsage.objects.get_or_create(
+                user=request.user,
+                coupon=coupon,
+                defaults={'order_id': order.order_number}
+            )
+            request.session.pop("coupon_id", None)
+        except Coupon.DoesNotExist:
+            pass
+
     CartItem.objects.filter(user=request.user).delete()
 
     data = {
@@ -166,7 +180,6 @@ def payments(request):
     return JsonResponse(data)
 
 
-# STEP 3: ORDER COMPLETE PAGE
 def order_complete(request):
     order_number = request.GET.get('order_number')
     transID = request.GET.get('payment_id')
@@ -187,7 +200,9 @@ def order_complete(request):
             'payment': payment,
             'subtotal': subtotal,
             'shipping': order.shipping_charge,
-            # no tax shown here either; if template expects it, it will be 0 from order.tax
+            'discount': order.discount_amount,
+            'coupon_code': order.coupon_code,
+            'grand_total': order.order_total,
         }
         return render(request, 'orders/order_complete.html', context)
     except (Order.DoesNotExist, Payment.DoesNotExist):
