@@ -19,7 +19,7 @@ def _cart_id(request):
 
 
 def _shipping_amount(total):
-    if total >= 999:
+    if total >= 1199:
         return Decimal("0.00")
     return Decimal("80.00")
 

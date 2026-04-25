@@ -15,7 +15,7 @@ from .models import Order, Payment, OrderProduct
 from .utils import send_invoice_email
 
 # ---------- Shipping policy ----------
-FREE_SHIPPING_THRESHOLD = Decimal('999')
+FREE_SHIPPING_THRESHOLD = Decimal('1199')
 
 
 @login_required

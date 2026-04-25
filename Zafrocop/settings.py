@@ -53,4 +53,4 @@ if "whitenoise.middleware.WhiteNoiseMiddleware" not in MIDDLEWARE:
     MIDDLEWARE = MIDDLEWARE[:i] + ["whitenoise.middleware.WhiteNoiseMiddleware"] + MIDDLEWARE[i:]
 
 SHIPPING_FLAT_RATE = int(config("SHIPPING_FLAT_RATE", default="80"))      # ₹80
-FREE_SHIPPING_THRESHOLD = int(config("FREE_SHIPPING_THRESHOLD", default="999"))  # free ≥ ₹999
+FREE_SHIPPING_THRESHOLD = int(config("FREE_SHIPPING_THRESHOLD", default="1199"))  # free ≥ ₹999
