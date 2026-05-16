@@ -116,7 +116,21 @@ def place_order(request, total=0, quantity=0):
             }
             return render(request, 'orders/payments.html', context)
         else:
-            return redirect('checkout')
+            shipping = Decimal('0.00') if total <= 0 else (Decimal('0.00') if total >= FREE_SHIPPING_THRESHOLD else Decimal('80.00'))
+            grand_total = total + shipping - discount
+
+            context = {
+                'form': form,
+                'total': total,
+                'quantity': quantity,
+                'cart_items': cart_items,
+                'shipping': shipping,
+                'discount': discount,
+                'coupon': coupon,
+                'original_total': total + shipping,
+                'grand_total': grand_total,
+            }
+            return render(request, 'store/checkout.html', context)
     else:
         return redirect('checkout')
 

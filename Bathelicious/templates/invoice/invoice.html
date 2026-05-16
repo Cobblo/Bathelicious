@@ -50,7 +50,7 @@
     <p>
       {{ order.full_name }}<br>
       {{ order.address_line_1 }}{% if order.address_line_2 %}, {{ order.address_line_2 }}{% endif %}<br>
-      {{ order.city }}, {{ order.state }}<br>
+      {{ order.city }}, {{ order.state }} - {{ order.pincode }}<br>
       {{ order.country }}<br>
       {{ order.phone }}
     </p>

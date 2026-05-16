@@ -40,6 +40,13 @@ class OrderDateRangeFilter(admin.SimpleListFilter):
             last_30_days = now - timedelta(days=30)
             return queryset.filter(created_at__gte=last_30_days)
 
+class OrderProductInline(admin.TabularInline):
+    model = OrderProduct
+    extra = 0
+    readonly_fields = ('product', 'quantity', 'product_price', 'ordered')
+    can_delete = False
+
+
 class OrderAdmin(admin.ModelAdmin):
     list_display = (
         'order_number', 'user', 'status', 'courier_name',
@@ -47,6 +54,7 @@ class OrderAdmin(admin.ModelAdmin):
     )
     list_editable = ('status', 'courier_name', 'courier_tracking_id')
     search_fields = ('order_number', 'courier_tracking_id', 'user__email')
+    inlines = (OrderProductInline,)
                         
 
 

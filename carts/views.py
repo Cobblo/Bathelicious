@@ -8,6 +8,7 @@ from store.models import Product, Variation, Coupon
 from .models import Cart, CartItem
 from .points import apply_redeem
 from orders.models import Order
+from orders.forms import OrderForm
 
 
 # ---------- Helpers ----------
@@ -293,6 +294,7 @@ def checkout(request, total=0, quantity=0, cart_items=None):
         original_total = Decimal("0.00")
         cart_items = []
 
+    form = OrderForm()
     context = {
         'total': total,
         'quantity': quantity,
@@ -302,6 +304,7 @@ def checkout(request, total=0, quantity=0, cart_items=None):
         'coupon': coupon,
         'original_total': original_total,
         'grand_total': grand_total,
+        'form': form,
     }
     return render(request, 'store/checkout.html', context)
 
