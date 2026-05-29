@@ -11,7 +11,7 @@ from .models import (
     Wishlist,
     SmallBanner,
     AboutSettings,
-    ReviewVideo,   # ✅ added
+    ReviewVideo,
 )
 from category.models import Category
 from carts.models import CartItem
@@ -22,12 +22,20 @@ from banners.models import Banner
 
 
 def home(request):
-    featured_products = Product.objects.filter(is_featured=True, is_available=True)[:8]
-    new_arrivals = Product.objects.filter(is_new_arrival=True, is_available=True)[:8]
+    featured_products = Product.objects.filter(
+        is_featured=True,
+        is_available=True
+    )[:8]
+
+    new_arrivals = Product.objects.filter(
+        is_new_arrival=True,
+        is_available=True
+    )[:8]
+
     banners = Banner.objects.all()
     categories = Category.objects.all()
     small_banner = SmallBanner.objects.filter(is_active=True).first()
-    review_videos = ReviewVideo.objects.filter(is_active=True)[:3]  # ✅ pick max 3 active
+    review_videos = ReviewVideo.objects.filter(is_active=True)[:3]
 
     return render(request, 'home.html', {
         'featured_products': featured_products,
@@ -35,18 +43,30 @@ def home(request):
         'banners': banners,
         'categories': categories,
         'small_banner': small_banner,
-        'review_videos': review_videos,  # ✅ send to template
+        'review_videos': review_videos,
     })
 
 
+# STORE + CATEGORY PAGE
 def store(request, category_slug=None):
     categories = Category.objects.all()
+    category = None
 
     if category_slug:
-        category = get_object_or_404(Category, slug=category_slug)
-        products = Product.objects.filter(category=category, is_available=True)
+        category = get_object_or_404(
+            Category,
+            slug=category_slug
+        )
+
+        products = Product.objects.filter(
+            category=category,
+            is_available=True
+        ).order_by('id')
+
     else:
-        products = Product.objects.filter(is_available=True).order_by('id')
+        products = Product.objects.filter(
+            is_available=True
+        ).order_by('id')
 
     paginator = Paginator(products, 8)
     page = request.GET.get('page')
@@ -57,23 +77,48 @@ def store(request, category_slug=None):
         'products': paged_products,
         'product_count': product_count,
         'links': categories,
+        'category': category,   # for description display
     }
+
     return render(request, 'store/store.html', context)
 
 
+# PRODUCT DETAIL
 def product_detail(request, category_slug, product_slug):
-    single_product = get_object_or_404(Product, category__slug=category_slug, slug=product_slug)
-    in_cart = CartItem.objects.filter(cart__cart_id=_cart_id(request), product=single_product).exists()
+    single_product = get_object_or_404(
+        Product,
+        category__slug=category_slug,
+        slug=product_slug
+    )
+
+    in_cart = CartItem.objects.filter(
+        cart__cart_id=_cart_id(request),
+        product=single_product
+    ).exists()
 
     orderproduct = None
+
     if request.user.is_authenticated:
-        orderproduct = OrderProduct.objects.filter(user=request.user, product=single_product).exists()
-        in_wishlist = Wishlist.objects.filter(user=request.user, product=single_product).exists()
+        orderproduct = OrderProduct.objects.filter(
+            user=request.user,
+            product=single_product
+        ).exists()
+
+        in_wishlist = Wishlist.objects.filter(
+            user=request.user,
+            product=single_product
+        ).exists()
     else:
         in_wishlist = False
 
-    reviews = ReviewRating.objects.filter(product_id=single_product.id, status=True)
-    product_gallery = ProductGallery.objects.filter(product_id=single_product.id)
+    reviews = ReviewRating.objects.filter(
+        product_id=single_product.id,
+        status=True
+    )
+
+    product_gallery = ProductGallery.objects.filter(
+        product_id=single_product.id
+    )
 
     context = {
         'single_product': single_product,
@@ -83,9 +128,15 @@ def product_detail(request, category_slug, product_slug):
         'product_gallery': product_gallery,
         'in_wishlist': in_wishlist,
     }
-    return render(request, 'store/product_detail.html', context)
+
+    return render(
+        request,
+        'store/product_detail.html',
+        context
+    )
 
 
+# SEARCH
 def search(request):
     products = Product.objects.none()
     product_count = 0
@@ -93,9 +144,11 @@ def search(request):
 
     if keyword:
         products = Product.objects.filter(
-            Q(description__icontains=keyword) | Q(product_name__icontains=keyword),
+            Q(description__icontains=keyword) |
+            Q(product_name__icontains=keyword),
             is_available=True
         ).order_by('-created_date')
+
         product_count = products.count()
 
     paginator = Paginator(products, 8)
@@ -107,40 +160,72 @@ def search(request):
         'product_count': product_count,
         'links': Category.objects.all(),
     }
+
     return render(request, 'store/store.html', context)
 
 
+# WISHLIST
 @login_required
 def wishlist(request):
     wishlist_items = Wishlist.objects.filter(user=request.user)
-    return render(request, 'store/wishlist.html', {'wishlist_items': wishlist_items})
+
+    return render(
+        request,
+        'store/wishlist.html',
+        {'wishlist_items': wishlist_items}
+    )
 
 
 @login_required
 def add_to_wishlist(request, product_id):
     product = get_object_or_404(Product, id=product_id)
-    Wishlist.objects.get_or_create(user=request.user, product=product)
+
+    Wishlist.objects.get_or_create(
+        user=request.user,
+        product=product
+    )
+
     return redirect('wishlist')
 
 
 @login_required
 def remove_from_wishlist(request, product_id):
     product = get_object_or_404(Product, id=product_id)
-    Wishlist.objects.filter(user=request.user, product=product).delete()
+
+    Wishlist.objects.filter(
+        user=request.user,
+        product=product
+    ).delete()
+
     return redirect('wishlist')
 
 
+# REVIEW
 def submit_review(request, product_id):
     url = request.META.get('HTTP_REFERER', '/')
+
     if request.method == 'POST':
         try:
-            review = ReviewRating.objects.get(user_id=request.user.id, product_id=product_id)
-            form = ReviewForm(request.POST, instance=review)
+            review = ReviewRating.objects.get(
+                user_id=request.user.id,
+                product_id=product_id
+            )
+
+            form = ReviewForm(
+                request.POST,
+                instance=review
+            )
+
             if form.is_valid():
                 form.save()
-                messages.success(request, 'Thank you! Your review has been updated.')
+                messages.success(
+                    request,
+                    'Thank you! Your review has been updated.'
+                )
+
         except ReviewRating.DoesNotExist:
             form = ReviewForm(request.POST)
+
             if form.is_valid():
                 data = ReviewRating(
                     subject=form.cleaned_data['subject'],
@@ -150,12 +235,18 @@ def submit_review(request, product_id):
                     product_id=product_id,
                     user_id=request.user.id
                 )
+
                 data.save()
-                messages.success(request, 'Thank you! Your review has been submitted.')
+
+                messages.success(
+                    request,
+                    'Thank you! Your review has been submitted.'
+                )
+
     return redirect(url)
 
 
-# Policy pages
+# POLICY PAGES
 def shipping_policy(request):
     return render(request, 'store/shipping_policy.html')
 
@@ -172,17 +263,37 @@ def return_and_refund(request):
     return render(request, 'store/return_and_refund.html')
 
 
+# COMBOS
 def combos_view(request):
     combos = Product.objects.filter(is_combo=True)
-    return render(request, 'store/combos.html', {'combos': combos})
+
+    return render(
+        request,
+        'store/combos.html',
+        {'combos': combos}
+    )
 
 
+# BESTSELLERS
 def bestsellers_view(request):
-    bestsellers = Product.objects.filter(is_bestseller=True, is_available=True)
-    return render(request, 'store/bestsellers.html', {'bestsellers': bestsellers})
+    bestsellers = Product.objects.filter(
+        is_bestseller=True,
+        is_available=True
+    )
+
+    return render(
+        request,
+        'store/bestsellers.html',
+        {'bestsellers': bestsellers}
+    )
 
 
-# About Us page – now loads images from Admin (AboutSettings)
+# ABOUT US
 def aboutus(request):
     about = AboutSettings.objects.first()
-    return render(request, 'store/about_us.html', {'about': about})
+
+    return render(
+        request,
+        'store/about_us.html',
+        {'about': about}
+    )
