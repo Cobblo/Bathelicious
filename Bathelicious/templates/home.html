@@ -45,7 +45,7 @@
 /* GREY LINE ONLY */
 .offer-line-bg {
   position: absolute;
-  top: 28px;
+  top: 34px;   /* line moves down */
   left: 0;
   height: 3px;
   width: 100%;
@@ -188,19 +188,18 @@
 
 .review-videos-row {
   display: flex;
-  flex-wrap: wrap;
   justify-content: center;
-  gap: 24px;
+  align-items: flex-start;
+  gap: 20px;
 }
 
 .review-video-card {
-  flex: 1 1 30%;
-  max-width: 30%;
+  width: calc((100% - 40px) / 3);
+  max-width: 380px;
 }
 
 .review-video-wrapper {
   width: 100%;
-  max-width: 400px;
   height: 550px;
   border-radius: 12px;
   overflow: hidden;
@@ -216,9 +215,72 @@
 /* ================= MOBILE FIX ================= */
 
 @media (max-width: 576px) {
+
+  .offer-progress-section {
+      width: 320px;
+      max-width: 320px;
+      margin: 10px auto;
+  }
+
+  .offer-progress-box {
+      padding: 6px 8px;
+      border-radius: 8px;
+  }
+
+  .offer-progress-title {
+      font-size: 14px;
+      margin-bottom: 4px;
+      line-height: 1.1;
+  }
+
+  .offer-progress-wrapper {
+      padding-top: 6px;
+      margin-top: 0;
+  }
+
+  .offer-line-bg {
+      top: 19px;
+  }
+
+  .offer-price {
+      font-size: 10px;
+      margin-bottom: 2px;
+  }
+
+  .offer-icon {
+      width: 28px;
+      height: 28px;
+      font-size: 11px;
+      margin-bottom: 2px;
+      border-width: 1px;
+  }
+
+  .offer-label {
+      font-size: 9px;
+      line-height: 1.1;
+  }
+
+  .offer-subtext {
+      margin-top: 3px;
+      font-size: 9px;
+      line-height: 1.1;
+  }
+
+  /* Review Videos Mobile */
+
+  .review-videos-row {
+      flex-direction: column;
+      align-items: center;
+      gap: 20px;
+  }
+
   .review-video-card {
-    max-width: 100%;
-    flex-basis: 100%;
+      width: 90%;
+      max-width: 400px;
+  }
+
+  .review-video-wrapper {
+      height: 500px;
   }
 }
 
