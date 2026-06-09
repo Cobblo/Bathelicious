@@ -148,6 +148,15 @@
             </dl>
             {% endif %}
 
+            {% if returning_customer_discount > 0 %}
+            <dl class="dlist-align">
+              <dt>Returning Customer Discount:</dt>
+              <dd class="text-right text-success">
+                - ₹ {{ returning_customer_discount }}
+              </dd>
+            </dl>
+            {% endif %}
+
             <dl class="dlist-align">
               <dt>Shipping:</dt>
               <dd class="text-right">
@@ -181,6 +190,12 @@
 
             {% if coupon %}
               <small class="text-success d-block mb-2">Offer applied successfully.</small>
+            {% endif %}
+
+            {% if returning_customer_discount > 0 %}
+              <small class="text-success d-block mb-2">
+                🎁 As a valued returning customer, you've unlocked a special ₹100 discount on this purchase.
+              </small>
             {% endif %}
 
             <hr>

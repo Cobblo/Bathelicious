@@ -39,6 +39,7 @@ class Order(models.Model):
     city = models.CharField(max_length=50)
     order_note = models.CharField(max_length=100, blank=True)
     pincode = models.CharField(max_length=10, blank=True)
+    returning_discount_used = models.BooleanField(default=False)
 
     shipping_charge = models.DecimalField(max_digits=10, decimal_places=2, default=0)
     order_total = models.FloatField()

@@ -30,6 +30,20 @@ def place_order(request, total=0, quantity=0):
     quantity = 0
     discount = Decimal('0.00')
     coupon = None
+    returning_customer_discount = Decimal('0.00')
+
+    previous_paid_order = Order.objects.filter(
+    user=current_user,
+    is_ordered=True
+    ).exists()
+
+    already_used = Order.objects.filter(
+        user=current_user,
+        returning_discount_used=True
+    ).exists()
+
+    if previous_paid_order and not already_used:
+        returning_customer_discount = Decimal('100.00')
 
     for item in cart_items:
         total += Decimal(str(item.product.price)) * item.quantity
@@ -59,7 +73,12 @@ def place_order(request, total=0, quantity=0):
                     coupon = None
                     discount = Decimal('0.00')
 
-            grand_total = (total + shipping_charge - discount).quantize(Decimal('1.00'))
+            grand_total = (
+                total +
+                shipping_charge -
+                discount -
+                returning_customer_discount
+            ).quantize(Decimal('1.00'))
 
             data = Order()
             data.user = current_user
@@ -75,7 +94,7 @@ def place_order(request, total=0, quantity=0):
             data.order_note = form.cleaned_data['order_note']
             data.order_total = float(grand_total)
             data.shipping_charge = shipping_charge
-            data.discount_amount = discount
+            data.discount_amount = discount + returning_customer_discount
             data.coupon_code = coupon.code if coupon else ""
             data.tax = float(tax)
             data.ip = request.META.get('REMOTE_ADDR')
@@ -107,6 +126,7 @@ def place_order(request, total=0, quantity=0):
                 'tax': tax,
                 'shipping': shipping_charge,
                 'discount': discount,
+                'returning_customer_discount': returning_customer_discount,
                 'coupon': coupon,
                 'grand_total': grand_total,
                 'original_total': total + shipping_charge,
@@ -151,6 +171,20 @@ def payments(request):
 
     order.payment = payment
     order.is_ordered = True
+
+    previous_discount_used = Order.objects.filter(
+        user=request.user,
+        returning_discount_used=True
+    ).exists()
+
+    previous_orders = Order.objects.filter(
+        user=request.user,
+        is_ordered=True
+    ).exclude(id=order.id).exists()
+
+    if previous_orders and not previous_discount_used:
+        order.returning_discount_used = True
+
     order.save()
 
     cart_items = CartItem.objects.filter(user=request.user)
