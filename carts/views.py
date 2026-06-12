@@ -254,6 +254,20 @@ def checkout(request, total=0, quantity=0, cart_items=None):
     coupon = None
     shipping = Decimal("0.00")
     original_total = Decimal("0.00")
+    returning_customer_discount = Decimal("0.00")
+
+    previous_paid_order = Order.objects.filter(
+        user=request.user,
+        is_ordered=True
+    ).exists()
+
+    already_used = Order.objects.filter(
+        user=request.user,
+        returning_discount_used=True
+    ).exists()
+
+    if previous_paid_order and not already_used:
+        returning_customer_discount = Decimal("100.00")
 
     try:
         cart_items = _get_cart_items(request)
@@ -284,7 +298,12 @@ def checkout(request, total=0, quantity=0, cart_items=None):
                 coupon = None
                 discount = Decimal("0.00")
 
-        grand_total = total + shipping - discount
+        grand_total = (
+            total +
+            shipping -
+            discount -
+            returning_customer_discount
+        )
 
     except (ObjectDoesNotExist, Cart.DoesNotExist):
         shipping = Decimal("0.00")
@@ -292,20 +311,24 @@ def checkout(request, total=0, quantity=0, cart_items=None):
         discount = Decimal("0.00")
         coupon = None
         original_total = Decimal("0.00")
+        returning_customer_discount = Decimal("0.00")
         cart_items = []
 
     form = OrderForm()
+
     context = {
         'total': total,
         'quantity': quantity,
         'cart_items': cart_items,
         'shipping': shipping,
         'discount': discount,
+        'returning_customer_discount': returning_customer_discount,
         'coupon': coupon,
         'original_total': original_total,
         'grand_total': grand_total,
         'form': form,
     }
+
     return render(request, 'store/checkout.html', context)
 
 
