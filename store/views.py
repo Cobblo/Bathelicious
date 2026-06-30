@@ -6,6 +6,7 @@ from django.contrib.auth.decorators import login_required
 
 from .models import (
     Product,
+    ProductFAQ,
     ReviewRating,
     ProductGallery,
     Wishlist,
@@ -13,6 +14,7 @@ from .models import (
     AboutSettings,
     ReviewVideo,
 )
+
 from category.models import Category
 from carts.models import CartItem
 from carts.views import _cart_id
@@ -47,22 +49,16 @@ def home(request):
     })
 
 
-# STORE + CATEGORY PAGE
 def store(request, category_slug=None):
     categories = Category.objects.all()
     category = None
 
     if category_slug:
-        category = get_object_or_404(
-            Category,
-            slug=category_slug
-        )
-
+        category = get_object_or_404(Category, slug=category_slug)
         products = Product.objects.filter(
             category=category,
             is_available=True
         ).order_by('id')
-
     else:
         products = Product.objects.filter(
             is_available=True
@@ -77,13 +73,12 @@ def store(request, category_slug=None):
         'products': paged_products,
         'product_count': product_count,
         'links': categories,
-        'category': category,   # for description display
+        'category': category,
     }
 
     return render(request, 'store/store.html', context)
 
 
-# PRODUCT DETAIL
 def product_detail(request, category_slug, product_slug):
     single_product = get_object_or_404(
         Product,
@@ -120,6 +115,11 @@ def product_detail(request, category_slug, product_slug):
         product_id=single_product.id
     )
 
+    faqs = ProductFAQ.objects.filter(
+        product=single_product,
+        is_active=True
+    ).order_by('order')[:10]
+
     context = {
         'single_product': single_product,
         'in_cart': in_cart,
@@ -127,16 +127,12 @@ def product_detail(request, category_slug, product_slug):
         'reviews': reviews,
         'product_gallery': product_gallery,
         'in_wishlist': in_wishlist,
+        'faqs': faqs,
     }
 
-    return render(
-        request,
-        'store/product_detail.html',
-        context
-    )
+    return render(request, 'store/product_detail.html', context)
 
 
-# SEARCH
 def search(request):
     products = Product.objects.none()
     product_count = 0
@@ -164,7 +160,6 @@ def search(request):
     return render(request, 'store/store.html', context)
 
 
-# WISHLIST
 @login_required
 def wishlist(request):
     wishlist_items = Wishlist.objects.filter(user=request.user)
@@ -200,7 +195,6 @@ def remove_from_wishlist(request, product_id):
     return redirect('wishlist')
 
 
-# REVIEW
 def submit_review(request, product_id):
     url = request.META.get('HTTP_REFERER', '/')
 
@@ -211,10 +205,7 @@ def submit_review(request, product_id):
                 product_id=product_id
             )
 
-            form = ReviewForm(
-                request.POST,
-                instance=review
-            )
+            form = ReviewForm(request.POST, instance=review)
 
             if form.is_valid():
                 form.save()
@@ -228,7 +219,7 @@ def submit_review(request, product_id):
 
             if form.is_valid():
                 data = ReviewRating(
-                    subject=form.cleaned_data['subject'],
+                    subject=form.cleaned_data.get('subject', ''),
                     rating=form.cleaned_data['rating'],
                     review=form.cleaned_data['review'],
                     ip=request.META.get('REMOTE_ADDR'),
@@ -246,7 +237,6 @@ def submit_review(request, product_id):
     return redirect(url)
 
 
-# POLICY PAGES
 def shipping_policy(request):
     return render(request, 'store/shipping_policy.html')
 
@@ -263,7 +253,6 @@ def return_and_refund(request):
     return render(request, 'store/return_and_refund.html')
 
 
-# COMBOS
 def combos_view(request):
     combos = Product.objects.filter(is_combo=True)
 
@@ -274,7 +263,6 @@ def combos_view(request):
     )
 
 
-# BESTSELLERS
 def bestsellers_view(request):
     bestsellers = Product.objects.filter(
         is_bestseller=True,
@@ -288,7 +276,6 @@ def bestsellers_view(request):
     )
 
 
-# ABOUT US
 def aboutus(request):
     about = AboutSettings.objects.first()
 

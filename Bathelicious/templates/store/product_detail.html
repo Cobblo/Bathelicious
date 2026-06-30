@@ -17,6 +17,7 @@
           <div style="display: flex; gap: 10px; margin-top: 12px; flex-wrap: wrap;">
             <img src="{{ single_product.images.url }}" onclick="switchImage(this.src)"
                  style="width: 60px; height: 60px; object-fit: cover; cursor: pointer; border-radius: 6px; border: 2px solid #ccc;">
+
             {% for img in product_gallery %}
               <img src="{{ img.image.url }}" onclick="switchImage(this.src)"
                    style="width: 60px; height: 60px; object-fit: cover; cursor: pointer; border-radius: 6px; border: 2px solid #ccc;">
@@ -34,7 +35,6 @@
             <small style="color: #555; font-weight: normal;">(inclusive of all taxes)</small>
           </h5>
 
-          <!-- Keep same behavior as first code -->
           <p class="mt-3">{{ single_product.description|safe }}</p>
 
           {% if single_product.benefits %}
@@ -46,6 +46,7 @@
 
           <form action="{% url 'add_cart' single_product.id %}" method="POST" class="mt-4">
             {% csrf_token %}
+
             {% if single_product.stock > 0 %}
               <div class="d-flex flex-wrap" style="gap: 20px;">
                 <button type="submit" class="btn text-white px-4" style="background-color: #B87333;">
@@ -69,19 +70,123 @@
         </div>
       </div>
 
-      
+      <style>
+        .toggle-card {
+          width: 100%;
+          background: #fff;
+          border: 1px solid #bfe6c8;
+          border-radius: 12px;
+          padding: 18px 20px;
+          box-shadow: 0 4px 14px rgba(0,0,0,0.06);
+        }
+
+        .toggle-content {
+          display: none;
+          margin-top: 18px;
+        }
+
+        .toggle-card.open > .toggle-content {
+          display: block;
+        }
+
+        .toggle-btn {
+          border: none;
+          background: #fff;
+          color: #000;
+          width: 34px;
+          height: 34px;
+          border-radius: 7px;
+          cursor: pointer;
+          transition: 0.3s ease;
+          font-size: 18px;
+          line-height: 1;
+        }
+
+        .toggle-btn.rotate {
+          transform: rotate(180deg);
+        }
+
+        .faq-main-card {
+          margin-top: 45px;
+          margin-bottom: 35px;
+        }
+
+        .faq-card {
+          width: 100%;
+          background: #fff;
+          border: 1px solid #eee;
+          border-radius: 12px;
+          padding: 18px 20px;
+          margin-bottom: 14px;
+          box-shadow: 0 4px 14px rgba(0,0,0,0.05);
+        }
+
+        .faq-question-row {
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          gap: 15px;
+        }
+
+        .faq-question {
+          margin: 0;
+          font-size: 16px;
+          font-weight: 700;
+          color: #3b0804;
+        }
+
+        .faq-answer {
+          display: none;
+          margin-top: 15px;
+          color: #555;
+          line-height: 1.8;
+          font-size: 15px;
+        }
+
+        .faq-card.open .faq-answer {
+          display: block;
+        }
+
+        .faq-btn {
+          border: none;
+          background: #B87333;
+          color: #fff;
+          width: 34px;
+          height: 34px;
+          border-radius: 50%;
+          cursor: pointer;
+          transition: 0.3s ease;
+          font-size: 14px;
+          flex: 0 0 34px;
+        }
+
+        .faq-card.open .faq-btn {
+          transform: rotate(180deg);
+        }
+
+        @media (max-width: 768px) {
+          .faq-question {
+            font-size: 14px;
+          }
+
+          .toggle-card {
+            padding: 16px;
+          }
+        }
+      </style>
+
       {% if single_product.key_ingredients.all %}
-        <div class="toggle-card mt-4" data-toggle-box id="keyIngredientsBox">
+        <div class="toggle-card mt-4" data-toggle-box>
           <div class="d-flex justify-content-between align-items-center">
             <h5 class="mb-0" style="font-weight:700;">Key Ingredients</h5>
-            <button type="button" class="btn btn-light btn-sm toggle-btn" data-target="keyIngredientsList">▼</button>
+            <button type="button" class="btn btn-light btn-sm toggle-btn">▼</button>
           </div>
 
-          <div id="keyIngredientsList" class="toggle-content">
+          <div class="toggle-content">
             {% for ingredient in single_product.key_ingredients.all %}
               <div class="d-flex flex-wrap align-items-center mb-3 p-3 ingredient-block"
                    style="background:#f8f8f8;border-radius:10px;">
-                <!-- Image -->
+                
                 <div style="flex:0 0 150px;text-align:center;">
                   {% if ingredient.image %}
                     <img src="{{ ingredient.image.url }}" alt="{{ ingredient.name }}"
@@ -90,7 +195,6 @@
                   {% endif %}
                 </div>
 
-                <!-- Text -->
                 <div style="flex:1; padding-left:20px; margin-top:10px;">
                   <h6 style="font-weight:700;margin-bottom:8px;">{{ ingredient.name }}</h6>
                   <p class="mb-0" style="color:#555;">{{ ingredient.description }}</p>
@@ -106,42 +210,70 @@
       <div class="d-flex flex-wrap mt-5" style="gap: 20px;">
 
         {% if single_product.all_ingredients %}
-          <div class="toggle-card" data-toggle-box>
+          <div class="toggle-card" data-toggle-box style="flex:1; min-width:280px;">
             <div class="d-flex justify-content-between align-items-center">
               <h6 style="font-weight: bold;">All Ingredients</h6>
-              <button type="button" class="btn btn-light btn-sm toggle-btn" data-target="allSection">▼</button>
+              <button type="button" class="btn btn-light btn-sm toggle-btn">▼</button>
             </div>
-            <div id="allSection" class="toggle-content">
+            <div class="toggle-content">
               {{ single_product.all_ingredients|linebreaks }}
             </div>
           </div>
         {% endif %}
 
         {% if single_product.packaging_details %}
-          <div class="toggle-card" data-toggle-box>
+          <div class="toggle-card" data-toggle-box style="flex:1; min-width:280px;">
             <div class="d-flex justify-content-between align-items-center">
               <h6 style="font-weight: bold;">About Our Packaging</h6>
-              <button type="button" class="btn btn-light btn-sm toggle-btn" data-target="packagingSection">▼</button>
+              <button type="button" class="btn btn-light btn-sm toggle-btn">▼</button>
             </div>
-            <div id="packagingSection" class="toggle-content">
+            <div class="toggle-content">
               {{ single_product.packaging_details|linebreaks }}
             </div>
           </div>
         {% endif %}
 
         {% if single_product.how_to_use %}
-          <div class="toggle-card" data-toggle-box>
+          <div class="toggle-card" data-toggle-box style="flex:1; min-width:280px;">
             <div class="d-flex justify-content-between align-items-center">
               <h6 style="font-weight: bold;">How to Use</h6>
-              <button type="button" class="btn btn-light btn-sm toggle-btn" data-target="howToUseSection">▼</button>
+              <button type="button" class="btn btn-light btn-sm toggle-btn">▼</button>
             </div>
-            <div id="howToUseSection" class="toggle-content">
+            <div class="toggle-content">
               {{ single_product.how_to_use|linebreaks }}
             </div>
           </div>
         {% endif %}
       </div>
 
+      <!-- FAQ Main Dropdown Section -->
+      {% if faqs %}
+        <div class="toggle-card faq-main-card" data-toggle-box>
+          <div class="d-flex justify-content-between align-items-center">
+            <h4 class="mb-0" style="font-weight:700;">
+              Frequently Asked Questions
+            </h4>
+            <button type="button" class="btn btn-light btn-sm toggle-btn">▼</button>
+          </div>
+
+          <div class="toggle-content">
+            {% for faq in faqs %}
+              <div class="faq-card">
+                <div class="faq-question-row">
+                  <h6 class="faq-question">
+                    {{ forloop.counter }}. {{ faq.question }}
+                  </h6>
+                  <button type="button" class="faq-btn">▼</button>
+                </div>
+
+                <div class="faq-answer">
+                  {{ faq.answer|linebreaks }}
+                </div>
+              </div>
+            {% endfor %}
+          </div>
+        </div>
+      {% endif %}
 
       <!-- Review Form -->
       <div class="mt-5">
@@ -181,17 +313,20 @@
       <!-- Customer Reviews -->
       <div class="mt-4">
         <h4>Customer Reviews</h4>
+
         {% for review in reviews %}
           <div class="border rounded p-3 mb-3">
             <div class="d-flex justify-content-between">
               <strong>{{ review.user.full_name }}</strong>
               <small class="text-muted">{{ review.updated_at }}</small>
             </div>
+
             <div class="rating-star">
               {% for i in 1|make_range:5 %}
                 <i class="fa fa-star{% if review.rating < i %}-o{% endif %}"></i>
               {% endfor %}
             </div>
+
             <p class="mt-2">{{ review.review }}</p>
           </div>
         {% empty %}
@@ -208,29 +343,46 @@
     document.getElementById("mainImage").src = src;
   }
 
-  // Generic toggle handler for any .toggle-btn inside [data-toggle-box]
   document.addEventListener("DOMContentLoaded", function () {
-    const toggleButtons = document.querySelectorAll(".toggle-btn");
 
-    toggleButtons.forEach(btn => {
+    document.querySelectorAll(".toggle-btn").forEach(function (btn) {
       btn.addEventListener("click", function () {
         const targetBox = this.closest("[data-toggle-box]");
         const isOpen = targetBox.classList.contains("open");
 
-        // close all
-        document.querySelectorAll("[data-toggle-box]").forEach(box => {
+        document.querySelectorAll("[data-toggle-box]").forEach(function (box) {
           box.classList.remove("open");
-          const b = box.querySelector(".toggle-btn");
-          if (b) b.classList.remove("rotate");
+
+          const boxBtn = box.querySelector(".toggle-btn");
+          if (boxBtn) {
+            boxBtn.classList.remove("rotate");
+          }
         });
 
-        // open clicked
         if (!isOpen) {
           targetBox.classList.add("open");
           this.classList.add("rotate");
         }
       });
     });
+
+    document.querySelectorAll(".faq-btn").forEach(function (btn) {
+      btn.addEventListener("click", function (event) {
+        event.stopPropagation();
+
+        const faqCard = this.closest(".faq-card");
+        const isOpen = faqCard.classList.contains("open");
+
+        document.querySelectorAll(".faq-card").forEach(function (card) {
+          card.classList.remove("open");
+        });
+
+        if (!isOpen) {
+          faqCard.classList.add("open");
+        }
+      });
+    });
+
   });
 </script>
 
