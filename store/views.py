@@ -13,6 +13,7 @@ from .models import (
     SmallBanner,
     AboutSettings,
     ReviewVideo,
+    ComboPageContent,
 )
 
 from category.models import Category
@@ -36,17 +37,37 @@ def home(request):
 
     banners = Banner.objects.all()
     categories = Category.objects.all()
-    small_banner = SmallBanner.objects.filter(is_active=True).first()
-    review_videos = ReviewVideo.objects.filter(is_active=True)[:3]
 
-    return render(request, 'home.html', {
+    small_banner = SmallBanner.objects.filter(
+        is_active=True
+    ).first()
+
+    review_videos = ReviewVideo.objects.filter(
+        is_active=True
+    ).order_by('order')
+
+    customer_reviews = ReviewRating.objects.filter(
+        status=True
+    ).select_related(
+        'user',
+        'product'
+    ).order_by('-updated_at')
+
+    context = {
         'featured_products': featured_products,
         'new_arrivals': new_arrivals,
         'banners': banners,
         'categories': categories,
         'small_banner': small_banner,
         'review_videos': review_videos,
-    })
+        'customer_reviews': customer_reviews,
+    }
+
+    return render(
+        request,
+        'home.html',
+        context
+    )
 
 
 def store(request, category_slug=None):
@@ -120,6 +141,12 @@ def product_detail(request, category_slug, product_slug):
         is_active=True
     ).order_by('order')[:10]
 
+    related_products = single_product.related_products.filter(
+        is_available=True
+    ).exclude(
+        id=single_product.id
+    )[:4]
+
     context = {
         'single_product': single_product,
         'in_cart': in_cart,
@@ -128,6 +155,7 @@ def product_detail(request, category_slug, product_slug):
         'product_gallery': product_gallery,
         'in_wishlist': in_wishlist,
         'faqs': faqs,
+        'related_products': related_products,
     }
 
     return render(request, 'store/product_detail.html', context)
@@ -254,12 +282,26 @@ def return_and_refund(request):
 
 
 def combos_view(request):
-    combos = Product.objects.filter(is_combo=True)
+    combo_products = Product.objects.filter(
+        is_combo=True,
+        is_available=True
+    ).order_by('-created_date')
+
+    paginator = Paginator(combo_products, 8)
+    page = request.GET.get('page')
+    combos = paginator.get_page(page)
+
+    combo_page_content = ComboPageContent.objects.first()
+
+    context = {
+        'combos': combos,
+        'combo_page_content': combo_page_content,
+    }
 
     return render(
         request,
         'store/combos.html',
-        {'combos': combos}
+        context
     )
 
 

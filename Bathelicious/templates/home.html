@@ -284,6 +284,850 @@
   }
 }
 
+
+/* ================= CATEGORY QUICK LINKS ================= */
+
+.category-quick-links{
+    max-width:1200px;
+    margin:35px auto 10px;
+    text-align:center;
+}
+
+.category-quick-links ul{
+    list-style:disc;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    gap:40px;
+    padding:0;
+    margin:0;
+    flex-wrap:wrap;
+}
+
+.category-quick-links li{
+    color:#2F6B3A;
+    font-size:18px;
+    font-weight:600;
+}
+
+.category-quick-links a{
+    color:#2F6B3A;
+    text-decoration:none;
+    transition:.3s;
+}
+
+.category-quick-links a:hover{
+    color:#1d4d28;
+    text-decoration:underline;
+}
+
+@media(max-width:768px){
+
+    .category-quick-links{
+        margin:25px auto 5px;
+    }
+
+    .category-quick-links ul{
+        gap:18px;
+        justify-content:center;
+    }
+
+    .category-quick-links li{
+        font-size:15px;
+    }
+
+}
+
+/* ================= FEATURED PRODUCT SLIDER ================= */
+
+.featured-slider-wrapper {
+    position: relative;
+}
+
+.featured-mobile-arrow {
+    display: none;
+}
+
+/* ================= MOBILE VIEW ONLY ================= */
+
+@media (max-width: 576px) {
+
+    #featured-products {
+        width: 100%;
+        max-width: 100% !important;
+        margin: 30px auto !important;
+        padding: 0 8px;
+        overflow: hidden;
+    }
+
+    #featured-products h2 {
+        font-size: 24px;
+        margin-bottom: 20px !important;
+    }
+
+    .featured-slider-wrapper {
+        width: 100%;
+        position: relative;
+        padding: 0 18px;
+    }
+
+    .featured-products-row {
+        width: 100%;
+        display: flex !important;
+        flex-wrap: nowrap !important;
+        justify-content: flex-start !important;
+        gap: 15px !important;
+        overflow-x: auto;
+        scroll-behavior: smooth;
+        scroll-snap-type: x mandatory;
+        scrollbar-width: none;
+        padding: 5px 0 15px;
+    }
+
+    .featured-products-row::-webkit-scrollbar {
+        display: none;
+    }
+
+    .featured-products-row .product-card {
+        flex: 0 0 100%;
+        width: 100% !important;
+        min-width: 100%;
+        max-width: 100%;
+        padding: 16px !important;
+        margin: 0 !important;
+        border-radius: 12px !important;
+        scroll-snap-align: start;
+        box-sizing: border-box;
+    }
+
+    .featured-products-row .product-card img {
+        width: 100% !important;
+        height: 255px !important;
+        object-fit: cover !important;
+        border-radius: 9px;
+        margin-bottom: 18px !important;
+    }
+
+    .featured-products-row .product-card h5 {
+        font-size: 18px;
+        font-weight: 700;
+        line-height: 1.3;
+        min-height: auto;
+        margin: 0 0 8px;
+    }
+
+    .featured-products-row .product-card p {
+        font-size: 16px;
+        font-weight: 700;
+        margin: 0 0 12px;
+    }
+
+    .featured-products-row .product-card form {
+        width: 100%;
+    }
+
+    .featured-products-row .product-card button {
+        width: 100%;
+        padding: 12px 15px !important;
+        font-size: 16px !important;
+        border-radius: 5px !important;
+    }
+
+    .featured-mobile-arrow {
+        display: flex;
+        position: absolute;
+        top: 48%;
+        transform: translateY(-50%);
+        width: 38px;
+        height: 38px;
+        padding: 0;
+        border: none;
+        border-radius: 50%;
+        background-color: #237b43;
+        color: #ffffff;
+        align-items: center;
+        justify-content: center;
+        font-size: 19px;
+        cursor: pointer;
+        z-index: 20;
+        box-shadow: 0 3px 9px rgba(0, 0, 0, 0.25);
+    }
+
+    .featured-prev-arrow {
+        left: 0;
+    }
+
+    .featured-next-arrow {
+        right: 0;
+    }
+}
+
+/* ================= NEW ARRIVALS SLIDER ================= */
+
+.new-arrivals-slider-wrapper {
+    position: relative;
+}
+
+.new-arrivals-mobile-arrow {
+    display: none;
+}
+
+@media (max-width: 576px) {
+
+    #new-arrivals {
+        width: 100%;
+        max-width: 100% !important;
+        margin: 50px auto 30px !important;
+        padding: 0 8px;
+        overflow: hidden;
+    }
+
+    #new-arrivals h2 {
+        font-size: 24px;
+        margin-bottom: 20px !important;
+    }
+
+    .new-arrivals-slider-wrapper {
+        width: 100%;
+        position: relative;
+        padding: 0 18px;
+    }
+
+    .new-arrivals-products-row {
+        width: 100%;
+        display: flex !important;
+        flex-wrap: nowrap !important;
+        justify-content: flex-start !important;
+        gap: 15px !important;
+        overflow-x: auto;
+        scroll-behavior: smooth;
+        scroll-snap-type: x mandatory;
+        scrollbar-width: none;
+        padding: 5px 0 15px;
+    }
+
+    .new-arrivals-products-row::-webkit-scrollbar {
+        display: none;
+    }
+
+    .new-arrivals-products-row .product-card {
+        flex: 0 0 100%;
+        width: 100% !important;
+        min-width: 100%;
+        max-width: 100%;
+        padding: 16px !important;
+        margin: 0 !important;
+        border-radius: 12px !important;
+        scroll-snap-align: start;
+        box-sizing: border-box;
+    }
+
+    .new-arrivals-products-row .product-card img {
+        width: 100% !important;
+        height: 255px !important;
+        object-fit: cover !important;
+        border-radius: 9px;
+        margin-bottom: 18px !important;
+    }
+
+    .new-arrivals-products-row .product-card h5 {
+        font-size: 18px;
+        font-weight: 700;
+        line-height: 1.3;
+        min-height: auto;
+        margin: 0 0 8px;
+    }
+
+    .new-arrivals-products-row .product-card p {
+        font-size: 16px;
+        font-weight: 700;
+        margin: 0 0 12px;
+    }
+
+    .new-arrivals-products-row .product-card form {
+        width: 100%;
+    }
+
+    .new-arrivals-products-row .product-card button {
+        width: 100%;
+        padding: 12px 15px !important;
+        font-size: 16px !important;
+        border-radius: 5px !important;
+    }
+
+    .new-arrivals-mobile-arrow {
+        display: flex;
+        position: absolute;
+        top: 48%;
+        transform: translateY(-50%);
+        width: 38px;
+        height: 38px;
+        padding: 0;
+        border: none;
+        border-radius: 50%;
+        background-color: #237b43;
+        color: #ffffff;
+        align-items: center;
+        justify-content: center;
+        font-size: 19px;
+        cursor: pointer;
+        z-index: 20;
+        box-shadow: 0 3px 9px rgba(0, 0, 0, 0.25);
+    }
+
+    .new-arrivals-prev-arrow {
+        left: 0;
+    }
+
+    .new-arrivals-next-arrow {
+        right: 0;
+    }
+}
+
+/* ================= REVIEW VIDEOS ================= */
+
+.review-videos-section {
+    margin: 60px auto 80px;
+    max-width: 1200px;
+}
+
+.review-videos-slider-wrapper {
+    position: relative;
+}
+
+.review-videos-row {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: flex-start;
+    gap: 20px;
+}
+
+.review-video-card {
+    width: calc((100% - 40px) / 3);
+    max-width: 380px;
+}
+
+/* ================= PRODUCT REVIEW CARDS ================= */
+
+.product-reviews-section {
+    margin: 60px auto 80px;
+    max-width: 1200px;
+}
+
+.product-reviews-row {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 20px;
+}
+
+.product-review-card {
+    width: calc((100% - 60px) / 4);
+    max-width: 280px;
+    min-width: 220px;
+    background: #fff;
+    border: 1px solid #eee;
+    border-radius: 14px;
+    padding: 20px;
+    text-align: left;
+    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.08);
+}
+
+.product-review-card h5 {
+    margin: 0 0 10px;
+    font-size: 18px;
+    font-weight: 700;
+}
+
+.product-review-card p {
+    margin: 0 0 10px;
+    color: #555;
+    line-height: 1.6;
+}
+
+.product-review-card .review-rating {
+    color: #B87333;
+    font-weight: 700;
+    margin-bottom: 10px;
+}
+
+.product-review-card .review-product-link {
+    display: block;
+    text-decoration: none;
+    color: inherit;
+    margin-bottom: 12px;
+}
+
+@media (max-width: 992px) {
+    .product-review-card {
+        width: calc(50% - 10px);
+        max-width: 45%;
+    }
+}
+
+@media (max-width: 576px) {
+    .product-review-card {
+        width: 100%;
+        max-width: 100%;
+    }
+}
+
+.review-video-wrapper {
+    width: 100%;
+    height: 550px;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.2);
+}
+
+.review-video-wrapper video {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.review-video-arrow {
+    display: none;
+}
+
+
+/* ================= CUSTOMER REVIEWS SLIDER ================= */
+
+.customer-reviews-section {
+  width: 100%;
+  max-width: 1200px;
+  margin: 40px auto 80px;
+  padding: 0 20px;
+}
+
+.customer-reviews-heading {
+  margin-bottom: 30px;
+  text-align: center;
+  font-size: 30px;
+  font-weight: 700;
+}
+
+.customer-reviews-slider-wrap {
+  width: 100%;
+  position: relative;
+  overflow: hidden;
+  padding: 0 42px;
+}
+
+.customer-reviews-track {
+  width: 100%;
+  display: flex;
+  gap: 20px;
+  overflow-x: auto;
+  overflow-y: hidden;
+  padding: 10px 0 20px;
+  scroll-behavior: smooth;
+  scroll-snap-type: x mandatory;
+  scrollbar-width: none;
+  -webkit-overflow-scrolling: touch;
+  cursor: grab;
+}
+
+.customer-reviews-track::-webkit-scrollbar {
+  display: none;
+}
+
+/* Used automatically when reviews fit inside the screen */
+.customer-reviews-track.is-centered {
+  justify-content: center;
+}
+
+.customer-reviews-track.is-dragging {
+  cursor: grabbing;
+  scroll-behavior: auto;
+  scroll-snap-type: none;
+  user-select: none;
+}
+
+.customer-review-card {
+  flex: 0 0 calc((100% - 40px) / 3);
+  width: calc((100% - 40px) / 3);
+  max-width: none;
+  min-width: 0;
+  box-sizing: border-box;
+  scroll-snap-align: start;
+  background: #fff;
+  border: 1px solid #e8eee9;
+  border-radius: 14px;
+  padding: 24px;
+  box-shadow: 0 5px 16px rgba(0, 0, 0, 0.07);
+}
+
+.customer-review-stars {
+  margin-bottom: 14px;
+  color: #B87333;
+  font-size: 17px;
+  letter-spacing: 2px;
+}
+
+.customer-review-text {
+  margin-bottom: 20px;
+  color: #444;
+  font-size: 15px;
+  line-height: 1.75;
+}
+
+.customer-review-footer {
+  padding-top: 14px;
+  border-top: 1px solid #eee;
+}
+
+.customer-review-name {
+  margin: 0 0 4px;
+  color: #2F6B3A;
+  font-size: 16px;
+  font-weight: 700;
+}
+
+.customer-review-product {
+  margin: 0;
+  color: #777;
+  font-size: 13px;
+}
+
+
+
+/* ================= CUSTOMER REVIEW LAPTOP ARROWS ================= */
+
+.customer-review-desktop-arrow {
+  display: flex;
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 28px;
+  height: 28px;
+  padding: 0;
+  border: none;
+  border-radius: 50%;
+  background: #2F6B3A;
+  color: #fff;
+  align-items: center;
+  justify-content: center;
+  font-size: 11px;
+  cursor: pointer;
+  z-index: 5;
+  box-shadow: 0 3px 8px rgba(0, 0, 0, 0.18);
+}
+
+.customer-review-desktop-arrow:hover {
+  background: #214f2b;
+}
+
+.customer-review-desktop-prev {
+  left: 5px;
+}
+
+.customer-review-desktop-next {
+  right: 5px;
+}
+
+
+/* ================= CUSTOMER REVIEW MOBILE ARROWS ================= */
+
+.customer-review-mobile-arrow {
+  display: none;
+}
+.review-video-arrow{
+    position:absolute;
+    top:50%;
+    transform:translateY(-50%);
+    width:32px;
+    height:32px;
+    border:none;
+    border-radius:50%;
+    background:#2F6B3A;
+    color:#fff;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    cursor:pointer;
+    z-index:20;
+    box-shadow:0 3px 8px rgba(0,0,0,.18);
+    transition:.25s;
+}
+
+.review-video-arrow:hover{
+    background:#214f2b;
+}
+
+.review-video-arrow i{
+    font-size:12px;
+}
+
+.review-video-prev{
+    left:8px;
+}
+
+.review-video-next{
+    right:8px;
+}
+
+/* ================= TABLET VIEW ================= */
+
+@media (min-width: 577px) and (max-width: 992px) {
+
+  .customer-review-desktop-arrow {
+    display: none;
+  }
+
+  .customer-reviews-slider-wrap {
+    padding: 0;
+  }
+
+  .customer-review-card {
+    flex: 0 0 calc((100% - 20px) / 2);
+    max-width: 340px;
+    min-width: 260px;
+  }
+}
+
+
+/* ================= MOBILE VIEW ================= */
+
+@media (max-width: 576px) {
+
+  .customer-review-desktop-arrow {
+    display: none;
+  }
+
+  .customer-reviews-slider-wrap {
+    position: relative;
+    padding: 0 42px;
+  }
+
+  .customer-review-mobile-arrow {
+    display: flex;
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 28px;
+    height: 28px;
+    padding: 0;
+    border: none;
+    border-radius: 50%;
+    background: #2F6B3A;
+    color: #fff;
+    align-items: center;
+    justify-content: center;
+    font-size: 11px;
+    cursor: pointer;
+    z-index: 20;
+    box-shadow: 0 3px 8px rgba(0, 0, 0, 0.18);
+  }
+
+  .customer-review-mobile-prev {
+    left: 5px;
+  }
+
+  .customer-review-mobile-next {
+    right: 5px;
+  }
+
+  .customer-reviews-section {
+    margin: 30px auto 60px;
+    padding: 0 18px;
+  }
+
+  .customer-reviews-heading {
+    margin-bottom: 22px;
+    font-size: 23px;
+  }
+
+  .customer-reviews-track {
+    gap: 14px;
+    padding-bottom: 16px;
+  }
+
+  .customer-review-card {
+    flex: 0 0 100%;
+    width: 100%;
+    max-width: 320px;
+    min-width: 100%;
+    padding: 20px 18px;
+  }
+
+  .customer-reviews-track.is-centered .customer-review-card {
+    min-width: 0;
+    flex-basis: 100%;
+  }
+}
+
+
+
+/* ================= REVIEW VIDEOS MOBILE ================= */
+
+@media (max-width: 576px) {
+
+    .review-videos-section {
+        width: 100%;
+        max-width: 100%;
+        margin: 45px auto 60px;
+        padding: 0 8px;
+        overflow: hidden;
+    }
+
+    .review-videos-section h2 {
+        font-size: 26px;
+        line-height: 1.2;
+        margin-bottom: 22px !important;
+        padding: 0 8px;
+    }
+
+    .review-videos-slider-wrapper {
+        width: 100%;
+        position: relative;
+        padding: 0 18px;
+    }
+
+    .review-videos-row {
+        width: 100%;
+        display: flex !important;
+        flex-direction: row !important;
+        flex-wrap: nowrap !important;
+        justify-content: flex-start !important;
+        align-items: flex-start !important;
+        gap: 15px !important;
+        overflow-x: auto;
+        overflow-y: hidden;
+        scroll-behavior: smooth;
+        scroll-snap-type: x mandatory;
+        scrollbar-width: none;
+        padding: 5px 0 15px;
+    }
+
+    .review-videos-row::-webkit-scrollbar {
+        display: none;
+    }
+
+    .review-video-card {
+        flex: 0 0 100% !important;
+        width: 100% !important;
+        min-width: 100% !important;
+        max-width: 100% !important;
+        margin: 0 !important;
+        scroll-snap-align: start;
+        box-sizing: border-box;
+    }
+
+    .review-video-wrapper {
+        width: 100%;
+        height: 500px;
+        border-radius: 12px;
+        overflow: hidden;
+    }
+
+    .review-video-wrapper video {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+
+    .review-video-arrow {
+        display: flex;
+        position: absolute;
+        top: 50%;
+        transform: translateY(-50%);
+        width: 40px;
+        height: 40px;
+        padding: 0;
+        border: none;
+        border-radius: 50%;
+        background-color: #237b43;
+        color: #ffffff;
+        align-items: center;
+        justify-content: center;
+        font-size: 18px;
+        cursor: pointer;
+        z-index: 20;
+        box-shadow: 0 3px 8px rgba(0, 0, 0, 0.25);
+    }
+
+    .review-prev {
+        left: 0;
+    }
+
+    .review-next {
+        right: 0;
+    }
+
+    .new-arrival-arrow{
+        position:absolute;
+        top:50%;
+        transform:translateY(-50%);
+        width:32px;
+        height:32px;
+        border:none;
+        border-radius:50%;
+        background:#2F6B3A;
+        color:#fff;
+        display:flex;
+        align-items:center;
+        justify-content:center;
+        cursor:pointer;
+        z-index:20;
+        box-shadow:0 3px 8px rgba(0,0,0,.18);
+        transition:.25s;
+    }
+
+    .new-arrival-arrow:hover{
+        background:#214f2b;
+    }
+
+    .new-arrival-arrow i{
+        font-size:12px;
+    }
+
+    .new-arrival-prev{
+        left:8px;
+    }
+
+    .new-arrival-next{
+        right:8px;
+    }
+
+    .bestseller-arrow{
+        position:absolute;
+        top:50%;
+        transform:translateY(-50%);
+        width:32px;
+        height:32px;
+        border:none;
+        border-radius:50%;
+        background:#2F6B3A;
+        color:#fff;
+        display:flex;
+        align-items:center;
+        justify-content:center;
+        cursor:pointer;
+        z-index:20;
+        box-shadow:0 3px 8px rgba(0,0,0,.18);
+        transition:.25s;
+    }
+
+    .bestseller-arrow:hover{
+        background:#214f2b;
+    }
+
+    .bestseller-arrow i{
+        font-size:12px;
+    }
+
+    .bestseller-prev{
+        left:8px;
+    }
+
+    .bestseller-next{
+        right:8px;
+    }
+}
+
 </style>
 
 <!-- Offer Popup Modal -->
@@ -370,29 +1214,146 @@
 </div>
 {% endif %}
 
+
+<!-- Category Quick Links -->
+<section class="category-quick-links">
+    <ul>
+        <li>
+            <a href="{% url 'products_by_category' 'face-care' %}">
+                Face Care
+            </a>
+        </li>
+
+        <li>
+            <a href="{% url 'products_by_category' 'lip-care' %}">
+                Lip Care
+            </a>
+        </li>
+
+        <li>
+            <a href="{% url 'products_by_category' 'hair-care' %}">
+                Hair Care
+            </a>
+        </li>
+
+        <li>
+            <a href="{% url 'products_by_category' 'body-care' %}">
+                Body Care
+            </a>
+        </li>
+    </ul>
+</section>
+
 <!-- Featured Products -->
 <section id="featured-products" style="margin: 40px auto; max-width: 1200px;">
-    <h2 class="text-center mb-4 text-3xl font-bold">Featured Products</h2>
-    <div class="d-flex flex-wrap justify-content-center" style="gap: 30px;">
-        {% for product in featured_products %}
-        <div class="product-card" style="width: 250px; border: 1px solid #eee; padding: 15px; border-radius: 10px; text-align: center; background-color: #fff; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05); margin-bottom: 30px;">
-            <a href="{{ product.get_url }}" style="text-decoration: none; color: inherit;">
-                {% if product.images %}
-                    <img src="{{ product.images.url }}" alt="{{ product.product_name }}" style="width: 100%; height: 200px; object-fit: cover; margin-bottom: 10px;">
-                {% endif %}
-                <h5>{{ product.product_name }}</h5>
-                <p>₹{{ product.price }}</p>
-            </a>
-            <form method="POST" action="{% url 'add_cart' product.id %}">
-                {% csrf_token %}
-                <input type="hidden" name="quantity" value="1">
-                <button type="submit" style="background-color: #B87333; color: white; border: none; padding: 10px 20px; border-radius: 5px;">Add to Cart</button>
-            </form>
+
+    <h2 class="text-center mb-4 text-3xl font-bold">
+        Best Sellers
+    </h2>
+
+    <div class="featured-slider-wrapper">
+
+        <button
+            class="bestseller-arrow bestseller-prev"
+            id="bestSellerPrev"
+            type="button"
+            aria-label="Previous">
+
+            <i class="fas fa-chevron-left"></i>
+
+        </button>
+
+        <div
+            class="d-flex flex-wrap justify-content-center featured-products-row"
+            id="featuredProductsSlider"
+            style="gap: 30px;">
+
+            {% for product in featured_products %}
+
+            <div
+                class="product-card"
+                style="
+                    width: 250px;
+                    border: 1px solid #eeeeee;
+                    padding: 15px;
+                    border-radius: 10px;
+                    text-align: center;
+                    background-color: #ffffff;
+                    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
+                    margin-bottom: 30px;
+                ">
+
+                <a
+                    href="{{ product.get_url }}"
+                    style="text-decoration: none; color: inherit; display: block;">
+
+                    {% if product.images %}
+                    <img
+                        src="{{ product.images.url }}"
+                        alt="{{ product.product_name }}"
+                        style="
+                            width: 100%;
+                            height: 200px;
+                            object-fit: cover;
+                            margin-bottom: 10px;
+                        ">
+                    {% endif %}
+
+                    <h5>{{ product.product_name }}</h5>
+
+                    <p>₹{{ product.price }}</p>
+
+                </a>
+
+                <form
+                    method="POST"
+                    action="{% url 'add_cart' product.id %}">
+
+                    {% csrf_token %}
+
+                    <input
+                        type="hidden"
+                        name="quantity"
+                        value="1">
+
+                    <button
+                        type="submit"
+                        style="
+                            background-color: #B87333;
+                            color: #ffffff;
+                            border: none;
+                            padding: 10px 20px;
+                            border-radius: 5px;
+                        ">
+                        Add to Cart
+                    </button>
+
+                </form>
+
+            </div>
+
+            {% empty %}
+
+            <p class="text-center">
+                No featured products available at the moment.
+            </p>
+
+            {% endfor %}
+
         </div>
-        {% empty %}
-        <p class="text-center col-span-full">No featured products available at the moment.</p>
-        {% endfor %}
+
+        <button
+            class="bestseller-arrow bestseller-next"
+            id="bestSellerNext"
+            type="button"
+            aria-label="Next">
+
+            <i class="fas fa-chevron-right"></i>
+
+        </button>
+
     </div>
+
 </section>
 
 <!-- Full-width Carousel Banners -->
@@ -413,48 +1374,327 @@
 </div>
 
 <!-- New Arrivals -->
-<section style="margin: 80px auto 40px auto; max-width: 1200px;">
-    <h2 class="text-center mb-4 text-3xl font-bold">New Arrivals</h2>
-    <div class="d-flex flex-wrap justify-content-center" style="gap: 30px;">
-        {% for product in new_arrivals %}
-        <div class="product-card" style="width: 250px; border: 1px solid #eee; padding: 15px; border-radius: 10px; text-align: center; background-color: #fff; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05); margin-bottom: 30px; position: relative;">
-            <span style="position: absolute; top: 10px; left: 10px; background: red; color: white; font-size: 12px; padding: 3px 6px; border-radius: 3px;">NEW</span>
-            <a href="{% url 'product_detail' category_slug=product.category.slug product_slug=product.slug %}" style="text-decoration: none; color: inherit;">
-                {% if product.images %}
-                    <img src="{{ product.images.url }}" alt="{{ product.product_name }}" style="width: 100%; height: 200px; object-fit: cover; margin-bottom: 10px;">
-                {% endif %}
-                <h5>{{ product.product_name }}</h5>
-                <p>₹{{ product.price }}</p>
-            </a>
-            <form method="POST" action="{% url 'add_cart' product.id %}">
-                {% csrf_token %}
-                <input type="hidden" name="quantity" value="1">
-                <button type="submit" style="background-color: #B87333; color: white; border: none; padding: 10px 20px; border-radius: 5px;">Add to Cart</button>
-            </form>
+<section id="new-arrivals" style="margin: 80px auto 40px auto; max-width: 1200px;">
+
+    <h2 class="text-center mb-4 text-3xl font-bold">
+        New Arrivals
+    </h2>
+
+    {% if new_arrivals %}
+
+    <div class="new-arrivals-slider-wrapper">
+
+        <!-- Mobile Previous Arrow -->
+        <button
+            class="new-arrival-arrow new-arrival-prev"
+            id="newArrivalPrev"
+            type="button"
+            aria-label="Previous">
+
+            <i class="fas fa-chevron-left"></i>
+
+        </button>
+
+        <div
+            class="d-flex flex-wrap justify-content-center new-arrivals-products-row"
+            id="newArrivalsSlider"
+            style="gap: 30px;">
+
+            {% for product in new_arrivals %}
+
+            <div
+                class="product-card"
+                style="
+                    width: 250px;
+                    border: 1px solid #eeeeee;
+                    padding: 15px;
+                    border-radius: 10px;
+                    text-align: center;
+                    background-color: #ffffff;
+                    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
+                    margin-bottom: 30px;
+                    position: relative;
+                ">
+
+                <span
+                    style="
+                        position: absolute;
+                        top: 10px;
+                        left: 10px;
+                        background-color: red;
+                        color: #ffffff;
+                        font-size: 12px;
+                        font-weight: 600;
+                        padding: 3px 7px;
+                        border-radius: 3px;
+                        z-index: 2;
+                    ">
+                    NEW
+                </span>
+
+                <a
+                    href="{% url 'product_detail' category_slug=product.category.slug product_slug=product.slug %}"
+                    style="
+                        text-decoration: none;
+                        color: inherit;
+                        display: block;
+                    ">
+
+                    {% if product.images %}
+                    <img
+                        src="{{ product.images.url }}"
+                        alt="{{ product.product_name }}"
+                        style="
+                            width: 100%;
+                            height: 200px;
+                            object-fit: cover;
+                            margin-bottom: 10px;
+                        ">
+                    {% endif %}
+
+                    <h5>
+                        {{ product.product_name }}
+                    </h5>
+
+                    <p>
+                        ₹{{ product.price }}
+                    </p>
+
+                </a>
+
+                <form
+                    method="POST"
+                    action="{% url 'add_cart' product.id %}">
+
+                    {% csrf_token %}
+
+                    <input
+                        type="hidden"
+                        name="quantity"
+                        value="1">
+
+                    <button
+                        type="submit"
+                        style="
+                            background-color: #B87333;
+                            color: #ffffff;
+                            border: none;
+                            padding: 10px 20px;
+                            border-radius: 5px;
+                        ">
+                        Add to Cart
+                    </button>
+
+                </form>
+
+            </div>
+
+            {% endfor %}
+
         </div>
+
+        <!-- Mobile Next Arrow -->
+        <button
+            class="new-arrival-arrow new-arrival-next"
+            id="newArrivalNext"
+            type="button"
+            aria-label="Next">
+
+            <i class="fas fa-chevron-right"></i>
+
+        </button>
+
+    </div>
+
+    {% else %}
+
+    <div
+        class="text-center"
+        style="
+            padding: 10px 15px 20px;
+            color: #555555;
+            font-size: 16px;
+        ">
+        New products are coming soon.
+    </div>
+
+    {% endif %}
+
+</section>
+
+{% if review_ratings %}
+<section class="product-reviews-section">
+
+    <h2 class="text-center mb-4 text-3xl font-bold">
+        Customer Reviews
+    </h2>
+
+    <div class="product-reviews-row">
+        {% for rating in review_ratings %}
+            <div class="product-review-card">
+                <a href="{{ rating.product.get_url }}" class="review-product-link">
+                    <h5>{{ rating.product.product_name }}</h5>
+                </a>
+                <div class="review-rating">Rating: {{ rating.rating }} / 5</div>
+                {% if rating.review %}
+                    <p>{{ rating.review|truncatechars:140 }}</p>
+                {% else %}
+                    <p>No review text available.</p>
+                {% endif %}
+                <div style="font-size: 14px; color: #777; margin-top: 10px;">
+                    Reviewed by {{ rating.user.full_name|default:rating.user.email }}
+                </div>
+            </div>
         {% endfor %}
     </div>
+
 </section>
+{% endif %}
 
 {% if review_videos %}
 <section class="review-videos-section">
-    <h2 class="text-center mb-4 text-3xl font-bold">Customer Review Videos</h2>
-    <div class="review-videos-row">
-        {% for video in review_videos %}
-        <div class="review-video-card">
-            <div class="review-video-wrapper">
-                <video
-                    controls
-                    preload="metadata"
-                    controlsList="nodownload"
-                    oncontextmenu="return false">
-                    <source src="{{ video.video.url }}" type="video/mp4">
-                    Your browser does not support the video tag.
-                </video>
+
+    <h2 class="text-center mb-4 text-3xl font-bold">
+        Customer Review Videos
+    </h2>
+
+    <div class="review-videos-slider-wrapper">
+
+        <button
+            class="review-video-arrow review-video-prev"
+            id="reviewVideoPrev"
+            type="button"
+            aria-label="Previous video">
+
+            <i class="fas fa-chevron-left"></i>
+
+        </button>
+
+        <div
+            class="review-videos-row"
+            id="reviewSlider">
+
+            {% for video in review_videos %}
+
+            <div class="review-video-card">
+
+                <div class="review-video-wrapper">
+
+                    <video
+                        controls
+                        preload="metadata"
+                        controlsList="nodownload"
+                        oncontextmenu="return false">
+
+                        <source
+                            src="{{ video.video.url }}"
+                            type="video/mp4">
+
+                    </video>
+
+                </div>
+
             </div>
+
+            {% endfor %}
+
         </div>
-        {% endfor %}
+
+        <button
+            class="review-video-arrow review-video-next"
+            id="reviewVideoNext"
+            type="button"
+            aria-label="Next video">
+
+            <i class="fas fa-chevron-right"></i>
+
+        </button>
+
     </div>
+
+</section>
+{% endif %}
+
+{% if customer_reviews %}
+<section class="customer-reviews-section">
+
+  <h2 class="customer-reviews-heading">
+    What Our Customers Say
+  </h2>
+
+  <div class="customer-reviews-slider-wrap">
+
+    <button
+      type="button"
+      class="customer-review-desktop-arrow customer-review-desktop-prev"
+      id="customerReviewDesktopPrev"
+      aria-label="Previous review">
+      <i class="fas fa-chevron-left"></i>
+    </button>
+
+    <button
+      type="button"
+      class="customer-review-mobile-arrow customer-review-mobile-prev"
+      id="customerReviewMobilePrev"
+      aria-label="Previous review">
+      <i class="fas fa-chevron-left"></i>
+    </button>
+
+    <div class="customer-reviews-track" id="customerReviewsTrack">
+
+      {% for review in customer_reviews %}
+        <article class="customer-review-card">
+
+          <div class="customer-review-stars">
+            {% for value in "12345" %}
+              {% if forloop.counter <= review.rating %}
+                <i class="fas fa-star"></i>
+              {% else %}
+                <i class="far fa-star"></i>
+              {% endif %}
+            {% endfor %}
+          </div>
+
+          <p class="customer-review-text">
+            “{{ review.review }}”
+          </p>
+
+          <div class="customer-review-footer">
+
+            <h5 class="customer-review-name">
+              {{ review.user.full_name|default:review.user.email }}
+            </h5>
+
+            {% if review.product %}
+              <p class="customer-review-product">
+                Reviewed: {{ review.product.product_name }}
+              </p>
+            {% endif %}
+
+          </div>
+
+        </article>
+      {% endfor %}
+
+    </div>
+
+    <button
+      type="button"
+      class="customer-review-desktop-arrow customer-review-desktop-next"
+      id="customerReviewDesktopNext"
+      aria-label="Next review">
+      <i class="fas fa-chevron-right"></i>
+    </button>
+
+    <button
+      type="button"
+      class="customer-review-mobile-arrow customer-review-mobile-next"
+      id="customerReviewMobileNext"
+      aria-label="Next review">
+      <i class="fas fa-chevron-right"></i>
+    </button>
+
+  </div>
 </section>
 {% endif %}
 
@@ -485,6 +1725,322 @@
           });
         }, 300);
       });
+    }
+
+    // ================= FEATURED PRODUCTS MOBILE SLIDER =================
+
+    var featuredSlider = document.getElementById("featuredProductsSlider");
+    var featuredPrevBtn = document.getElementById("bestSellerPrev");
+    var featuredNextBtn = document.getElementById("bestSellerNext");
+
+    if (featuredSlider && featuredPrevBtn && featuredNextBtn) {
+
+        function getFeaturedScrollDistance() {
+            var productCard = featuredSlider.querySelector(".product-card");
+
+            if (!productCard) {
+                return featuredSlider.clientWidth;
+            }
+
+            return productCard.offsetWidth + 15;
+        }
+
+        featuredNextBtn.addEventListener("click", function () {
+            featuredSlider.scrollBy({
+                left: getFeaturedScrollDistance(),
+                behavior: "smooth"
+            });
+        });
+
+        featuredPrevBtn.addEventListener("click", function () {
+            featuredSlider.scrollBy({
+                left: -getFeaturedScrollDistance(),
+                behavior: "smooth"
+            });
+        });
+    }
+
+    // ================= NEW ARRIVALS MOBILE SLIDER =================
+
+    var newArrivalsSlider = document.getElementById("newArrivalsSlider");
+    var newArrivalsPrevBtn = document.getElementById("newArrivalPrev");
+    var newArrivalsNextBtn = document.getElementById("newArrivalNext");
+
+    if (
+        newArrivalsSlider &&
+        newArrivalsPrevBtn &&
+        newArrivalsNextBtn
+    ) {
+
+        function getNewArrivalsScrollDistance() {
+            var productCard =
+                newArrivalsSlider.querySelector(".product-card");
+
+            if (!productCard) {
+                return newArrivalsSlider.clientWidth;
+            }
+
+            return productCard.offsetWidth + 15;
+        }
+
+        newArrivalsNextBtn.addEventListener("click", function () {
+            newArrivalsSlider.scrollBy({
+                left: getNewArrivalsScrollDistance(),
+                behavior: "smooth"
+            });
+        });
+
+        newArrivalsPrevBtn.addEventListener("click", function () {
+            newArrivalsSlider.scrollBy({
+                left: -getNewArrivalsScrollDistance(),
+                behavior: "smooth"
+            });
+        });
+    }
+
+    // ================= REVIEW VIDEO SLIDER =================
+
+    const reviewSlider = document.getElementById("reviewSlider");
+    const reviewPrev = document.getElementById("reviewVideoPrev");
+    const reviewNext = document.getElementById("reviewVideoNext");
+
+    if(reviewSlider && reviewPrev && reviewNext){
+
+        function reviewScrollAmount(){
+
+            const card = reviewSlider.querySelector(".review-video-card");
+
+            if(card){
+                return card.offsetWidth + 15;
+            }
+
+            return reviewSlider.clientWidth;
+        }
+
+        reviewNext.addEventListener("click",function(){
+
+            reviewSlider.scrollBy({
+                left:reviewScrollAmount(),
+                behavior:"smooth"
+            });
+
+        });
+
+        reviewPrev.addEventListener("click",function(){
+
+            reviewSlider.scrollBy({
+                left:-reviewScrollAmount(),
+                behavior:"smooth"
+            });
+
+        });
+
+    }
+
+    // ================= CUSTOMER REVIEWS AUTO SLIDER =================
+
+    var reviewsTrack = document.getElementById("customerReviewsTrack");
+    var desktopReviewPrev =
+      document.getElementById("customerReviewDesktopPrev");
+    var desktopReviewNext =
+      document.getElementById("customerReviewDesktopNext");
+    var mobileReviewPrev =
+      document.getElementById("customerReviewMobilePrev");
+    var mobileReviewNext =
+      document.getElementById("customerReviewMobileNext");
+
+    if (reviewsTrack) {
+
+    var reviewAutoSlide = null;
+    var isDragging = false;
+    var dragStartX = 0;
+    var dragStartScrollLeft = 0;
+
+    function getReviewScrollAmount() {
+        var firstCard = reviewsTrack.querySelector(".customer-review-card");
+
+        if (!firstCard) {
+        return 0;
+        }
+
+        var trackStyles = window.getComputedStyle(reviewsTrack);
+        var gap = parseFloat(
+        trackStyles.columnGap ||
+        trackStyles.gap ||
+        0
+        );
+
+        return firstCard.getBoundingClientRect().width + gap;
+    }
+
+    function updateReviewAlignment() {
+        reviewsTrack.classList.remove("is-centered");
+
+        var reviewsFitInside =
+        reviewsTrack.scrollWidth <= reviewsTrack.clientWidth + 2;
+
+        if (reviewsFitInside) {
+        reviewsTrack.classList.add("is-centered");
+        reviewsTrack.scrollLeft = 0;
+        }
+    }
+
+    function moveReviewsForward() {
+        if (
+        reviewsTrack.classList.contains("is-centered") ||
+        reviewsTrack.children.length <= 1
+        ) {
+        return;
+        }
+
+        var reachedEnd =
+        reviewsTrack.scrollLeft + reviewsTrack.clientWidth >=
+        reviewsTrack.scrollWidth - 8;
+
+        if (reachedEnd) {
+        reviewsTrack.scrollTo({
+            left: 0,
+            behavior: "smooth"
+        });
+        } else {
+        reviewsTrack.scrollBy({
+            left: getReviewScrollAmount(),
+            behavior: "smooth"
+        });
+        }
+    }
+
+    function stopReviewAutoSlide() {
+        if (reviewAutoSlide) {
+        clearInterval(reviewAutoSlide);
+        reviewAutoSlide = null;
+        }
+    }
+
+    function startReviewAutoSlide() {
+        stopReviewAutoSlide();
+
+        if (
+        reviewsTrack.children.length <= 1 ||
+        reviewsTrack.classList.contains("is-centered")
+        ) {
+        return;
+        }
+
+        reviewAutoSlide = setInterval(function () {
+        moveReviewsForward();
+        }, 5000);
+    }
+
+    // Mouse drag for laptop and desktop
+    reviewsTrack.addEventListener("mousedown", function (event) {
+        isDragging = true;
+        dragStartX = event.pageX;
+        dragStartScrollLeft = reviewsTrack.scrollLeft;
+
+        reviewsTrack.classList.add("is-dragging");
+        stopReviewAutoSlide();
+    });
+
+    reviewsTrack.addEventListener("mousemove", function (event) {
+        if (!isDragging) {
+        return;
+        }
+
+        event.preventDefault();
+
+        var distance = event.pageX - dragStartX;
+
+        reviewsTrack.scrollLeft =
+        dragStartScrollLeft - distance;
+    });
+
+    function stopDragging() {
+        if (!isDragging) {
+        return;
+        }
+
+        isDragging = false;
+        reviewsTrack.classList.remove("is-dragging");
+
+        startReviewAutoSlide();
+    }
+
+    reviewsTrack.addEventListener("mouseup", stopDragging);
+    reviewsTrack.addEventListener("mouseleave", stopDragging);
+
+    // Mobile swipe already works through overflow-x
+    reviewsTrack.addEventListener(
+        "touchstart",
+        function () {
+        stopReviewAutoSlide();
+        },
+        { passive: true }
+    );
+
+    reviewsTrack.addEventListener(
+        "touchend",
+        function () {
+        startReviewAutoSlide();
+        },
+        { passive: true }
+    );
+
+    window.addEventListener("resize", function () {
+        updateReviewAlignment();
+        startReviewAutoSlide();
+    });
+
+    if (desktopReviewPrev) {
+      desktopReviewPrev.addEventListener("click", function () {
+        reviewsTrack.scrollBy({
+          left: -getReviewScrollAmount(),
+          behavior: "smooth"
+        });
+
+        stopReviewAutoSlide();
+        startReviewAutoSlide();
+      });
+    }
+
+    if (desktopReviewNext) {
+      desktopReviewNext.addEventListener("click", function () {
+        reviewsTrack.scrollBy({
+          left: getReviewScrollAmount(),
+          behavior: "smooth"
+        });
+
+        stopReviewAutoSlide();
+        startReviewAutoSlide();
+      });
+    }
+
+    if (mobileReviewPrev) {
+      mobileReviewPrev.addEventListener("click", function () {
+        reviewsTrack.scrollBy({
+          left: -getReviewScrollAmount(),
+          behavior: "smooth"
+        });
+
+        stopReviewAutoSlide();
+        startReviewAutoSlide();
+      });
+    }
+
+    if (mobileReviewNext) {
+      mobileReviewNext.addEventListener("click", function () {
+        reviewsTrack.scrollBy({
+          left: getReviewScrollAmount(),
+          behavior: "smooth"
+        });
+
+        stopReviewAutoSlide();
+        startReviewAutoSlide();
+      });
+    }
+
+    updateReviewAlignment();
+    startReviewAutoSlide();
     }
 
   });

@@ -3,9 +3,19 @@ from django.contrib.admin.sites import NotRegistered
 import admin_thumbnails
 
 from .models import (
-    Product, Variation, ReviewRating, ProductGallery,
-    Wishlist, SmallBanner, KeyIngredient, AboutSettings, ReviewVideo,
-    Coupon, CouponUsage, ProductFAQ
+    Product,
+    Variation,
+    ReviewRating,
+    ProductGallery,
+    Wishlist,
+    SmallBanner,
+    KeyIngredient,
+    AboutSettings,
+    ReviewVideo,
+    Coupon,
+    CouponUsage,
+    ProductFAQ,
+    ComboPageContent,
 )
 
 
@@ -46,16 +56,44 @@ class ProductFAQInline(admin.TabularInline):
 # --- ModelAdmins -----------------------------------------------------------
 class ProductAdmin(admin.ModelAdmin):
     list_display = (
-        'product_name', 'price', 'stock', 'category',
-        'is_available', 'is_featured', 'is_new_arrival'
+        'product_name',
+        'price',
+        'stock',
+        'category',
+        'is_available',
+        'is_featured',
+        'is_new_arrival',
+        'is_combo',
+        'is_bestseller',
     )
-    prepopulated_fields = {'slug': ('product_name',)}
-    inlines = [ProductGalleryInline, KeyIngredientInline, ProductFAQInline]
+
+    prepopulated_fields = {
+        'slug': ('product_name',)
+    }
+
+    inlines = [
+        ProductGalleryInline,
+        KeyIngredientInline,
+        ProductFAQInline,
+    ]
+
     list_filter = (
-        'category', 'is_available', 'is_featured',
-        'is_new_arrival', 'is_combo', 'is_bestseller'
+        'category',
+        'is_available',
+        'is_featured',
+        'is_new_arrival',
+        'is_combo',
+        'is_bestseller',
     )
-    search_fields = ('product_name', 'slug')
+
+    search_fields = (
+        'product_name',
+        'slug',
+    )
+
+    filter_horizontal = (
+        'related_products',
+    )
 
 
 class VariationAdmin(admin.ModelAdmin):
@@ -103,6 +141,25 @@ class CouponUsageAdmin(admin.ModelAdmin):
     search_fields = ('user__email', 'coupon__code', 'order_id')
 
 
+class ComboPageContentAdmin(admin.ModelAdmin):
+    list_display = (
+        'title',
+        'updated_at',
+    )
+
+    fields = (
+        'title',
+        'description',
+    )
+
+    def has_add_permission(self, request):
+        return not ComboPageContent.objects.exists()
+
+    def has_delete_permission(self, request, obj=None):
+        return False
+
+
+
 # --- Safe registrations ----------------------------------------------------
 safe_register(Product, ProductAdmin)
 safe_register(ProductFAQ)
@@ -115,3 +172,4 @@ safe_register(KeyIngredient)
 safe_register(AboutSettings, AboutSettingsAdmin)
 safe_register(Coupon, CouponAdmin)
 safe_register(CouponUsage, CouponUsageAdmin)
+safe_register(ComboPageContent, ComboPageContentAdmin)

@@ -59,6 +59,105 @@
         margin-top: 2px;
         white-space: nowrap;
     }
+
+    /* ================= COMBO DISCOUNT BADGE ================= */
+
+    .combo-nav-link {
+        position: relative;
+        display: inline-flex !important;
+        align-items: center;
+    }
+
+    .combo-discount-badge {
+        position: absolute;
+        top: -12px;
+        right: -36px;
+        background-color: #e62121;
+        color: #ffffff;
+        font-size: 8px;
+        font-weight: 700;
+        line-height: 1;
+        letter-spacing: 0.5px;
+        padding: 4px 7px;
+        border-radius: 20px;
+        white-space: nowrap;
+        box-shadow: 0 3px 8px rgba(230, 33, 33, 0.35);
+        animation: comboDiscountPulse 1.5s infinite;
+        z-index: 10;
+    }
+
+    .combo-discount-badge::after {
+        content: "";
+        position: absolute;
+        left: 12px;
+        bottom: -4px;
+        width: 0;
+        height: 0;
+        border-left: 4px solid transparent;
+        border-right: 4px solid transparent;
+        border-top: 5px solid #e62121;
+    }
+
+    @keyframes comboDiscountPulse {
+        0% {
+            transform: scale(1);
+        }
+
+        50% {
+            transform: scale(1.1);
+        }
+
+        100% {
+            transform: scale(1);
+        }
+    }
+
+    /* ================= MOBILE COMBO BADGE ================= */
+
+    .mobile-combo-link {
+        position: relative;
+        display: inline-block !important;
+        margin-top: 14px;
+    }
+
+    .mobile-combo-link .combo-discount-badge {
+        top: -13px;
+        left: 68px;
+        right: auto;
+
+        background-color: #e62121;
+        color: #ffffff;
+
+        font-size: 8px;
+        font-weight: 700;
+        line-height: 1;
+        letter-spacing: 0.5px;
+
+        padding: 4px 8px;
+        border-radius: 20px;
+
+        white-space: nowrap;
+
+        box-shadow: 0 3px 8px rgba(230, 33, 33, 0.35);
+
+        animation: comboDiscountPulse 1.5s infinite;
+    }
+
+    .mobile-combo-link .combo-discount-badge::after {
+        content: "";
+        display: block;
+
+        position: absolute;
+        left: 12px;
+        bottom: -4px;
+
+        width: 0;
+        height: 0;
+
+        border-left: 4px solid transparent;
+        border-right: 4px solid transparent;
+        border-top: 5px solid #e62121;
+    }
 </style>
 
 <!-- DESKTOP NAVBAR -->
@@ -95,9 +194,13 @@
                             Bestsellers
                         </a>
 
-                        <a class="nav-link text-olive"
+                        <a class="nav-link text-olive combo-nav-link"
                            href="{% url 'combos' %}">
                             Combos
+
+                            <span class="combo-discount-badge">
+                                DISCOUNT
+                            </span>
                         </a>
 
                         <a class="nav-link text-olive"
@@ -298,9 +401,13 @@
                 Bestsellers
             </a>
 
-            <a class="nav-link text-olive py-2"
+            <a class="nav-link text-olive py-2 mobile-combo-link"
                href="{% url 'combos' %}">
                 Combos
+
+                <span class="combo-discount-badge">
+                    DISCOUNT
+                </span>
             </a>
 
             <a class="nav-link text-olive py-2"

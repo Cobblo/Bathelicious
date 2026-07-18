@@ -22,6 +22,13 @@ class Product(models.Model):
     is_featured = models.BooleanField(default=False)
     is_combo = models.BooleanField(default=False)
     is_bestseller = models.BooleanField(default=False)
+    related_products = models.ManyToManyField(
+    "self",
+    blank=True,
+    symmetrical=False,
+    related_name="recommended_for",
+    help_text="Choose the products that should appear in the Related Products section."
+)
 
     # key_ingredients managed via KeyIngredient.related_name = 'key_ingredients'
     all_ingredients = models.TextField(blank=True, null=True)
@@ -258,3 +265,24 @@ class ProductFAQ(models.Model):
 
 
 
+class ComboPageContent(models.Model):
+    title = models.CharField(
+        max_length=100,
+        default="Combos"
+    )
+
+    description = CKEditor5Field(
+        config_name="default",
+        blank=True,
+        null=True,
+        help_text="This description will appear below the Combos page heading."
+    )
+
+    updated_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        verbose_name = "Combo Page Content"
+        verbose_name_plural = "Combo Page Content"
+
+    def __str__(self):
+        return self.title

@@ -3,71 +3,250 @@
 
 {% block content %}
 
+<style>
+
+    .combo-page-header {
+        max-width: 850px;
+        margin: 35px auto 30px;
+        padding: 0 20px;
+        text-align: center;
+    }
+
+    .combo-page-header h2 {
+        margin-bottom: 15px !important;
+    }
+
+    .combo-page-description {
+        color: #555555;
+        font-size: 16px;
+        line-height: 1.8;
+        text-align: center;
+    }
+
+    .combo-page-description p {
+        margin-bottom: 10px;
+    }
+
+    @media (max-width: 576px) {
+
+        .combo-page-header {
+            margin: 25px auto 25px;
+            padding: 0 15px;
+        }
+
+        .combo-page-header h2 {
+            font-size: 28px;
+        }
+
+        .combo-page-description {
+            font-size: 14px;
+            line-height: 1.7;
+        }
+    }
+
+</style>
+
 <div class="container">
-    <h2 class="text-center my-4 text-3xl font-bold">Combos</h2>
 
-    <!-- Combo Count -->
-    <div class="mb-3 text-end">
-        <small class="text-muted"><b>{{ combos.paginator.count }}</b></small>
-    </div>
+    <!-- Page Heading and Admin Description -->
+    <div class="combo-page-header">
 
-    <!-- Combo Grid -->
-    <div class="d-flex flex-wrap justify-content-center" style="gap: 30px;">
-        {% if combos %}
-            {% for combo in combos %}
-                <div class="product-card" style="width: 250px; border: 1px solid #eee; padding: 15px; border-radius: 10px; text-align: center; background-color: #fff; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05); margin-bottom: 30px;">
-                    <a href="{% url 'product_detail' combo.category.slug combo.slug %}" style="text-decoration: none; color: inherit;">
-                        {% if combo.images %}
-                            <img src="{{ combo.images.url }}" alt="{{ combo.product_name }}" style="width: 100%; height: 200px; object-fit: cover; margin-bottom: 10px;">
-                        {% endif %}
-                        <h5>{{ combo.product_name }}</h5>
-                        <p>₹{{ combo.price }}</p>
-                    </a>
+        <h2 class="text-center my-4 text-3xl font-bold">
+            {% if combo_page_content %}
+                {{ combo_page_content.title }}
+            {% else %}
+                Combos
+            {% endif %}
+        </h2>
 
-                    <!-- Always visible Add to Cart button -->
-                    <form method="POST" action="{% url 'add_cart' combo.id %}">
-                        {% csrf_token %}
-                        <input type="hidden" name="quantity" value="1">
-                        <button type="submit" style="background-color: #B87333; color: white; border: none; padding: 10px 20px; border-radius: 5px;">Add to Cart</button>
-                    </form>
-                </div>
-            {% endfor %}
-        {% else %}
-            <div class="col-12 text-center mt-4">
-                <h4>No combos available. Please check back later!</h4>
+        {% if combo_page_content and combo_page_content.description %}
+            <div class="combo-page-description">
+                {{ combo_page_content.description|safe }}
             </div>
         {% endif %}
+
     </div>
+
+    {% if combos %}
+
+        <!-- Combo Count -->
+        <div class="mb-3 text-end">
+            <small class="text-muted">
+                <b>{{ combos.paginator.count }}</b>
+                combo{% if combos.paginator.count != 1 %}s{% endif %}
+            </small>
+        </div>
+
+        <!-- Combo Grid -->
+        <div
+            class="d-flex flex-wrap justify-content-center"
+            style="gap: 30px;">
+
+            {% for combo in combos %}
+
+                <div
+                    class="product-card"
+                    style="
+                        width: 250px;
+                        border: 1px solid #eee;
+                        padding: 15px;
+                        border-radius: 10px;
+                        text-align: center;
+                        background-color: #fff;
+                        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
+                        margin-bottom: 30px;
+                    ">
+
+                    <a
+                        href="{% url 'product_detail' combo.category.slug combo.slug %}"
+                        style="
+                            text-decoration: none;
+                            color: inherit;
+                            display: block;
+                        ">
+
+                        {% if combo.images %}
+                            <img
+                                src="{{ combo.images.url }}"
+                                alt="{{ combo.product_name }}"
+                                style="
+                                    width: 100%;
+                                    height: 200px;
+                                    object-fit: cover;
+                                    margin-bottom: 10px;
+                                ">
+                        {% endif %}
+
+                        <h5>
+                            {{ combo.product_name }}
+                        </h5>
+
+                        <p>
+                            ₹{{ combo.price }}
+                        </p>
+
+                    </a>
+
+                    <form
+                        method="POST"
+                        action="{% url 'add_cart' combo.id %}">
+
+                        {% csrf_token %}
+
+                        <input
+                            type="hidden"
+                            name="quantity"
+                            value="1">
+
+                        <button
+                            type="submit"
+                            style="
+                                background-color: #B87333;
+                                color: white;
+                                border: none;
+                                padding: 10px 20px;
+                                border-radius: 5px;
+                            ">
+                            Add to Cart
+                        </button>
+
+                    </form>
+
+                </div>
+
+            {% endfor %}
+
+        </div>
+
+    {% else %}
+
+        <div class="col-12 text-center mt-4">
+            <h4>
+                No combos available. Please check back later!
+            </h4>
+        </div>
+
+    {% endif %}
 
     <!-- Pagination -->
     {% if combos.has_other_pages %}
-        <nav class="mt-4" aria-label="Combo page navigation">
+
+        <nav
+            class="mt-4"
+            aria-label="Combo page navigation">
+
             <ul class="pagination justify-content-center">
+
                 {% if combos.has_previous %}
+
                     <li class="page-item">
-                        <a class="page-link" href="?page={{ combos.previous_page_number }}">Previous</a>
+                        <a
+                            class="page-link"
+                            href="?page={{ combos.previous_page_number }}">
+                            Previous
+                        </a>
                     </li>
+
                 {% else %}
-                    <li class="page-item disabled"><span class="page-link">Previous</span></li>
+
+                    <li class="page-item disabled">
+                        <span class="page-link">
+                            Previous
+                        </span>
+                    </li>
+
                 {% endif %}
 
                 {% for i in combos.paginator.page_range %}
+
                     {% if combos.number == i %}
-                        <li class="page-item active"><span class="page-link">{{ i }}</span></li>
+
+                        <li class="page-item active">
+                            <span class="page-link">
+                                {{ i }}
+                            </span>
+                        </li>
+
                     {% else %}
-                        <li class="page-item"><a class="page-link" href="?page={{ i }}">{{ i }}</a></li>
+
+                        <li class="page-item">
+                            <a
+                                class="page-link"
+                                href="?page={{ i }}">
+                                {{ i }}
+                            </a>
+                        </li>
+
                     {% endif %}
+
                 {% endfor %}
 
                 {% if combos.has_next %}
+
                     <li class="page-item">
-                        <a class="page-link" href="?page={{ combos.next_page_number }}">Next</a>
+                        <a
+                            class="page-link"
+                            href="?page={{ combos.next_page_number }}">
+                            Next
+                        </a>
                     </li>
+
                 {% else %}
-                    <li class="page-item disabled"><span class="page-link">Next</span></li>
+
+                    <li class="page-item disabled">
+                        <span class="page-link">
+                            Next
+                        </span>
+                    </li>
+
                 {% endif %}
+
             </ul>
+
         </nav>
+
     {% endif %}
+
 </div>
+
 {% endblock %}
