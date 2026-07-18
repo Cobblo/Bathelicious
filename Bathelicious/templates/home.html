@@ -344,7 +344,9 @@
     position: relative;
 }
 
-.featured-mobile-arrow {
+.featured-mobile-arrow,
+.new-arrivals-mobile-arrow,
+.review-video-arrow {
     display: none;
 }
 
@@ -1006,6 +1008,26 @@
         display: none;
     }
 
+    .review-video-arrow {
+        display: flex;
+        position: absolute;
+        top: 50%;
+        transform: translateY(-50%);
+        width: 40px;
+        height: 40px;
+        padding: 0;
+        border: none;
+        border-radius: 50%;
+        background-color: #237b43;
+        color: #ffffff;
+        align-items: center;
+        justify-content: center;
+        font-size: 18px;
+        cursor: pointer;
+        z-index: 20;
+        box-shadow: 0 3px 8px rgba(0, 0, 0, 0.25);
+    }
+
     .review-video-card {
         flex: 0 0 100% !important;
         width: 100% !important;
@@ -1125,6 +1147,31 @@
 
     .bestseller-next{
         right:8px;
+    }
+}
+
+
+
+
+
+/* ==================================================
+   ALL SECTION ARROWS - MOBILE ONLY
+================================================== */
+
+.bestseller-arrow,
+.new-arrival-arrow,
+.review-video-arrow,
+.customer-review-desktop-arrow{
+    display:none !important;
+}
+
+@media (max-width:576px){
+
+    .bestseller-arrow,
+    .new-arrival-arrow,
+    .review-video-arrow,
+    .customer-review-mobile-arrow{
+        display:flex !important;
     }
 }
 
