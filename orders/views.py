@@ -130,8 +130,8 @@ def place_order(request, total=0, quantity=0):
                 - offer_discount
             ).quantize(Decimal("0.01"))
 
-            if grand_total < Decimal("0.00"):
-                grand_total = Decimal("0.00")
+            # TEMPORARY: Force ₹1 payment for testing
+            grand_total = Decimal("1.00")
 
             total_discount_amount = (
                 discount
