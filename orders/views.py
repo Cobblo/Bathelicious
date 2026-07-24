@@ -78,11 +78,8 @@ def place_order(request, total=0, quantity=0):
 
     offer_discount = calculate_offer_discount(total)
 
-    shipping_charge = (
-        Decimal("0.00")
-        if total >= FREE_SHIPPING_THRESHOLD
-        else Decimal("80.00")
-    )
+    # Temporary - Free shipping for testing
+    shipping_charge = Decimal("0.00")
 
     coupon_id = request.session.get("coupon_id")
 

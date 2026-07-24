@@ -30,10 +30,7 @@ def _cart_id(request):
 
 
 def _shipping_amount(total):
-    if total >= FREE_SHIPPING_THRESHOLD:
-        return Decimal("0.00")
-
-    return Decimal("80.00")
+    return Decimal("0.00")
 
 
 def _offer_discount_amount(total):
