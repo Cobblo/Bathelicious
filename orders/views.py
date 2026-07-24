@@ -78,8 +78,14 @@ def place_order(request, total=0, quantity=0):
 
     offer_discount = calculate_offer_discount(total)
 
-    # Temporary - Free shipping for testing
-    shipping_charge = Decimal("0.00")
+    # Normal shipping rule:
+    # Free shipping for ₹1,199 and above.
+    # ₹80 shipping below ₹1,199.
+    shipping_charge = (
+        Decimal("0.00")
+        if total >= FREE_SHIPPING_THRESHOLD
+        else Decimal("80.00")
+    )
 
     coupon_id = request.session.get("coupon_id")
 
@@ -130,8 +136,8 @@ def place_order(request, total=0, quantity=0):
                 - offer_discount
             ).quantize(Decimal("0.01"))
 
-            # TEMPORARY: Force ₹1 payment for testing
-            grand_total = Decimal("1.00")
+            if grand_total < Decimal("0.00"):
+                grand_total = Decimal("0.00")
 
             total_discount_amount = (
                 discount

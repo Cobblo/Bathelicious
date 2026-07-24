@@ -30,7 +30,14 @@ def _cart_id(request):
 
 
 def _shipping_amount(total):
-    return Decimal("0.00")
+    """
+    Free shipping for orders of ₹1,199 or more.
+    ₹80 shipping for orders below ₹1,199.
+    """
+    if total >= FREE_SHIPPING_THRESHOLD:
+        return Decimal("0.00")
+
+    return Decimal("80.00")
 
 
 def _offer_discount_amount(total):
