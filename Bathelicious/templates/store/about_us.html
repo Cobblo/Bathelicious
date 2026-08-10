@@ -2,142 +2,1681 @@
 {% load static %}
 
 {% block content %}
-<div class="container my-5">
 
-  {# ===== Section 1: Our Story ===== #}
-  <div class="row align-items-center mb-5">
-    <!-- Image -->
-    <div class="col-md-6 text-center">
-      {% if about and about.story_image %}
-        <img src="{{ about.story_image.url }}" alt="Our Story"
-             class="img-fluid rounded shadow w-50">
-      {% else %}
-        <img src="{% static 'images/story.png' %}" alt="Our Story"
-             class="img-fluid rounded shadow w-50">
-      {% endif %}
+<style>
+/* =========================================================
+   BATHELICIOUS — ABOUT US
+   ========================================================= */
+
+.bathelicious-about {
+    --ba-ink: #1B2A20;
+    --ba-ink-soft: rgba(27,42,32,0.72);
+    --ba-ink-faint: rgba(27,42,32,0.50);
+
+    --ba-green: #3E6650;
+    --ba-green-deep: #233C2C;
+    --ba-green-moss: #4F6B4A;
+
+    --ba-turmeric: #C08829;
+    --ba-turmeric-light: #E7BE72;
+
+    --ba-clay: #B5583A;
+    --ba-clay-dark: #5F3222;
+
+    --ba-brown-earth: #8A5A3C;
+    --ba-brown-light: #D8B58A;
+
+    --ba-blue: #3D6B80;
+    --ba-blue-water: #3D6B80;
+
+    --ba-bg: #EDEFE2;
+    --ba-paper: #FAF9F3;
+    --ba-cream-card: #F8F4E9;
+
+    --ba-line: rgba(27,42,32,0.14);
+
+    --ba-display: 'Fraunces', Georgia, serif;
+    --ba-body: 'Work Sans', Arial, sans-serif;
+    --ba-mono: 'Space Mono', monospace;
+
+    background: var(--ba-bg);
+    color: var(--ba-ink);
+    font-family: var(--ba-body);
+    line-height: 1.6;
+    overflow: hidden;
+    margin: 0;
+    padding: 0;
+}
+
+.bathelicious-about *,
+.bathelicious-about *::before,
+.bathelicious-about *::after {
+    box-sizing: border-box;
+}
+
+.bathelicious-about h1,
+.bathelicious-about h2,
+.bathelicious-about h3,
+.bathelicious-about p {
+    margin-top: 0;
+}
+
+.bathelicious-about img {
+    max-width: 100%;
+}
+
+.bathelicious-about a {
+    color: inherit;
+}
+
+
+/* =========================================================
+   WRAPPER
+   ========================================================= */
+
+.bathelicious-about .ba-wrap {
+    max-width: 1180px;
+    margin: 0 auto;
+    padding-left: clamp(20px, 5vw, 64px);
+    padding-right: clamp(20px, 5vw, 64px);
+}
+
+.bathelicious-about .ba-page {
+    width: 100%;
+}
+
+
+/* =========================================================
+   HERO
+   ========================================================= */
+
+.bathelicious-about .ba-hero {
+    background:
+        radial-gradient(
+            circle at 15% 20%,
+            rgba(192,136,41,0.10),
+            transparent 28%
+        ),
+        linear-gradient(
+            145deg,
+            #233C2C 0%,
+            #1B2A20 65%,
+            #17241B 100%
+        );
+
+    color: var(--ba-paper);
+
+    padding:
+        clamp(70px, 10vw, 125px)
+        20px
+        clamp(65px, 9vw, 105px);
+
+    text-align: center;
+
+    position: relative;
+    overflow: hidden;
+}
+
+.bathelicious-about .ba-hero::before {
+    content: "";
+    position: absolute;
+
+    width: 320px;
+    height: 320px;
+
+    border: 1px solid rgba(231,190,114,0.16);
+    border-radius: 50%;
+
+    top: -160px;
+    right: -80px;
+}
+
+.bathelicious-about .ba-hero::after {
+    content: "";
+    position: absolute;
+
+    width: 240px;
+    height: 240px;
+
+    border: 1px solid rgba(231,190,114,0.10);
+    border-radius: 50%;
+
+    bottom: -150px;
+    left: -80px;
+}
+
+.bathelicious-about .ba-hero-inner {
+    max-width: 900px;
+    margin: 0 auto;
+    position: relative;
+    z-index: 2;
+}
+
+.bathelicious-about .ba-eyebrow {
+    font-family: var(--ba-mono);
+    font-size: 0.70rem;
+    font-weight: 700;
+    letter-spacing: 0.17em;
+    text-transform: uppercase;
+
+    color: var(--ba-turmeric-light);
+
+    margin-bottom: 20px;
+}
+
+.bathelicious-about .ba-hero h1 {
+    font-family: var(--ba-display);
+    font-size: clamp(2.6rem, 6vw, 5rem);
+    font-weight: 500;
+    line-height: 1.05;
+    letter-spacing: -0.025em;
+
+    margin: 0 auto 25px;
+    max-width: 850px;
+}
+
+.bathelicious-about .ba-hero h1 em {
+    font-style: italic;
+    color: var(--ba-turmeric-light);
+}
+
+.bathelicious-about .ba-lede {
+    font-size: clamp(1rem, 2vw, 1.2rem);
+    color: rgba(250,249,243,0.76);
+
+    max-width: 650px;
+    margin: 0 auto;
+}
+
+
+/* =========================================================
+   REVEAL ANIMATION
+   ========================================================= */
+
+.bathelicious-about .ba-reveal {
+    opacity: 0;
+    transform: translateY(24px);
+
+    transition:
+        opacity 0.8s ease,
+        transform 0.8s ease;
+}
+
+.bathelicious-about .ba-reveal.ba-visible {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+@media (prefers-reduced-motion: reduce) {
+
+    .bathelicious-about .ba-reveal {
+        opacity: 1;
+        transform: none;
+        transition: none;
+    }
+
+}
+
+
+/* =========================================================
+   SECTIONS
+   ========================================================= */
+
+.bathelicious-about .ba-block {
+    padding:
+        clamp(60px, 8vw, 95px)
+        0;
+}
+
+.bathelicious-about .ba-block:first-child {
+    padding-top: 65px;
+}
+
+.bathelicious-about .ba-kicker {
+    font-family: var(--ba-mono);
+
+    font-size: 0.70rem;
+    font-weight: 700;
+
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+
+    color: var(--ba-green);
+
+    margin-bottom: 12px;
+}
+
+.bathelicious-about .ba-section-title {
+    font-family: var(--ba-display);
+
+    font-size: clamp(2rem, 4vw, 3rem);
+    line-height: 1.15;
+
+    font-weight: 500;
+    letter-spacing: -0.02em;
+
+    color: var(--ba-green-deep);
+
+    margin-bottom: 25px;
+}
+
+.bathelicious-about .ba-body-text {
+    font-size: 1rem;
+    color: #4A483C;
+}
+
+.bathelicious-about .ba-center {
+    text-align: center;
+}
+
+
+/* =========================================================
+   FOUNDER
+   ========================================================= */
+
+.bathelicious-about .ba-founder-wrap {
+    display: flex;
+    align-items: flex-start;
+    gap: 30px;
+
+    background: rgba(250,249,243,0.62);
+
+    border: 1px solid var(--ba-line);
+    border-radius: 18px;
+
+    padding: clamp(26px, 4vw, 38px);
+
+    margin-top: 10px;
+}
+
+
+/* =========================================================
+   FOUNDER PHOTO
+   ========================================================= */
+
+.bathelicious-about .ba-founder-mark {
+    flex: none;
+
+    width: 105px;
+    height: 105px;
+
+    border-radius: 50%;
+
+    overflow: hidden;
+
+    background: #233C2C;
+
+    border: 3px solid rgba(192,136,41,0.35);
+
+    box-shadow:
+        0 8px 22px rgba(27,42,32,0.15);
+
+    display: block;
+}
+
+.bathelicious-about .ba-founder-mark img {
+    width: 100%;
+    height: 100%;
+
+    object-fit: cover;
+    object-position: center;
+
+    display: block;
+
+    margin: 0;
+    padding: 0;
+}
+
+
+/* =========================================================
+   FOUNDER TEXT
+   ========================================================= */
+
+.bathelicious-about .ba-founder-text {
+    flex: 1;
+}
+
+.bathelicious-about .ba-founder-text p {
+    font-size: 16.5px;
+    color: #3B392F;
+
+    margin-bottom: 16px;
+}
+
+.bathelicious-about .ba-founder-text p:last-child {
+    margin-bottom: 0;
+}
+
+.bathelicious-about .ba-name-line {
+    font-family: var(--ba-display);
+    color: var(--ba-green-deep);
+    font-weight: 600;
+}
+
+.bathelicious-about .ba-credential-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+
+    margin-top: 18px;
+}
+
+.bathelicious-about .ba-tag {
+    font-size: 12.5px;
+    letter-spacing: 0.5px;
+
+    padding: 7px 14px;
+
+    border-radius: 100px;
+
+    border: 1px solid var(--ba-brown-light);
+
+    color: var(--ba-brown-earth);
+    background: #FBF6EC;
+
+    font-weight: 600;
+}
+
+
+/* =========================================================
+   DIVIDER
+   ========================================================= */
+
+.bathelicious-about .ba-divider {
+    display: flex;
+    align-items: center;
+    gap: 18px;
+
+    max-width: 1180px;
+
+    margin: 0 auto;
+
+    padding:
+        0 clamp(20px, 5vw, 64px);
+}
+
+.bathelicious-about .ba-rule {
+    height: 1px;
+    background: var(--ba-line);
+    flex: 1;
+}
+
+.bathelicious-about .ba-divider svg {
+    width: 24px;
+    height: 24px;
+    color: var(--ba-green);
+
+    flex: none;
+}
+
+
+/* =========================================================
+   CONVICTIONS
+   ========================================================= */
+
+.bathelicious-about .ba-convictions {
+    display: grid;
+
+    grid-template-columns:
+        repeat(2, minmax(0, 1fr));
+
+    gap: 24px;
+
+    margin-top: 30px;
+}
+
+.bathelicious-about .ba-conviction-card {
+    background: var(--ba-cream-card);
+
+    border: 1px solid var(--ba-line);
+    border-radius: 16px;
+
+    padding: 30px 28px;
+
+    position: relative;
+    overflow: hidden;
+}
+
+.bathelicious-about .ba-conviction-card::before {
+    content: "";
+
+    position: absolute;
+
+    top: 0;
+    left: 0;
+    right: 0;
+
+    height: 4px;
+}
+
+.bathelicious-about .ba-conviction-card.ba-self::before {
+    background: var(--ba-blue);
+}
+
+.bathelicious-about .ba-conviction-card.ba-eco::before {
+    background: var(--ba-green-moss);
+}
+
+.bathelicious-about .ba-conviction-icon {
+    width: 44px;
+    height: 44px;
+
+    border-radius: 12px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    margin-bottom: 18px;
+}
+
+.bathelicious-about
+.ba-conviction-card.ba-self
+.ba-conviction-icon {
+    background: rgba(61,107,128,0.12);
+    color: var(--ba-blue);
+}
+
+.bathelicious-about
+.ba-conviction-card.ba-eco
+.ba-conviction-icon {
+    background: rgba(79,107,74,0.14);
+    color: var(--ba-green-moss);
+}
+
+.bathelicious-about .ba-conviction-card h3 {
+    font-family: var(--ba-display);
+
+    font-weight: 600;
+    font-size: 20px;
+
+    color: var(--ba-green-deep);
+
+    margin-bottom: 10px;
+}
+
+.bathelicious-about .ba-conviction-card p {
+    font-size: 15px;
+    color: #4A483C;
+
+    margin: 0;
+}
+
+
+/* =========================================================
+   BANNER
+   ========================================================= */
+
+.bathelicious-about .ba-banner,
+.bathelicious-about .ba-impact-visual {
+    margin:
+        44px 0;
+
+    border-radius: 16px;
+
+    overflow: hidden;
+
+    border: 1px solid var(--ba-line);
+
+    box-shadow:
+        0 14px 34px -18px
+        rgba(36,61,43,0.35);
+
+    background:
+        linear-gradient(
+            135deg,
+            #233C2C,
+            #4F6B4A
+        );
+
+    min-height: 250px;
+
+    position: relative;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    text-align: center;
+}
+
+.bathelicious-about .ba-banner::before,
+.bathelicious-about .ba-impact-visual::before {
+    content: "";
+
+    position: absolute;
+
+    width: 220px;
+    height: 220px;
+
+    border-radius: 50%;
+
+    border: 1px solid
+        rgba(231,190,114,0.22);
+}
+
+.bathelicious-about .ba-banner::after,
+.bathelicious-about .ba-impact-visual::after {
+    content: "";
+
+    position: absolute;
+
+    width: 130px;
+    height: 130px;
+
+    border-radius: 50%;
+
+    border: 1px solid
+        rgba(250,249,243,0.14);
+}
+
+.bathelicious-about .ba-banner-content {
+    position: relative;
+    z-index: 2;
+
+    padding: 45px 25px;
+}
+
+.bathelicious-about .ba-banner-content .ba-leaf {
+    font-size: 48px;
+    display: block;
+
+    margin-bottom: 12px;
+}
+
+.bathelicious-about .ba-banner-content h3 {
+    font-family: var(--ba-display);
+
+    color: #F8F4EA;
+
+    font-size: clamp(1.5rem, 3vw, 2.1rem);
+
+    margin-bottom: 10px;
+}
+
+.bathelicious-about .ba-banner-content p {
+    color: rgba(250,249,243,0.76);
+
+    font-size: 14px;
+
+    margin: 0 auto;
+
+    max-width: 550px;
+}
+
+
+/* =========================================================
+   STATS
+   ========================================================= */
+
+.bathelicious-about .ba-stats-intro {
+    text-align: center;
+
+    max-width: 640px;
+
+    margin:
+        0 auto 34px;
+}
+
+.bathelicious-about .ba-stats-grid {
+    display: grid;
+
+    grid-template-columns:
+        repeat(3, minmax(0, 1fr));
+
+    gap: 20px;
+
+    margin-bottom: 22px;
+}
+
+.bathelicious-about .ba-stat-card {
+    background: var(--ba-cream-card);
+
+    border: 1px solid var(--ba-line);
+
+    border-radius: 16px;
+
+    padding: 26px 20px;
+
+    text-align: center;
+}
+
+.bathelicious-about .ba-stat-card .ba-num {
+    font-family: var(--ba-display);
+
+    font-weight: 600;
+
+    font-size: clamp(26px, 3vw, 32px);
+
+    color: var(--ba-green-deep);
+
+    line-height: 1;
+
+    margin-bottom: 10px;
+
+    display: block;
+}
+
+.bathelicious-about .ba-stat-card.ba-warn .ba-num {
+    color: var(--ba-brown-earth);
+}
+
+.bathelicious-about .ba-stat-card .ba-label {
+    font-size: 13px;
+
+    color: #4A483C;
+
+    line-height: 1.5;
+}
+
+.bathelicious-about .ba-stat-row-title {
+    font-size: 12.5px;
+
+    letter-spacing: 2px;
+
+    text-transform: uppercase;
+
+    font-weight: 700;
+
+    color: var(--ba-blue);
+
+    text-align: center;
+
+    margin:
+        38px 0 18px;
+}
+
+.bathelicious-about .ba-scaled-strip {
+    display: flex;
+
+    justify-content: center;
+
+    gap: 14px;
+
+    flex-wrap: wrap;
+
+    margin-top: 6px;
+}
+
+.bathelicious-about .ba-scaled-pill {
+    display: flex;
+
+    align-items: baseline;
+
+    gap: 6px;
+
+    background: #EEF3EF;
+
+    border: 1px solid var(--ba-line);
+
+    border-radius: 100px;
+
+    padding: 10px 18px;
+}
+
+.bathelicious-about .ba-scaled-pill .ba-num {
+    font-family: var(--ba-display);
+
+    font-weight: 600;
+
+    font-size: 16px;
+
+    color: var(--ba-green-moss);
+}
+
+.bathelicious-about .ba-scaled-pill .ba-label {
+    font-size: 12.5px;
+
+    color: #4A483C;
+}
+
+.bathelicious-about .ba-impact-note {
+    text-align: center;
+
+    font-family: var(--ba-display);
+
+    font-style: italic;
+
+    font-size: 16.5px;
+
+    color: var(--ba-green-deep);
+
+    max-width: 560px;
+
+    margin:
+        34px auto 0;
+}
+
+
+/* =========================================================
+   PROMISE
+   ========================================================= */
+
+.bathelicious-about .ba-promise-panel {
+    background:
+        linear-gradient(
+            155deg,
+            var(--ba-green-deep),
+            #1D3323
+        );
+
+    color: #F4EFE1;
+
+    border-radius: 20px;
+
+    padding:
+        48px 40px;
+
+    text-align: center;
+
+    margin-top: 10px;
+}
+
+.bathelicious-about .ba-promise-panel .ba-kicker {
+    color: var(--ba-brown-light);
+}
+
+.bathelicious-about .ba-promise-panel h2 {
+    color: #F8F4EA;
+}
+
+.bathelicious-about .ba-promise-panel p {
+    color: #DCE3D3;
+
+    max-width: 640px;
+
+    margin:
+        0 auto 16px;
+
+    font-size: 16px;
+}
+
+.bathelicious-about .ba-closing-line {
+    font-family: var(--ba-display);
+
+    font-style: italic;
+
+    font-size: 19px;
+
+    color: #EADFC2;
+
+    margin-top: 22px;
+}
+
+
+/* =========================================================
+   IMPACT VISUAL
+   ========================================================= */
+
+.bathelicious-about .ba-impact-visual {
+    margin-top: 56px;
+    margin-bottom: 8px;
+
+    min-height: 310px;
+
+    background:
+        linear-gradient(
+            120deg,
+            #1B2A20,
+            #3E6650 55%,
+            #5F3222
+        );
+}
+
+.bathelicious-about .ba-impact-visual .ba-impact-content {
+    position: relative;
+    z-index: 2;
+
+    padding: 50px 25px;
+}
+
+.bathelicious-about .ba-impact-content .ba-impact-leaf {
+    font-size: 55px;
+    display: block;
+
+    margin-bottom: 15px;
+}
+
+.bathelicious-about .ba-impact-content h3 {
+    font-family: var(--ba-display);
+
+    color: #F8F4EA;
+
+    font-size: clamp(1.6rem, 3vw, 2.4rem);
+
+    margin-bottom: 10px;
+}
+
+.bathelicious-about .ba-impact-content p {
+    color: rgba(250,249,243,0.78);
+
+    max-width: 600px;
+
+    margin: 0 auto;
+
+    font-size: 15px;
+}
+
+
+/* =========================================================
+   FINAL TAGS
+   ========================================================= */
+
+.bathelicious-about .ba-tag-strip {
+    display: flex;
+
+    justify-content: center;
+
+    gap: 10px;
+
+    flex-wrap: wrap;
+
+    margin-top: 50px;
+
+    padding-bottom: 55px;
+}
+
+.bathelicious-about .ba-pill {
+    font-size: 12px;
+
+    letter-spacing: 1.5px;
+
+    text-transform: uppercase;
+
+    padding: 9px 18px;
+
+    border-radius: 100px;
+
+    font-weight: 700;
+}
+
+.bathelicious-about .ba-pill-1 {
+    background: var(--ba-green-deep);
+    color: #F4EFE1;
+}
+
+.bathelicious-about .ba-pill-2 {
+    background: var(--ba-brown-earth);
+    color: #F8F1E2;
+}
+
+.bathelicious-about .ba-pill-3 {
+    background: var(--ba-blue-water);
+    color: #F1F6F8;
+}
+
+
+/* =========================================================
+   RESPONSIVE
+   ========================================================= */
+
+@media (max-width: 720px) {
+
+    .bathelicious-about .ba-founder-wrap {
+        flex-direction: column;
+
+        align-items: center;
+
+        padding: 26px;
+
+        gap: 20px;
+    }
+
+    .bathelicious-about .ba-founder-mark {
+        width: 130px;
+        height: 130px;
+    }
+
+    .bathelicious-about .ba-convictions {
+        grid-template-columns: 1fr;
+    }
+
+    .bathelicious-about .ba-stats-grid {
+        grid-template-columns:
+            repeat(2, minmax(0, 1fr));
+    }
+
+    .bathelicious-about .ba-hero {
+        padding:
+            64px 20px 50px;
+    }
+
+    .bathelicious-about .ba-promise-panel {
+        padding:
+            34px 24px;
+    }
+
+}
+
+
+@media (max-width: 520px) {
+
+    .bathelicious-about .ba-stats-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .bathelicious-about .ba-stat-card {
+        padding:
+            24px 18px;
+    }
+
+    .bathelicious-about .ba-hero h1 {
+        font-size: 2.55rem;
+    }
+
+    .bathelicious-about .ba-section-title {
+        font-size: 2rem;
+    }
+
+    .bathelicious-about .ba-founder-text p {
+        font-size: 15.5px;
+    }
+
+    .bathelicious-about .ba-scaled-pill {
+        width: 100%;
+        justify-content: center;
+    }
+
+    .bathelicious-about .ba-banner,
+    .bathelicious-about .ba-impact-visual {
+        min-height: 250px;
+    }
+
+}
+
+
+/* =========================================================
+   ACCESSIBILITY
+   ========================================================= */
+
+.bathelicious-about a:focus-visible,
+.bathelicious-about button:focus-visible {
+    outline: 2px dashed var(--ba-turmeric);
+    outline-offset: 4px;
+}
+</style>
+
+
+<div class="bathelicious-about">
+
+    <!-- =====================================================
+         HERO
+         ===================================================== -->
+
+    <section class="ba-hero">
+
+        <div class="ba-hero-inner">
+
+            <div class="ba-eyebrow">
+                Our Story
+            </div>
+
+            <h1 class="ba-reveal">
+                Care that's kind to
+                <em>you</em>,
+                kind to the
+                <em>earth</em>
+            </h1>
+
+            <p class="ba-lede ba-reveal">
+                The vision, the values, and the promise behind
+                every Bathelicious formulation.
+            </p>
+
+        </div>
+
+    </section>
+
+
+    <div class="ba-page">
+
+
+        <!-- =================================================
+             FOUNDER
+             ================================================= -->
+
+        <section class="ba-block">
+
+            <div class="ba-wrap">
+
+                <div class="ba-kicker">
+                    Meet Our Founder
+                </div>
+
+                <h2 class="ba-section-title">
+                    Where the idea began
+                </h2>
+
+
+                <div class="ba-founder-wrap ba-reveal">
+
+
+                    <!-- FOUNDER PHOTO -->
+
+                    <div class="ba-founder-mark">
+
+                        <img
+                            src="{% static 'images/LV.jpeg' %}"
+                            alt="Lakshmi Varadarajan"
+                        >
+
+                    </div>
+
+
+                    <!-- FOUNDER TEXT -->
+
+                    <div class="ba-founder-text">
+
+                        <p>
+                            <span class="ba-name-line">
+                                Bathelicious
+                            </span>
+                            was born from the vision of our founder,
+                            <strong>Lakshmi Varadarajan</strong>, a
+                            certified skincare and haircare formulator
+                            trained at <strong>Formula Botanica</strong>
+                            and other leading institutions in the
+                            United Kingdom. With a deep passion for
+                            natural science and a genuine love for the
+                            craft of formulation, the idea behind
+                            Bathelicious took shape: create products
+                            that are honest, effective, and rooted
+                            in nature.
+                        </p>
+
+                        <p>
+                            The journey into formulation wasn't just
+                            about learning the science of skincare
+                            and haircare — it was about understanding
+                            how every ingredient, every process, and
+                            every choice of packaging leaves a
+                            footprint, on our bodies and on the planet
+                            we live in.
+                        </p>
+
+
+                        <div class="ba-credential-tags">
+
+                            <span class="ba-tag">
+                                Formula Botanica, UK
+                            </span>
+
+                            <span class="ba-tag">
+                                Certified Formulator
+                            </span>
+
+                            <span class="ba-tag">
+                                Skincare &amp; Haircare
+                            </span>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- =================================================
+             DIVIDER
+             ================================================= -->
+
+        <div class="ba-divider">
+
+            <div class="ba-rule"></div>
+
+            <svg
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="1.6"
+            >
+                <path
+                    d="M12 22c0-6 4-10 9-11-1 6-4 10-9 11Z"
+                />
+
+                <path
+                    d="M12 22c0-6-4-10-9-11 1 6 4 10 9 11Z"
+                />
+
+                <path
+                    d="M12 2v20"
+                />
+            </svg>
+
+            <div class="ba-rule"></div>
+
+        </div>
+
+
+        <!-- =================================================
+             PHILOSOPHY
+             ================================================= -->
+
+        <section class="ba-block">
+
+            <div class="ba-wrap">
+
+                <div class="ba-kicker">
+                    The Philosophy
+                </div>
+
+                <h2 class="ba-section-title">
+                    A brand built on two convictions
+                </h2>
+
+                <p class="ba-body-text ba-center">
+                    Bathelicious was envisioned around two guiding
+                    principles that continue to shape every product
+                    the brand creates.
+                </p>
+
+
+                <div class="ba-convictions ba-reveal">
+
+
+                    <div class="ba-conviction-card ba-self">
+
+                        <div class="ba-conviction-icon">
+
+                            <svg
+                                width="22"
+                                height="22"
+                                viewBox="0 0 24 24"
+                                fill="none"
+                                stroke="currentColor"
+                                stroke-width="1.8"
+                            >
+                                <path
+                                    d="M12 21s-7-4.5-9.5-9C.5 8 3 4 7 4c2 0 4 1 5 3 1-2 3-3 5-3 4 0 6.5 4 4.5 8-2.5 4.5-9.5 9-9.5 9Z"
+                                />
+                            </svg>
+
+                        </div>
+
+                        <h3>
+                            Self-conscious care
+                        </h3>
+
+                        <p>
+                            Formulations that are gentle, safe, and
+                            genuinely good for your skin and hair,
+                            made with ingredients you can trust and
+                            understand.
+                        </p>
+
+                    </div>
+
+
+                    <div class="ba-conviction-card ba-eco">
+
+                        <div class="ba-conviction-icon">
+
+                            <svg
+                                width="22"
+                                height="22"
+                                viewBox="0 0 24 24"
+                                fill="none"
+                                stroke="currentColor"
+                                stroke-width="1.8"
+                            >
+                                <path
+                                    d="M12 22c0-6 4-10 9-11-1 6-4 10-9 11Z"
+                                />
+
+                                <path
+                                    d="M12 22c0-6-4-10-9-11 1 6 4 10 9 11Z"
+                                />
+
+                                <path
+                                    d="M12 2v20"
+                                />
+                            </svg>
+
+                        </div>
+
+                        <h3>
+                            Environment-conscious craft
+                        </h3>
+
+                        <p>
+                            A commitment to sustainability at every
+                            stage — from plant-based formulations to
+                            eco-friendly, reusable packaging that
+                            reduces harm to the planet.
+                        </p>
+
+                    </div>
+
+                </div>
+
+
+                <figure class="ba-banner ba-reveal">
+
+                    <div class="ba-banner-content">
+
+                        <span class="ba-leaf">
+                            🌿
+                        </span>
+
+                        <h3>
+                            Pure. Plant Based. Conscious.
+                        </h3>
+
+                        <p>
+                            Formulated with plant-powered ingredients
+                            and a conscious approach to personal care.
+                        </p>
+
+                    </div>
+
+                </figure>
+
+            </div>
+
+        </section>
+
+
+        <!-- =================================================
+             DIVIDER
+             ================================================= -->
+
+        <div class="ba-divider">
+
+            <div class="ba-rule"></div>
+
+            <svg
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="1.6"
+            >
+                <circle
+                    cx="12"
+                    cy="12"
+                    r="9"
+                />
+
+                <path d="M12 3v18" />
+                <path d="M3 12h18" />
+            </svg>
+
+            <div class="ba-rule"></div>
+
+        </div>
+
+
+        <!-- =================================================
+             NUMBERS
+             ================================================= -->
+
+        <section class="ba-block">
+
+            <div class="ba-wrap">
+
+                <div class="ba-kicker">
+                    The Numbers
+                </div>
+
+                <h2 class="ba-section-title">
+                    Reducing plastic, saving the planet
+                </h2>
+
+                <p class="ba-stats-intro ba-body-text">
+                    The personal care industry has a plastic problem.
+                    Here's why it matters, and the difference every
+                    reused Bathelicious bottle makes.
+                </p>
+
+
+                <div class="ba-stats-grid ba-reveal">
+
+                    <div class="ba-stat-card ba-warn">
+
+                        <span class="ba-num">
+                            120B+
+                        </span>
+
+                        <div class="ba-label">
+                            cosmetic packaging units produced
+                            every year
+                        </div>
+
+                    </div>
+
+
+                    <div class="ba-stat-card ba-warn">
+
+                        <span class="ba-num">
+                            79%
+                        </span>
+
+                        <div class="ba-label">
+                            end up in landfills, oceans,
+                            or are incinerated
+                        </div>
+
+                    </div>
+
+
+                    <div class="ba-stat-card ba-warn">
+
+                        <span class="ba-num">
+                            500–1000
+                        </span>
+
+                        <div class="ba-label">
+                            years for a single plastic bottle
+                            to decompose
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <div class="ba-stat-row-title">
+                    Our Contribution, Per Reused Bottle
+                </div>
+
+
+                <div class="ba-stats-grid ba-reveal">
+
+                    <div class="ba-stat-card">
+
+                        <span class="ba-num">
+                            ~40g
+                        </span>
+
+                        <div class="ba-label">
+                            plastic waste saved
+                        </div>
+
+                    </div>
+
+
+                    <div class="ba-stat-card">
+
+                        <span class="ba-num">
+                            ~60g
+                        </span>
+
+                        <div class="ba-label">
+                            CO₂ emissions prevented
+                        </div>
+
+                    </div>
+
+
+                    <div class="ba-stat-card">
+
+                        <span class="ba-num">
+                            ~2.5L
+                        </span>
+
+                        <div class="ba-label">
+                            water conserved
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <div class="ba-stat-row-title">
+                    Scaled Impact, Per 1,000 Customers
+                </div>
+
+
+                <div class="ba-scaled-strip ba-reveal">
+
+                    <div class="ba-scaled-pill">
+
+                        <span class="ba-num">
+                            40 kg
+                        </span>
+
+                        <span class="ba-label">
+                            plastic saved
+                        </span>
+
+                    </div>
+
+
+                    <div class="ba-scaled-pill">
+
+                        <span class="ba-num">
+                            60 kg
+                        </span>
+
+                        <span class="ba-label">
+                            CO₂ reduced
+                        </span>
+
+                    </div>
+
+
+                    <div class="ba-scaled-pill">
+
+                        <span class="ba-num">
+                            2,500 L
+                        </span>
+
+                        <span class="ba-label">
+                            water preserved
+                        </span>
+
+                    </div>
+
+                </div>
+
+
+                <p class="ba-impact-note ba-reveal">
+                    When you choose Bathelicious, you're not just
+                    caring for your skin and hair — you're taking
+                    a stand for the planet.
+                </p>
+
+            </div>
+
+        </section>
+
+
+        <!-- =================================================
+             PROMISE
+             ================================================= -->
+
+        <section class="ba-block">
+
+            <div class="ba-wrap">
+
+                <div class="ba-promise-panel ba-reveal">
+
+                    <div class="ba-kicker">
+                        The Promise
+                    </div>
+
+                    <h2
+                        class="ba-section-title"
+                        style="margin-bottom:16px;"
+                    >
+                        Grown from a mission,
+                        made for everyone
+                    </h2>
+
+
+                    <p>
+                        From the very first formulation,
+                        Bathelicious has stood for clean,
+                        conscious self-care — personal care
+                        products that don't compromise on
+                        performance or principles. The brand
+                        brings together plant-powered ingredients,
+                        cruelty-free practices, and sustainable
+                        packaging to offer skincare, haircare,
+                        and body care that feels good to use and
+                        does good in the process.
+                    </p>
+
+
+                    <p>
+                        What began as a formulator's mission has
+                        grown into a brand that invites everyone
+                        to be part of a cleaner, more conscious
+                        way of caring for themselves and the planet.
+                    </p>
+
+
+                    <p class="ba-closing-line">
+                        "Skin and hair care that is kind to you,
+                        and kind to the Earth."
+                    </p>
+
+                </div>
+
+
+                <figure class="ba-impact-visual ba-reveal">
+
+                    <div class="ba-impact-content">
+
+                        <span class="ba-impact-leaf">
+                            🌱
+                        </span>
+
+                        <h3>
+                            Your purchase today leaves
+                            a greener footprint
+                        </h3>
+
+                        <p>
+                            Every conscious choice contributes
+                            to a cleaner and more sustainable
+                            tomorrow.
+                        </p>
+
+                    </div>
+
+                </figure>
+
+
+                <div class="ba-tag-strip ba-reveal">
+
+                    <span class="ba-pill ba-pill-1">
+                        Plant-Based
+                    </span>
+
+                    <span class="ba-pill ba-pill-2">
+                        Cruelty-Free
+                    </span>
+
+                    <span class="ba-pill ba-pill-3">
+                        Sustainably Packaged
+                    </span>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
     </div>
-
-    <!-- Text -->
-    <div class="col-md-6">
-      <h2 class="mb-4" style="color:#B87333;font-weight:bold;">🌿 Our Story</h2>
-
-      <h4 style="color:#333;font-size:1.1rem;font-weight:500;line-height:1.6;">
-        “Bathelicious began with a simple mission to create skin and hair care products that are kind to your body and the planet, using the healing power of plants.”
-      </h4>
-
-      <p class="mt-4" style="color:#333;font-size:1.05rem;font-weight:500;line-height:1.8;">
-        In today’s fast-paced world, our bodies and the planet are constantly exposed to harsh chemicals, pollutants, and unsustainable materials. Most personal care products available in the market are loaded with harsh and unwanted chemicals, synthetic additives, artificial fragrances, and non-biodegradable packaging—putting both our health and Earth at risk.
-      </p>
-
-      <p style="color:#333;font-size:1.05rem;font-weight:500;line-height:1.8;">
-        <span style="font-weight:bold;color:#B87333;font-size:1.1rem;">
-          What if we could nourish your skin and hair without harming your health or the environment?
-        </span><br>
-        This question led us to research, experiment, and finally discover the true potential of plant-based formulations.
-      </p>
-
-      <p style="color:#333;font-size:1.05rem;font-weight:500;line-height:1.8;">
-        Our mission is to reconnect people with nature offering clean, effective, and sustainable skincare and haircare solutions that honor both your body and Mother Earth.
-      </p>
-    </div>
-  </div>
-
-  {# ===== Section 2: Why Choose Bathelicious ===== #}
-  <div class="row align-items-center mb-5 flex-md-row-reverse">
-    <!-- Image -->
-    <div class="col-md-6 text-center">
-      {% if about and about.choose_image %}
-        <img src="{{ about.choose_image.url }}" alt="Why Choose Bathelicious"
-             class="img-fluid rounded shadow w-50">
-      {% else %}
-        <img src="{% static 'images/choose.png' %}" alt="Why Choose Bathelicious"
-             class="img-fluid rounded shadow w-50">
-      {% endif %}
-    </div>
-
-    <!-- Text -->
-    <div class="col-md-6">
-      <h2 class="mb-3" style="color:#B87333;">💚 Why Choose Bathelicious?</h2>
-      <ul class="list-unstyled ps-3" style="line-height:1.8;color:#333;font-weight:500;font-size:1.05rem;">
-        <li>
-          <strong>• Plant-Based Formulations</strong><br>
-          We harness the power of nature using herbs, essential oils, botanical extracts, and other plant-based ingredients—zero harsh chemicals, parabens, sulfates, or artificial preservatives.
-        </li>
-        <li class="mt-3">
-          <strong>• Gentle on Skin, Strong on Results</strong><br>
-          Our products are formulated to suit all skin types, including sensitive skin. Each ingredient is chosen for its effectiveness, safety, and healing properties.
-        </li>
-        <li class="mt-3">
-          <strong>• Eco-Friendly & Reusable Packaging</strong><br>
-          All Bathelicious products come in reusable or recyclable packaging, helping reduce landfill waste and your carbon footprint.
-        </li>
-        <li class="mt-3">
-          <strong>• Cruelty-Free & Ethical</strong><br>
-          We love animals as much as we love nature. All our products are cruelty-free, and we never test on animals.
-        </li>
-        <li class="mt-3">
-          <strong>• Handcrafted in Small Batches</strong><br>
-          Every product is crafted with care in small batches to ensure freshness, potency, and minimal waste.
-        </li>
-      </ul>
-    </div>
-  </div>
-
-  {# ===== Section 3: Our Impact ===== #}
-  <div class="row align-items-center mb-5">
-    <!-- Image -->
-    <div class="col-md-6 text-center">
-      {% if about and about.impact_image %}
-        <img src="{{ about.impact_image.url }}" alt="Sustainability Impact"
-             class="img-fluid rounded shadow"
-             style="width:50%;height:350px;object-fit:cover;">
-      {% else %}
-        <img src="{% static 'images/plastic.png' %}" alt="Sustainability Impact"
-             class="img-fluid rounded shadow"
-             style="width:50%;height:350px;object-fit:cover;">
-      {% endif %}
-    </div>
-
-    <!-- Text -->
-    <div class="col-md-6">
-      <h2 class="mb-3" style="color:#B87333;">🌎 Our Impact</h2>
-      <h4 class="text-muted">“Reducing Plastic, Saving the Planet”</h4>
-
-      <p style="color:#333;font-size:1.05rem;font-weight:500;"><strong>💡 Did You Know?</strong></p>
-      <ul class="list-unstyled ps-3" style="color:#333;font-size:1.05rem;font-weight:500;">
-        <li>• Over <strong>120 billion</strong> cosmetic packaging units are produced every year</li>
-        <li>• <strong>79%</strong> end up in landfills, oceans, or are incinerated</li>
-        <li>• A single plastic bottle takes <strong>500–1000 years</strong> to decompose</li>
-      </ul>
-
-      <p style="color:#333;font-size:1.05rem;font-weight:500;"><strong>♻ Our Contribution to the Planet</strong></p>
-      <ul class="list-unstyled ps-3" style="color:#333;font-size:1.05rem;font-weight:500;">
-        <li>• ~ <strong>40g</strong> of plastic waste saved per reused bottle</li>
-        <li>• ~ <strong>60g</strong> of CO₂ emissions prevented</li>
-        <li>• ~ <strong>2.5 liters</strong> of water conserved</li>
-      </ul>
-
-      <p style="color:#333;font-size:1.05rem;font-weight:500;"><strong>🌱 Scaled Impact</strong></p>
-      <ul class="list-unstyled ps-3" style="color:#333;font-size:1.05rem;font-weight:500;">
-        <li>• <strong>40 kg</strong> of plastic saved per 1,000 customers</li>
-        <li>• <strong>60 kg</strong> of CO₂ emissions reduced</li>
-        <li>• <strong>2,500 liters</strong> of water preserved</li>
-      </ul>
-
-      <p style="color:#333;font-size:1.05rem;font-weight:500;">
-        🌿 When you choose Bathelicious, you're not just caring for your skin and hair, you’re taking a stand for the planet.
-      </p>
-    </div>
-  </div>
-
-  {# ===== Section 4: CTA ===== #}
-  <div class="text-center mt-5">
-    <h2 style="color:#B87333;font-weight:bold;">🌱 Join the Green Skin and Hair care Revolution</h2>
-    <p class="mt-3" style="color:#333;font-size:1.1rem;font-weight:500;max-width:800px;margin:0 auto;line-height:1.9;">
-      We believe skin and hair care is self-care and self-care should never come at the cost of your health or the Earth’s wellbeing.
-      Choose <strong style="color:#000">Bathelicious</strong> to nourish your skin and hair naturally, and step into a lifestyle that’s clean, conscious, and kind.
-    </p>
-  </div>
 
 </div>
+
+
+<script>
+(function () {
+
+    var aboutPage =
+        document.querySelector(
+            '.bathelicious-about'
+        );
+
+    if (!aboutPage) {
+        return;
+    }
+
+    var reduceMotion =
+        window.matchMedia(
+            '(prefers-reduced-motion: reduce)'
+        ).matches;
+
+
+    /* =====================================================
+       REVEAL ANIMATIONS
+       ===================================================== */
+
+    var revealElements =
+        aboutPage.querySelectorAll(
+            '.ba-reveal'
+        );
+
+
+    if (
+        reduceMotion ||
+        !('IntersectionObserver' in window)
+    ) {
+
+        revealElements.forEach(
+            function (element) {
+
+                element.classList.add(
+                    'ba-visible'
+                );
+
+            }
+        );
+
+    } else {
+
+        var revealObserver =
+            new IntersectionObserver(
+                function (entries) {
+
+                    entries.forEach(
+                        function (entry) {
+
+                            if (
+                                entry.isIntersecting
+                            ) {
+
+                                entry.target.classList.add(
+                                    'ba-visible'
+                                );
+
+                                revealObserver.unobserve(
+                                    entry.target
+                                );
+
+                            }
+
+                        }
+                    );
+
+                },
+                {
+                    threshold: 0.15
+                }
+            );
+
+
+        revealElements.forEach(
+            function (element) {
+
+                revealObserver.observe(
+                    element
+                );
+
+            }
+        );
+
+    }
+
+})();
+</script>
+
 {% endblock %}
