@@ -62,7 +62,9 @@ class Category(models.Model):
     def get_url(self):
         return reverse(
             'products_by_category',
-            args=[self.slug]
+            kwargs={
+                'category_slug': self.slug,
+            }
         )
 
     def __str__(self):

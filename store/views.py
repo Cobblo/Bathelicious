@@ -24,6 +24,10 @@ from orders.models import OrderProduct
 from banners.models import Banner
 
 
+# =========================================================
+# HOME
+# =========================================================
+
 def home(request):
     featured_products = Product.objects.filter(
         is_featured=True,
@@ -69,6 +73,10 @@ def home(request):
         context
     )
 
+
+# =========================================================
+# STORE / CATEGORY
+# =========================================================
 
 def store(request, category_slug=None):
     categories = Category.objects.all()
@@ -166,6 +174,10 @@ def store(request, category_slug=None):
     )
 
 
+# =========================================================
+# PRODUCT DETAIL
+# =========================================================
+
 def product_detail(
     request,
     category_slug,
@@ -236,6 +248,69 @@ def product_detail(
     )
 
 
+# =========================================================
+# OLD URL 301 REDIRECTS
+# =========================================================
+
+def old_category_redirect(
+    request,
+    category_slug
+):
+    """
+    Permanently redirect old category URLs:
+
+    /store/category/face-care/
+
+    to:
+
+    /store/face-care/
+    """
+
+    category = get_object_or_404(
+        Category,
+        slug=category_slug
+    )
+
+    return redirect(
+        'products_by_category',
+        category_slug=category.slug,
+        permanent=True
+    )
+
+
+def old_product_redirect(
+    request,
+    category_slug,
+    product_slug
+):
+    """
+    Permanently redirect old product URLs:
+
+    /store/category/face-care/product-name/
+
+    to:
+
+    /store/face-care/product-name/
+    """
+
+    product = get_object_or_404(
+        Product,
+        category__slug=category_slug,
+        slug=product_slug
+    )
+
+    return redirect(
+        'product_detail',
+        category_slug=product.category.slug,
+        product_slug=product.slug,
+        permanent=True
+    )
+
+
+# =========================================================
+# SEARCH
+# =========================================================
+
 def search(request):
     products = Product.objects.none()
     product_count = 0
@@ -292,6 +367,10 @@ def search(request):
     )
 
 
+# =========================================================
+# WISHLIST
+# =========================================================
+
 @login_required
 def wishlist(request):
     wishlist_items = Wishlist.objects.filter(
@@ -346,6 +425,10 @@ def remove_from_wishlist(
         'wishlist'
     )
 
+
+# =========================================================
+# REVIEWS
+# =========================================================
 
 def submit_review(
     request,
@@ -412,6 +495,10 @@ def submit_review(
     )
 
 
+# =========================================================
+# POLICY PAGES
+# =========================================================
+
 def shipping_policy(request):
     return render(
         request,
@@ -439,6 +526,10 @@ def return_and_refund(request):
         'store/return_and_refund.html'
     )
 
+
+# =========================================================
+# COMBOS
+# =========================================================
 
 def combos_view(request):
     combo_products = Product.objects.filter(
@@ -473,6 +564,10 @@ def combos_view(request):
     )
 
 
+# =========================================================
+# BESTSELLERS
+# =========================================================
+
 def bestsellers_view(request):
     bestsellers = Product.objects.filter(
         is_bestseller=True,
@@ -487,6 +582,10 @@ def bestsellers_view(request):
         }
     )
 
+
+# =========================================================
+# ABOUT US
+# =========================================================
 
 def aboutus(request):
     about = AboutSettings.objects.first()
