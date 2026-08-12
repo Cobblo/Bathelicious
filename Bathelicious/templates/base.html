@@ -1,89 +1,205 @@
 {% load static %}
+
 <!DOCTYPE HTML>
+
 <html lang="en">
+
 <head>
+
 <meta charset="utf-8">
+
 <meta http-equiv="pragma" content="no-cache" />
+
 <meta http-equiv="cache-control" content="max-age=604800" />
+
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
-<title>Bathelicious</title>
+
+<!-- ================= SEO ================= -->
+
+<title>{% block meta_title %}Bathelicious{% endblock %}</title>
+
+<meta
+    name="description"
+    content="{% block meta_description %}Bathelicious plant-powered skincare, haircare and body care products for everyday nourishment and thoughtful personal care.{% endblock %}"
+>
+
+<!-- ================= END SEO ================= -->
+
 
 <link href="{% static 'images/new_logo.png' %}" rel="shortcut icon" type="image/x-icon">
 
+
 <!-- jQuery -->
+
 <script src="{% static 'js/jquery-2.0.0.min.js' %}" type="text/javascript"></script>
 
+
 <!-- Bootstrap4 files-->
+
 <script src="{% static 'js/bootstrap.bundle.min.js' %}" type="text/javascript"></script>
+
 <link href="{% static 'css/bootstrap.css' %}" rel="stylesheet" type="text/css"/>
 
+
 <!-- Font awesome 5 -->
+
 <link href="{% static 'fonts/fontawesome/css/all.min.css' %}" type="text/css" rel="stylesheet">
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
+<link
+    rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"
+>
+
 
 <!-- custom style -->
+
 <link href="{% static 'css/ui.css' %}" rel="stylesheet" type="text/css"/>
-<link href="{% static 'css/responsive.css' %}" rel="stylesheet" media="only screen and (max-width: 1200px)" />
-<link href="{% static 'css/custom.css' %}" rel="stylesheet" type="text/css"/>
+
+<link
+    href="{% static 'css/responsive.css' %}"
+    rel="stylesheet"
+    media="only screen and (max-width: 1200px)"
+/>
+
+<link
+    href="{% static 'css/custom.css' %}"
+    rel="stylesheet"
+    type="text/css"
+/>
+
 
 <!-- custom javascript -->
+
 <script src="{% static 'js/script.js' %}" type="text/javascript"></script>
 
 
 <script type="text/javascript">
+
     // Scroll button visibility
+
     window.addEventListener("scroll", function () {
+
         const scrollTop = document.getElementById("scroll-top");
-        if (window.scrollY > 100) {
-            scrollTop.style.display = "flex";
-        } else {
-            scrollTop.style.display = "none";
+
+        if (scrollTop) {
+
+            if (window.scrollY > 100) {
+
+                scrollTop.style.display = "flex";
+
+            } else {
+
+                scrollTop.style.display = "none";
+
+            }
+
         }
+
     });
+
 </script>
 
+
 </head>
+
 <body>
 
+
     <!-- Navbar -->
+
     {% include 'includes/navbar.html' %}
 
+
     <!-- Main content -->
+
     {% block content %}
+
     {% endblock %}
 
+
     <!-- Footer -->
+
     {% include 'includes/footer.html' %}
 
-     <!-- WhatsApp Button -->
-    <a href="https://wa.me/8220773182" target="_blank" class="whatsapp-float" title="Chat with us">
+
+    <!-- WhatsApp Button -->
+
+    <a
+        href="https://wa.me/8220773182"
+        target="_blank"
+        class="whatsapp-float"
+        title="Chat with us"
+    >
+
         <i class="fa fa-whatsapp"></i>
+
     </a>
+
 
     <!-- Scroll to Top Button -->
-    <a href="#" id="scroll-top" class="scroll-top d-flex align-items-center justify-content-center">
-        <i class="fa fa-arrow-up"></i>  <!-- Using Font Awesome icon instead of Bootstrap Icons -->
+
+    <a
+        href="#"
+        id="scroll-top"
+        class="scroll-top d-flex align-items-center justify-content-center"
+    >
+
+        <i class="fa fa-arrow-up"></i>
+
     </a>
 
+
     <script>
+
         // Show scroll-to-top button
+
         window.addEventListener("scroll", function () {
+
             const scrollTop = document.getElementById("scroll-top");
-            if (window.scrollY > 100) {
-                scrollTop.style.display = "flex";
-            } else {
-                scrollTop.style.display = "none";
+
+            if (scrollTop) {
+
+                if (window.scrollY > 100) {
+
+                    scrollTop.style.display = "flex";
+
+                } else {
+
+                    scrollTop.style.display = "none";
+
+                }
+
             }
+
         });
-    
+
+
         // Scroll smoothly to top
-        document.getElementById("scroll-top").addEventListener("click", function (e) {
-            e.preventDefault();
-            window.scrollTo({ top: 0, behavior: "smooth" });
-        });
+
+        const scrollTopButton = document.getElementById("scroll-top");
+
+        if (scrollTopButton) {
+
+            scrollTopButton.addEventListener(
+                "click",
+                function (e) {
+
+                    e.preventDefault();
+
+                    window.scrollTo({
+                        top: 0,
+                        behavior: "smooth"
+                    });
+
+                }
+            );
+
+        }
+
     </script>
-    
+
 
 </body>
+
 </html>

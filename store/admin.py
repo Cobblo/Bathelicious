@@ -19,7 +19,10 @@ from .models import (
 )
 
 
-# --- helpers ---------------------------------------------------------------
+# =========================================================
+# HELPERS
+# =========================================================
+
 def safe_unregister(model):
     try:
         admin.site.unregister(model)
@@ -29,13 +32,17 @@ def safe_unregister(model):
 
 def safe_register(model, admin_class=None):
     safe_unregister(model)
+
     if admin_class:
         admin.site.register(model, admin_class)
     else:
         admin.site.register(model)
 
 
-# --- inlines ---------------------------------------------------------------
+# =========================================================
+# INLINES
+# =========================================================
+
 @admin_thumbnails.thumbnail('image')
 class ProductGalleryInline(admin.TabularInline):
     model = ProductGallery
@@ -53,8 +60,12 @@ class ProductFAQInline(admin.TabularInline):
     max_num = 10
 
 
-# --- ModelAdmins -----------------------------------------------------------
+# =========================================================
+# PRODUCT ADMIN
+# =========================================================
+
 class ProductAdmin(admin.ModelAdmin):
+
     list_display = (
         'product_name',
         'price',
@@ -89,38 +100,173 @@ class ProductAdmin(admin.ModelAdmin):
     search_fields = (
         'product_name',
         'slug',
+        'seo_title',
+        'h1_title',
+        'primary_keyword',
     )
 
     filter_horizontal = (
         'related_products',
     )
 
+    fieldsets = (
+
+        (
+            'Basic Product Details',
+            {
+                'fields': (
+                    'product_name',
+                    'slug',
+                    'category',
+                    'description',
+                    'price',
+                    'quantity',
+                    'images',
+                    'stock',
+                )
+            }
+        ),
+
+        (
+            'SEO Settings',
+            {
+                'fields': (
+                    'seo_title',
+                    'h1_title',
+                    'meta_description',
+                    'primary_keyword',
+                )
+            }
+        ),
+
+        (
+            'Product Content',
+            {
+                'fields': (
+                    'benefits',
+                    'all_ingredients',
+                    'packaging_details',
+                    'how_to_use',
+                )
+            }
+        ),
+
+        (
+            'Product Relationships',
+            {
+                'fields': (
+                    'related_products',
+                )
+            }
+        ),
+
+        (
+            'Product Status',
+            {
+                'fields': (
+                    'is_available',
+                    'is_new_arrival',
+                    'is_featured',
+                    'is_combo',
+                    'is_bestseller',
+                )
+            }
+        ),
+    )
+
+
+# =========================================================
+# VARIATION ADMIN
+# =========================================================
 
 class VariationAdmin(admin.ModelAdmin):
-    list_display = ('product', 'variation_category', 'variation_value', 'is_active')
-    list_editable = ('is_active',)
-    list_filter = ('product', 'variation_category', 'variation_value')
 
+    list_display = (
+        'product',
+        'variation_category',
+        'variation_value',
+        'is_active',
+    )
+
+    list_editable = (
+        'is_active',
+    )
+
+    list_filter = (
+        'product',
+        'variation_category',
+        'variation_value',
+    )
+
+
+# =========================================================
+# REVIEW ADMIN
+# =========================================================
 
 class ReviewRatingAdmin(admin.ModelAdmin):
-    list_display = ('product', 'user', 'rating', 'status', 'created_at')
-    list_filter = ('status', 'created_at')
-    search_fields = ('product__product_name', 'user__email')
 
+    list_display = (
+        'product',
+        'user',
+        'rating',
+        'status',
+        'created_at',
+    )
+
+    list_filter = (
+        'status',
+        'created_at',
+    )
+
+    search_fields = (
+        'product__product_name',
+        'user__email',
+    )
+
+
+# =========================================================
+# ABOUT SETTINGS
+# =========================================================
 
 class AboutSettingsAdmin(admin.ModelAdmin):
-    list_display = ("id", "updated_at")
 
+    list_display = (
+        "id",
+        "updated_at",
+    )
+
+
+# =========================================================
+# REVIEW VIDEOS
+# =========================================================
 
 @admin.register(ReviewVideo)
 class ReviewVideoAdmin(admin.ModelAdmin):
-    list_display = ('video', 'order', 'is_active')
-    list_editable = ('order', 'is_active')
-    ordering = ('order',)
+
+    list_display = (
+        'video',
+        'order',
+        'is_active',
+    )
+
+    list_editable = (
+        'order',
+        'is_active',
+    )
+
+    ordering = (
+        'order',
+    )
+
     list_per_page = 10
 
 
+# =========================================================
+# COUPON ADMIN
+# =========================================================
+
 class CouponAdmin(admin.ModelAdmin):
+
     list_display = (
         'code',
         'discount_percentage',
@@ -131,17 +277,49 @@ class CouponAdmin(admin.ModelAdmin):
         'one_time_per_user',
         'first_order_only',
     )
-    search_fields = ('code',)
-    list_filter = ('is_active', 'one_time_per_user', 'first_order_only')
-    filter_horizontal = ('categories', 'products')
 
+    search_fields = (
+        'code',
+    )
+
+    list_filter = (
+        'is_active',
+        'one_time_per_user',
+        'first_order_only',
+    )
+
+    filter_horizontal = (
+        'categories',
+        'products',
+    )
+
+
+# =========================================================
+# COUPON USAGE ADMIN
+# =========================================================
 
 class CouponUsageAdmin(admin.ModelAdmin):
-    list_display = ('user', 'coupon', 'order_id', 'used_at')
-    search_fields = ('user__email', 'coupon__code', 'order_id')
 
+    list_display = (
+        'user',
+        'coupon',
+        'order_id',
+        'used_at',
+    )
+
+    search_fields = (
+        'user__email',
+        'coupon__code',
+        'order_id',
+    )
+
+
+# =========================================================
+# COMBO PAGE CONTENT ADMIN
+# =========================================================
 
 class ComboPageContentAdmin(admin.ModelAdmin):
+
     list_display = (
         'title',
         'updated_at',
@@ -159,17 +337,48 @@ class ComboPageContentAdmin(admin.ModelAdmin):
         return False
 
 
+# =========================================================
+# SAFE REGISTRATIONS
+# =========================================================
 
-# --- Safe registrations ----------------------------------------------------
 safe_register(Product, ProductAdmin)
+
 safe_register(ProductFAQ)
-safe_register(Variation, VariationAdmin)
-safe_register(ReviewRating, ReviewRatingAdmin)
+
+safe_register(
+    Variation,
+    VariationAdmin
+)
+
+safe_register(
+    ReviewRating,
+    ReviewRatingAdmin
+)
+
 safe_register(ProductGallery)
+
 safe_register(Wishlist)
+
 safe_register(SmallBanner)
+
 safe_register(KeyIngredient)
-safe_register(AboutSettings, AboutSettingsAdmin)
-safe_register(Coupon, CouponAdmin)
-safe_register(CouponUsage, CouponUsageAdmin)
-safe_register(ComboPageContent, ComboPageContentAdmin)
+
+safe_register(
+    AboutSettings,
+    AboutSettingsAdmin
+)
+
+safe_register(
+    Coupon,
+    CouponAdmin
+)
+
+safe_register(
+    CouponUsage,
+    CouponUsageAdmin
+)
+
+safe_register(
+    ComboPageContent,
+    ComboPageContentAdmin
+)

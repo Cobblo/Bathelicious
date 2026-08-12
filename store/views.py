@@ -75,19 +75,75 @@ def store(request, category_slug=None):
     category = None
 
     if category_slug:
-        category = get_object_or_404(Category, slug=category_slug)
+        category = get_object_or_404(
+            Category,
+            slug=category_slug
+        )
+
         products = Product.objects.filter(
             category=category,
             is_available=True
         ).order_by('id')
+
+        seo_title = (
+            category.seo_title
+            if category.seo_title
+            else f"{category.category_name} | Bathelicious"
+        )
+
+        h1_title = (
+            category.h1_title
+            if category.h1_title
+            else category.category_name
+        )
+
+        meta_description = (
+            category.meta_description
+            if category.meta_description
+            else category.description
+        )
+
+        primary_keyword = (
+            category.primary_keyword
+            if category.primary_keyword
+            else category.category_name
+        )
+
     else:
         products = Product.objects.filter(
             is_available=True
         ).order_by('id')
 
-    paginator = Paginator(products, 8)
-    page = request.GET.get('page')
-    paged_products = paginator.get_page(page)
+        seo_title = (
+            "Bathelicious Skincare, Haircare & Body Care Products"
+        )
+
+        h1_title = (
+            "Skincare, Haircare & Body Care"
+        )
+
+        meta_description = (
+            "Shop Bathelicious plant-powered skincare, haircare and body care "
+            "products designed for everyday nourishment and thoughtful personal care."
+        )
+
+        primary_keyword = (
+            "plant based skincare"
+        )
+
+    paginator = Paginator(
+        products,
+        8
+    )
+
+    page = request.GET.get(
+        'page'
+    )
+
+    paged_products = paginator.get_page(
+        page
+    )
+
     product_count = products.count()
 
     context = {
@@ -95,12 +151,26 @@ def store(request, category_slug=None):
         'product_count': product_count,
         'links': categories,
         'category': category,
+
+        # SEO
+        'seo_title': seo_title,
+        'h1_title': h1_title,
+        'meta_description': meta_description,
+        'primary_keyword': primary_keyword,
     }
 
-    return render(request, 'store/store.html', context)
+    return render(
+        request,
+        'store/store.html',
+        context
+    )
 
 
-def product_detail(request, category_slug, product_slug):
+def product_detail(
+    request,
+    category_slug,
+    product_slug
+):
     single_product = get_object_or_404(
         Product,
         category__slug=category_slug,
@@ -124,6 +194,7 @@ def product_detail(request, category_slug, product_slug):
             user=request.user,
             product=single_product
         ).exists()
+
     else:
         in_wishlist = False
 
@@ -158,13 +229,20 @@ def product_detail(request, category_slug, product_slug):
         'related_products': related_products,
     }
 
-    return render(request, 'store/product_detail.html', context)
+    return render(
+        request,
+        'store/product_detail.html',
+        context
+    )
 
 
 def search(request):
     products = Product.objects.none()
     product_count = 0
-    keyword = request.GET.get('keyword')
+
+    keyword = request.GET.get(
+        'keyword'
+    )
 
     if keyword:
         products = Product.objects.filter(
@@ -175,56 +253,108 @@ def search(request):
 
         product_count = products.count()
 
-    paginator = Paginator(products, 8)
-    page = request.GET.get('page')
-    paged_products = paginator.get_page(page)
+    paginator = Paginator(
+        products,
+        8
+    )
+
+    page = request.GET.get(
+        'page'
+    )
+
+    paged_products = paginator.get_page(
+        page
+    )
 
     context = {
         'products': paged_products,
         'product_count': product_count,
         'links': Category.objects.all(),
+
+        # SEO
+        'seo_title': (
+            "Search Products | Bathelicious"
+        ),
+
+        'h1_title': (
+            "Search Products"
+        ),
+
+        'meta_description': (
+            "Search Bathelicious skincare, haircare and body care products."
+        ),
     }
-
-    return render(request, 'store/store.html', context)
-
-
-@login_required
-def wishlist(request):
-    wishlist_items = Wishlist.objects.filter(user=request.user)
 
     return render(
         request,
-        'store/wishlist.html',
-        {'wishlist_items': wishlist_items}
+        'store/store.html',
+        context
     )
 
 
 @login_required
-def add_to_wishlist(request, product_id):
-    product = get_object_or_404(Product, id=product_id)
+def wishlist(request):
+    wishlist_items = Wishlist.objects.filter(
+        user=request.user
+    )
+
+    return render(
+        request,
+        'store/wishlist.html',
+        {
+            'wishlist_items': wishlist_items
+        }
+    )
+
+
+@login_required
+def add_to_wishlist(
+    request,
+    product_id
+):
+    product = get_object_or_404(
+        Product,
+        id=product_id
+    )
 
     Wishlist.objects.get_or_create(
         user=request.user,
         product=product
     )
 
-    return redirect('wishlist')
+    return redirect(
+        'wishlist'
+    )
 
 
 @login_required
-def remove_from_wishlist(request, product_id):
-    product = get_object_or_404(Product, id=product_id)
+def remove_from_wishlist(
+    request,
+    product_id
+):
+    product = get_object_or_404(
+        Product,
+        id=product_id
+    )
 
     Wishlist.objects.filter(
         user=request.user,
         product=product
     ).delete()
 
-    return redirect('wishlist')
+    return redirect(
+        'wishlist'
+    )
 
 
-def submit_review(request, product_id):
-    url = request.META.get('HTTP_REFERER', '/')
+def submit_review(
+    request,
+    product_id
+):
+    url = request.META.get(
+        'HTTP_REFERER',
+        '/'
+    )
 
     if request.method == 'POST':
         try:
@@ -233,24 +363,39 @@ def submit_review(request, product_id):
                 product_id=product_id
             )
 
-            form = ReviewForm(request.POST, instance=review)
+            form = ReviewForm(
+                request.POST,
+                instance=review
+            )
 
             if form.is_valid():
                 form.save()
+
                 messages.success(
                     request,
                     'Thank you! Your review has been updated.'
                 )
 
         except ReviewRating.DoesNotExist:
-            form = ReviewForm(request.POST)
+            form = ReviewForm(
+                request.POST
+            )
 
             if form.is_valid():
                 data = ReviewRating(
-                    subject=form.cleaned_data.get('subject', ''),
-                    rating=form.cleaned_data['rating'],
-                    review=form.cleaned_data['review'],
-                    ip=request.META.get('REMOTE_ADDR'),
+                    subject=form.cleaned_data.get(
+                        'subject',
+                        ''
+                    ),
+                    rating=form.cleaned_data[
+                        'rating'
+                    ],
+                    review=form.cleaned_data[
+                        'review'
+                    ],
+                    ip=request.META.get(
+                        'REMOTE_ADDR'
+                    ),
                     product_id=product_id,
                     user_id=request.user.id
                 )
@@ -262,23 +407,37 @@ def submit_review(request, product_id):
                     'Thank you! Your review has been submitted.'
                 )
 
-    return redirect(url)
+    return redirect(
+        url
+    )
 
 
 def shipping_policy(request):
-    return render(request, 'store/shipping_policy.html')
+    return render(
+        request,
+        'store/shipping_policy.html'
+    )
 
 
 def terms_and_conditions(request):
-    return render(request, 'store/terms_and_conditions.html')
+    return render(
+        request,
+        'store/terms_and_conditions.html'
+    )
 
 
 def privacy_policy(request):
-    return render(request, 'store/privacy_policy.html')
+    return render(
+        request,
+        'store/privacy_policy.html'
+    )
 
 
 def return_and_refund(request):
-    return render(request, 'store/return_and_refund.html')
+    return render(
+        request,
+        'store/return_and_refund.html'
+    )
 
 
 def combos_view(request):
@@ -287,9 +446,18 @@ def combos_view(request):
         is_available=True
     ).order_by('-created_date')
 
-    paginator = Paginator(combo_products, 8)
-    page = request.GET.get('page')
-    combos = paginator.get_page(page)
+    paginator = Paginator(
+        combo_products,
+        8
+    )
+
+    page = request.GET.get(
+        'page'
+    )
+
+    combos = paginator.get_page(
+        page
+    )
 
     combo_page_content = ComboPageContent.objects.first()
 
@@ -314,7 +482,9 @@ def bestsellers_view(request):
     return render(
         request,
         'store/bestsellers.html',
-        {'bestsellers': bestsellers}
+        {
+            'bestsellers': bestsellers
+        }
     )
 
 
@@ -324,5 +494,7 @@ def aboutus(request):
     return render(
         request,
         'store/about_us.html',
-        {'about': about}
+        {
+            'about': about
+        }
     )

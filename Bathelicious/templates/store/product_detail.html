@@ -2,6 +2,25 @@
 {% load static %}
 {% load custom_filters %}
 
+
+{% block meta_title %}
+{% if single_product.seo_title %}
+{{ single_product.seo_title }}
+{% else %}
+{{ single_product.product_name }} | Bathelicious
+{% endif %}
+{% endblock %}
+
+
+{% block meta_description %}
+{% if single_product.meta_description %}
+{{ single_product.meta_description }}
+{% else %}
+Shop {{ single_product.product_name }} from Bathelicious. Plant-powered personal care created for everyday nourishment and thoughtful care.
+{% endif %}
+{% endblock %}
+
+
 {% block content %}
 
 <section class="section-content padding-y bg">
@@ -28,7 +47,14 @@
 
         <!-- Product Info Section -->
         <div style="flex: 1; min-width: 300px;">
-          <h2>{{ single_product.product_name }}</h2>
+
+          <h1 style="font-size: 2rem; font-weight: 600;">
+            {% if single_product.h1_title %}
+              {{ single_product.h1_title }}
+            {% else %}
+              {{ single_product.product_name }}
+            {% endif %}
+          </h1>
 
           <h5 class="mb-0" style="color: #B87333;">
             ₹ {{ single_product.price }}
@@ -185,7 +211,6 @@
         }
 
 
-        
         /* ================= RELATED PRODUCTS ================= */
 
         .related-products-section {
@@ -378,19 +403,19 @@
 
         @media (max-width: 390px) {
 
-        .related-products-grid {
-            gap: 10px;
-        }
+          .related-products-grid {
+              gap: 10px;
+          }
 
-        .related-product-card {
-            width: calc(50% - 5px);
-            max-width: 145px;
-        }
+          .related-product-card {
+              width: calc(50% - 5px);
+              max-width: 145px;
+          }
 
-        .related-product-image {
-            height: 120px;
+          .related-product-image {
+              height: 120px;
+          }
         }
-    }
 
 
         /* ================= FAQ MOBILE VIEW ================= */
@@ -456,15 +481,20 @@
         }
       </style>
 
+
       {% if related_products %}
         <section class="related-products-section">
           <h4 class="text-center mb-4">Bathelicious Recommends</h4>
 
           <div class="related-products-wrapper">
             <div class="related-products-grid">
+
               {% for product in related_products %}
+
                 <div class="related-product-card">
+
                   <a href="{{ product.get_url }}" class="related-product-link">
+
                     {% if product.images %}
                       <img
                         src="{{ product.images.url }}"
@@ -479,232 +509,489 @@
                     <p class="related-product-price">
                       ₹{{ product.price }}
                     </p>
+
                   </a>
 
                   <form method="POST" action="{% url 'add_cart' product.id %}">
                     {% csrf_token %}
+
                     <input type="hidden" name="quantity" value="1">
 
                     <button type="submit" class="related-product-button">
                       Add to Cart
                     </button>
+
                   </form>
+
                 </div>
+
               {% endfor %}
+
             </div>
           </div>
         </section>
       {% endif %}
 
+
       {% if single_product.key_ingredients.all %}
+
         <div class="toggle-card mt-4" data-toggle-box>
+
           <div class="d-flex justify-content-between align-items-center">
-            <h5 class="mb-0" style="font-weight:700;">Key Ingredients</h5>
-            <button type="button" class="btn btn-light btn-sm toggle-btn">▼</button>
+
+            <h5 class="mb-0" style="font-weight:700;">
+              Key Ingredients
+            </h5>
+
+            <button type="button" class="btn btn-light btn-sm toggle-btn">
+              ▼
+            </button>
+
           </div>
 
           <div class="toggle-content">
+
             {% for ingredient in single_product.key_ingredients.all %}
-              <div class="d-flex flex-wrap align-items-center mb-3 p-3 ingredient-block"
-                   style="background:#f8f8f8;border-radius:10px;">
-                
+
+              <div
+                class="d-flex flex-wrap align-items-center mb-3 p-3 ingredient-block"
+                style="background:#f8f8f8;border-radius:10px;"
+              >
+
                 <div style="flex:0 0 150px;text-align:center;">
+
                   {% if ingredient.image %}
-                    <img src="{{ ingredient.image.url }}" alt="{{ ingredient.name }}"
-                         class="img-fluid rounded"
-                         style="max-height:120px;object-fit:cover;">
+
+                    <img
+                      src="{{ ingredient.image.url }}"
+                      alt="{{ ingredient.name }}"
+                      class="img-fluid rounded"
+                      style="max-height:120px;object-fit:cover;"
+                    >
+
                   {% endif %}
+
                 </div>
 
                 <div style="flex:1; padding-left:20px; margin-top:10px;">
-                  <h6 style="font-weight:700;margin-bottom:8px;">{{ ingredient.name }}</h6>
-                  <p class="mb-0" style="color:#555;">{{ ingredient.description }}</p>
+
+                  <h6 style="font-weight:700;margin-bottom:8px;">
+                    {{ ingredient.name }}
+                  </h6>
+
+                  <p class="mb-0" style="color:#555;">
+                    {{ ingredient.description }}
+                  </p>
+
                 </div>
+
               </div>
+
             {% empty %}
-              <p class="text-muted mb-0">No key ingredients added.</p>
+
+              <p class="text-muted mb-0">
+                No key ingredients added.
+              </p>
+
             {% endfor %}
+
           </div>
+
         </div>
+
       {% endif %}
       
+
       <div class="d-flex flex-wrap mt-5" style="gap: 20px;">
 
         {% if single_product.all_ingredients %}
-          <div class="toggle-card" data-toggle-box style="flex:1; min-width:280px;">
+
+          <div
+            class="toggle-card"
+            data-toggle-box
+            style="flex:1; min-width:280px;"
+          >
+
             <div class="d-flex justify-content-between align-items-center">
-              <h6 style="font-weight: bold;">All Ingredients</h6>
-              <button type="button" class="btn btn-light btn-sm toggle-btn">▼</button>
+
+              <h6 style="font-weight: bold;">
+                All Ingredients
+              </h6>
+
+              <button
+                type="button"
+                class="btn btn-light btn-sm toggle-btn"
+              >
+                ▼
+              </button>
+
             </div>
+
             <div class="toggle-content">
+
               {{ single_product.all_ingredients|linebreaks }}
+
             </div>
+
           </div>
+
         {% endif %}
+
 
         {% if single_product.packaging_details %}
-          <div class="toggle-card" data-toggle-box style="flex:1; min-width:280px;">
+
+          <div
+            class="toggle-card"
+            data-toggle-box
+            style="flex:1; min-width:280px;"
+          >
+
             <div class="d-flex justify-content-between align-items-center">
-              <h6 style="font-weight: bold;">About Our Packaging</h6>
-              <button type="button" class="btn btn-light btn-sm toggle-btn">▼</button>
+
+              <h6 style="font-weight: bold;">
+                About Our Packaging
+              </h6>
+
+              <button
+                type="button"
+                class="btn btn-light btn-sm toggle-btn"
+              >
+                ▼
+              </button>
+
             </div>
+
             <div class="toggle-content">
+
               {{ single_product.packaging_details|linebreaks }}
+
             </div>
+
           </div>
+
         {% endif %}
+
 
         {% if single_product.how_to_use %}
-          <div class="toggle-card" data-toggle-box style="flex:1; min-width:280px;">
+
+          <div
+            class="toggle-card"
+            data-toggle-box
+            style="flex:1; min-width:280px;"
+          >
+
             <div class="d-flex justify-content-between align-items-center">
-              <h6 style="font-weight: bold;">How to Use</h6>
-              <button type="button" class="btn btn-light btn-sm toggle-btn">▼</button>
+
+              <h6 style="font-weight: bold;">
+                How to Use
+              </h6>
+
+              <button
+                type="button"
+                class="btn btn-light btn-sm toggle-btn"
+              >
+                ▼
+              </button>
+
             </div>
+
             <div class="toggle-content">
+
               {{ single_product.how_to_use|linebreaks }}
+
             </div>
+
           </div>
+
         {% endif %}
+
       </div>
 
+
       <!-- FAQ Main Dropdown Section -->
+
       {% if faqs %}
+
         <div class="toggle-card faq-main-card" data-toggle-box>
+
           <div class="d-flex justify-content-between align-items-center">
+
             <h4 class="mb-0 faq-main-title">
               Frequently Asked Questions
             </h4>
-            <button type="button" class="btn btn-light btn-sm toggle-btn">▼</button>
+
+            <button
+              type="button"
+              class="btn btn-light btn-sm toggle-btn"
+            >
+              ▼
+            </button>
+
           </div>
 
           <div class="toggle-content">
+
             {% for faq in faqs %}
+
               <div class="faq-card">
+
                 <div class="faq-question-row">
+
                   <h6 class="faq-question">
                     {{ forloop.counter }}. {{ faq.question }}
                   </h6>
-                  <button type="button" class="faq-btn">▼</button>
+
+                  <button type="button" class="faq-btn">
+                    ▼
+                  </button>
+
                 </div>
 
                 <div class="faq-answer">
                   {{ faq.answer|linebreaks }}
                 </div>
+
               </div>
+
             {% endfor %}
+
           </div>
+
         </div>
+
       {% endif %}
 
-      <!-- Review Form -->
-      <div class="mt-5">
-        <form action="{% url 'submit_review' single_product.id %}" method="POST">
-          {% csrf_token %}
-          <h5>Write Your Review</h5>
 
-          <label>Rate this product:</label><br>
+      <!-- Review Form -->
+
+      <div class="mt-5">
+
+        <form
+          action="{% url 'submit_review' single_product.id %}"
+          method="POST"
+        >
+
+          {% csrf_token %}
+
+          <h5>
+            Write Your Review
+          </h5>
+
+          <label>
+            Rate this product:
+          </label>
+
+          <br>
+
           <div class="rate mb-2">
+
             {% for value in "54321" %}
-              <input type="radio" id="star{{ value }}" name="rating" value="{{ value }}" required />
-              <label for="star{{ value }}" title="{{ value }} stars"></label>
+
+              <input
+                type="radio"
+                id="star{{ value }}"
+                name="rating"
+                value="{{ value }}"
+                required
+              />
+
+              <label
+                for="star{{ value }}"
+                title="{{ value }} stars"
+              ></label>
+
             {% endfor %}
+
           </div>
 
-          <textarea name="review" rows="4" class="form-control mb-3" placeholder="Your review..."></textarea>
+          <textarea
+            name="review"
+            rows="4"
+            class="form-control mb-3"
+            placeholder="Your review..."
+          ></textarea>
+
 
           {% if user.is_authenticated %}
+
             {% if orderproduct %}
-              <button type="submit" class="btn text-white px-4" style="background-color: #B87333;">
+
+              <button
+                type="submit"
+                class="btn text-white px-4"
+                style="background-color: #B87333;"
+              >
+
                 Submit Review
+
               </button>
+
             {% else %}
-              <p class="text-muted mt-2">You must purchase the product to post a review.</p>
+
+              <p class="text-muted mt-2">
+                You must purchase the product to post a review.
+              </p>
+
             {% endif %}
+
           {% else %}
+
             <p class="text-muted">
+
               You must be logged in to post a review.
-              <a href="{% url 'login' %}">Login</a>
+
+              <a href="{% url 'login' %}">
+                Login
+              </a>
+
             </p>
+
           {% endif %}
 
+
           {% include 'includes/alerts.html' %}
+
         </form>
+
       </div>
 
+
       <!-- Customer Reviews -->
+
       <div class="mt-4">
-        <h4>Customer Reviews</h4>
+
+        <h4>
+          Customer Reviews
+        </h4>
 
         {% for review in reviews %}
+
           <div class="border rounded p-3 mb-3">
+
             <div class="d-flex justify-content-between">
-              <strong>{{ review.user.full_name }}</strong>
-              <small class="text-muted">{{ review.updated_at }}</small>
+
+              <strong>
+                {{ review.user.full_name }}
+              </strong>
+
+              <small class="text-muted">
+                {{ review.updated_at }}
+              </small>
+
             </div>
 
             <div class="rating-star">
+
               {% for i in 1|make_range:5 %}
+
                 <i class="fa fa-star{% if review.rating < i %}-o{% endif %}"></i>
+
               {% endfor %}
+
             </div>
 
-            <p class="mt-2">{{ review.review }}</p>
+            <p class="mt-2">
+              {{ review.review }}
+            </p>
+
           </div>
+
         {% empty %}
-          <p>No reviews yet.</p>
+
+          <p>
+            No reviews yet.
+          </p>
+
         {% endfor %}
+
       </div>
 
     </div>
   </div>
 </section>
 
+
 <script>
+
   function switchImage(src) {
+
     document.getElementById("mainImage").src = src;
+
   }
+
 
   document.addEventListener("DOMContentLoaded", function () {
 
+
     document.querySelectorAll(".toggle-btn").forEach(function (btn) {
+
       btn.addEventListener("click", function () {
+
         const targetBox = this.closest("[data-toggle-box]");
+
         const isOpen = targetBox.classList.contains("open");
 
+
         document.querySelectorAll("[data-toggle-box]").forEach(function (box) {
+
           box.classList.remove("open");
 
           const boxBtn = box.querySelector(".toggle-btn");
+
           if (boxBtn) {
+
             boxBtn.classList.remove("rotate");
+
           }
+
         });
 
+
         if (!isOpen) {
+
           targetBox.classList.add("open");
+
           this.classList.add("rotate");
+
         }
+
       });
+
     });
 
+
     document.querySelectorAll(".faq-btn").forEach(function (btn) {
+
       btn.addEventListener("click", function (event) {
+
         event.stopPropagation();
 
         const faqCard = this.closest(".faq-card");
+
         const isOpen = faqCard.classList.contains("open");
 
+
         document.querySelectorAll(".faq-card").forEach(function (card) {
+
           card.classList.remove("open");
+
         });
 
+
         if (!isOpen) {
+
           faqCard.classList.add("open");
+
         }
+
       });
+
     });
 
+
   });
+
 </script>
+
 
 {% endblock %}
