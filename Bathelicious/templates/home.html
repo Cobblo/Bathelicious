@@ -5,6 +5,68 @@
 
 <style>
 
+
+/* ==================================================
+   RUNNING BRAND HIGHLIGHTS
+================================================== */
+
+.brand-running-bar {
+    width: 100%;
+    background-color: #2F6B3A;
+    overflow: hidden;
+    white-space: nowrap;
+    padding: 10px 0;
+}
+
+.brand-running-track {
+    display: flex;
+    align-items: center;
+    width: max-content;
+    animation: bathelicious-marquee 25s linear infinite;
+}
+
+.brand-running-content {
+    display: flex;
+    align-items: center;
+    gap: 22px;
+    padding-right: 22px;
+    color: #ffffff;
+    font-size: 15px;
+    font-weight: 700;
+    flex-shrink: 0;
+}
+
+.brand-running-content span {
+    display: inline-block;
+}
+
+@keyframes bathelicious-marquee {
+    from {
+        transform: translateX(0);
+    }
+
+    to {
+        transform: translateX(-50%);
+    }
+}
+
+@media (max-width: 576px) {
+    .brand-running-bar {
+        padding: 8px 0;
+    }
+
+    .brand-running-content {
+        gap: 16px;
+        padding-right: 16px;
+        font-size: 12px;
+        font-weight: 700;
+    }
+
+    .brand-running-track {
+        animation-duration: 20s;
+    }
+}
+
 /* ================= OFFER SECTION (FIXED) ================= */
 
 .offer-progress-section {
@@ -287,55 +349,80 @@
 
 /* ================= CATEGORY QUICK LINKS ================= */
 
-.category-quick-links{
-    max-width:1200px;
-    margin:35px auto 10px;
-    text-align:center;
+.category-quick-links {
+    max-width: 1000px;
+    margin: 30px auto 20px;
+    text-align: center;
 }
 
-.category-quick-links ul{
-    list-style:disc;
-    display:flex;
-    justify-content:center;
-    align-items:center;
-    gap:40px;
-    padding:0;
-    margin:0;
-    flex-wrap:wrap;
+.category-quick-links ul {
+    list-style: none;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 18px;
+    padding: 0;
+    margin: 0;
+    flex-wrap: nowrap;
 }
 
-.category-quick-links li{
-    color:#2F6B3A;
-    font-size:18px;
-    font-weight:600;
+.category-quick-links li {
+    background-color: #F5EBDD;
+    border-radius: 7px;
+    padding: 10px 22px;
+    font-size: 16px;
+    font-weight: 600;
+    white-space: nowrap;
 }
 
-.category-quick-links a{
-    color:#2F6B3A;
-    text-decoration:none;
-    transition:.3s;
+/* Add green bullet */
+.category-quick-links li::before {
+    content: "•";
+    color: #2F6B3A;
+    font-size: 18px;
+    margin-right: 7px;
 }
 
-.category-quick-links a:hover{
-    color:#1d4d28;
-    text-decoration:underline;
+.category-quick-links a {
+    color: #2F6B3A;
+    text-decoration: none;
+    transition: 0.3s;
 }
 
-@media(max-width:768px){
+.category-quick-links a:hover {
+    color: #1d4d28;
+}
 
-    .category-quick-links{
-        margin:25px auto 5px;
+
+/* ================= MOBILE ================= */
+
+@media (max-width: 768px) {
+
+    .category-quick-links {
+        width: 100%;
+        margin: 22px auto 15px;
+        padding: 0 12px;
     }
 
-    .category-quick-links ul{
-        gap:18px;
-        justify-content:center;
+    .category-quick-links ul {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 10px;
+        width: 100%;
     }
 
-    .category-quick-links li{
-        font-size:15px;
+    .category-quick-links li {
+        width: 100%;
+        padding: 9px 8px;
+        font-size: 13px;
+        border-radius: 6px;
+        text-align: center;
     }
 
+    .category-quick-links li::before {
+        font-size: 15px;
+        margin-right: 5px;
+    }
 }
 
 /* ================= FEATURED PRODUCT SLIDER ================= */
@@ -1176,6 +1263,44 @@
 }
 
 </style>
+
+
+<!-- ================= RUNNING BRAND HIGHLIGHTS ================= -->
+<div class="brand-running-bar">
+    <div class="brand-running-track">
+
+        <div class="brand-running-content">
+            <span>Clinically Tested</span>
+            <span>🌿</span>
+            <span>Made in India</span>
+            <span>🌿</span>
+            <span>Cruelty Free</span>
+            <span>🌿</span>
+            <span>Certified Formulator</span>
+            <span>🌿</span>
+            <span>Plant Based Formulations</span>
+            <span>🌿</span>
+            <span>Ecocert Certified Suppliers</span>
+            <span>🌿</span>
+        </div>
+
+        <div class="brand-running-content" aria-hidden="true">
+            <span>Clinically Tested</span>
+            <span>🌿</span>
+            <span>Made in India</span>
+            <span>🌿</span>
+            <span>Cruelty Free</span>
+            <span>🌿</span>
+            <span>Certified Formulator</span>
+            <span>🌿</span>
+            <span>Plant Based Formulations</span>
+            <span>🌿</span>
+            <span>Ecocert Certified Suppliers</span>
+            <span>🌿</span>
+        </div>
+
+    </div>
+</div>
 
 <!-- Offer Popup Modal -->
 <div class="modal fade offer-modal" id="homepageOfferModal" tabindex="-1" aria-labelledby="homepageOfferModalLabel" aria-hidden="true">
