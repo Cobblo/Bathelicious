@@ -1,0 +1,198 @@
+{% extends "base.html" %}
+
+{% block title %}Blog | Bathelicious{% endblock %}
+
+{% block content %}
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:wght@500;600;700&family=Work+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+
+<style>
+.blog-list-page{
+    --forest:#1E3B2F;
+    --forest-deep:#152B22;
+    --clay:#8B5A34;
+    --sand:#D9B98E;
+    --paper:#FFFFFF;
+    --off:#FAFAF8;
+    --ink:#1A1815;
+    --ink-soft:#453F38;
+    --line:#E6E1D6;
+
+    font-family:'Work Sans',sans-serif;
+    background:var(--paper);
+    color:var(--ink);
+}
+
+.blog-list-header{
+    background:var(--forest);
+    color:#fff;
+    padding:46px 20px;
+    text-align:center;
+}
+
+.blog-list-header .journal{
+    margin:0 0 8px;
+    color:#F1E3CC;
+    font-size:13px;
+    font-weight:600;
+    letter-spacing:.14em;
+    text-transform:uppercase;
+}
+
+.blog-list-header h1{
+    margin:0;
+    color:#fff;
+    font-family:'Fraunces',serif;
+    font-size:clamp(34px,5vw,50px);
+}
+
+.blog-list-header p{
+    max-width:620px;
+    margin:14px auto 0;
+    color:#E7E0D5;
+    font-size:16px;
+}
+
+.blog-posts{
+    max-width:900px;
+    margin:0 auto;
+    padding:55px 24px 70px;
+}
+
+.blog-list-card{
+    display:block;
+    padding:30px 0;
+    border-bottom:1px solid var(--line);
+    text-decoration:none;
+    color:inherit;
+}
+
+.blog-list-card:first-child{
+    padding-top:0;
+}
+
+.blog-list-category{
+    display:inline-block;
+    margin-bottom:10px;
+    color:var(--clay);
+    font-size:12px;
+    font-weight:600;
+    letter-spacing:.1em;
+    text-transform:uppercase;
+}
+
+.blog-list-card h2{
+    margin:0 0 12px;
+    color:var(--forest-deep);
+    font-family:'Fraunces',serif;
+    font-size:clamp(25px,3.3vw,34px);
+    line-height:1.2;
+}
+
+.blog-list-card p{
+    max-width:720px;
+    margin:0 0 16px;
+    color:var(--ink-soft);
+    font-size:15.5px;
+    line-height:1.7;
+}
+
+.blog-list-meta{
+    display:flex;
+    flex-wrap:wrap;
+    gap:14px;
+    color:#756E65;
+    font-size:13px;
+}
+
+.blog-read-more{
+    display:inline-block;
+    margin-top:14px;
+    color:var(--clay);
+    font-weight:600;
+    font-size:14px;
+}
+
+.blog-list-card:hover h2,
+.blog-list-card:hover .blog-read-more{
+    color:#6E4426;
+}
+
+.blog-empty{
+    padding:60px 10px;
+    text-align:center;
+    color:var(--ink-soft);
+}
+
+@media(max-width:576px){
+    .blog-list-header{
+        padding:36px 18px;
+    }
+
+    .blog-posts{
+        padding:38px 20px 55px;
+    }
+
+    .blog-list-card{
+        padding:24px 0;
+    }
+}
+</style>
+
+<div class="blog-list-page">
+
+    <div class="blog-list-header">
+        <p class="journal">Bathelicious Journal</p>
+        <h1>Blog</h1>
+        <p>Plant-based beauty, ingredient guides and thoughtful routines for skin, hair and body care.</p>
+    </div>
+
+    <div class="blog-posts">
+
+        {% for post in posts %}
+
+        <a href="{{ post.get_absolute_url }}" class="blog-list-card">
+
+            <span class="blog-list-category">
+                {{ post.category }}
+            </span>
+
+            <h2>{{ post.title }}</h2>
+
+            {% if post.excerpt %}
+                <p>{{ post.excerpt }}</p>
+            {% elif post.subtitle %}
+                <p>{{ post.subtitle }}</p>
+            {% endif %}
+
+            <div class="blog-list-meta">
+                {% if post.read_time %}
+                    <span>{{ post.read_time }}</span>
+                {% endif %}
+
+                {% if post.published_at %}
+                    <span>{{ post.published_at|date:"d M Y" }}</span>
+                {% endif %}
+            </div>
+
+            <span class="blog-read-more">
+                Read article →
+            </span>
+
+        </a>
+
+        {% empty %}
+
+        <div class="blog-empty">
+            No blog posts are available yet.
+        </div>
+
+        {% endfor %}
+
+    </div>
+
+</div>
+
+{% endblock %}

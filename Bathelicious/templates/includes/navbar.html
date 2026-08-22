@@ -207,7 +207,7 @@
                         >
 
                         <div class="logo-tagline">
-                            Sustainable Skincare, Hair Care & Body Care Products
+                            Plant-Based Skincare, Haircare & Body Care Products
                         </div>
 
                     </a>
@@ -217,8 +217,8 @@
 
                 <!-- NAVIGATION -->
 
-                <div class="col-lg-5"
-                     style="padding-left:70px;">
+                <div class="col-lg-6"
+                     style="padding-left:40px;">
 
                     <nav class="nav">
 
@@ -256,6 +256,16 @@
                             href="{% url 'aboutus' %}"
                         >
                             About Us
+                        </a>
+
+
+                        <!-- BLOG -->
+
+                        <a
+                            class="nav-link text-olive"
+                            href="{% url 'blog_list' %}"
+                        >
+                            Blog
                         </a>
 
 
@@ -319,7 +329,7 @@
 
                 <!-- SEARCH -->
 
-                <div class="col-lg-3">
+                <div class="col-lg-2">
 
                     <form
                         action="{% url 'search' %}"
@@ -667,6 +677,17 @@
                 href="{% url 'aboutus' %}"
             >
                 About Us
+            </a>
+
+
+
+            <!-- BLOG -->
+
+            <a
+                class="nav-link text-olive py-2"
+                href="{% url 'blog_list' %}"
+            >
+                Blog
             </a>
 
 

@@ -35,4 +35,5 @@ urlpatterns = [
     path('policy/', views.privacy_policy, name='privacy_policy'),
     path('return-and-refund/', views.return_and_refund, name='return_and_refund'),
     path("ckeditor5/", include('django_ckeditor_5.urls')),
+    path('blog/', include('blog.urls')),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

@@ -47,6 +47,7 @@ INSTALLED_APPS = [
     'orders',
     'banners',
     'django_ckeditor_5',
+    'blog',
 ]
 
 MIDDLEWARE = [
