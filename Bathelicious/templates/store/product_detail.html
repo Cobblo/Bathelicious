@@ -418,6 +418,160 @@ Shop {{ single_product.product_name }} from Bathelicious. Plant-powered personal
         }
 
 
+
+        /* ================= PRODUCT DETAIL CUSTOMER REVIEWS ================= */
+
+        .product-detail-reviews-section {
+          margin-top: 24px;
+        }
+
+        .product-detail-reviews-heading {
+          margin-bottom: 16px;
+        }
+
+        .product-detail-reviews-slider-wrap {
+          position: relative;
+          width: 100%;
+        }
+
+        .product-detail-reviews-track {
+          width: 100%;
+        }
+
+        .product-detail-review-card {
+          border: 1px solid #dee2e6;
+          border-radius: 0.25rem;
+          padding: 1rem;
+          margin-bottom: 1rem;
+          background: #fff;
+        }
+
+        .product-detail-review-arrow {
+          display: none;
+        }
+
+
+        /* ================= PRODUCT DETAIL REVIEWS - MOBILE ================= */
+
+        @media (max-width: 576px) {
+
+          .product-detail-reviews-section {
+            margin-top: 30px !important;
+            width: 100%;
+          }
+
+          .product-detail-reviews-heading {
+            text-align: center;
+            margin-bottom: 20px;
+            font-size: 23px;
+            font-weight: 700;
+          }
+
+          .product-detail-reviews-slider-wrap {
+            position: relative;
+            width: 100%;
+            padding: 0 42px;
+            overflow: hidden;
+          }
+
+          .product-detail-reviews-track {
+            display: flex;
+            flex-wrap: nowrap;
+            gap: 14px;
+            width: 100%;
+            overflow-x: auto;
+            overflow-y: hidden;
+            scroll-behavior: smooth;
+            scroll-snap-type: x mandatory;
+            scrollbar-width: none;
+            -webkit-overflow-scrolling: touch;
+            padding: 5px 0 16px;
+          }
+
+          .product-detail-reviews-track::-webkit-scrollbar {
+            display: none;
+          }
+
+          .product-detail-review-card {
+            flex: 0 0 100%;
+            width: 100%;
+            min-width: 100%;
+            max-width: 100%;
+            box-sizing: border-box;
+            scroll-snap-align: start;
+            margin-bottom: 0;
+            padding: 20px 18px;
+            border: 1px solid #e8eee9;
+            border-radius: 14px;
+            box-shadow: 0 5px 16px rgba(0, 0, 0, 0.07);
+          }
+
+          .product-detail-review-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            gap: 12px;
+            margin-bottom: 8px;
+          }
+
+          .product-detail-review-name {
+            color: #2F6B3A;
+            font-size: 16px;
+            font-weight: 700;
+            line-height: 1.3;
+          }
+
+          .product-detail-review-date {
+            flex: 0 0 auto;
+            font-size: 11px;
+            line-height: 1.3;
+            text-align: right;
+          }
+
+          .product-detail-review-card .rating-star {
+            margin: 8px 0 12px;
+            color: #B87333;
+            font-size: 16px;
+            letter-spacing: 2px;
+          }
+
+          .product-detail-review-text {
+            margin: 0;
+            color: #444;
+            font-size: 14px;
+            line-height: 1.7;
+          }
+
+          .product-detail-review-arrow {
+            display: flex;
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 30px;
+            height: 30px;
+            padding: 0;
+            border: none;
+            border-radius: 50%;
+            background: #2F6B3A;
+            color: #fff;
+            align-items: center;
+            justify-content: center;
+            font-size: 11px;
+            cursor: pointer;
+            z-index: 20;
+            box-shadow: 0 3px 8px rgba(0, 0, 0, 0.18);
+          }
+
+          .product-detail-review-prev {
+            left: 5px;
+          }
+
+          .product-detail-review-next {
+            right: 5px;
+          }
+        }
+
+
         /* ================= FAQ MOBILE VIEW ================= */
 
         @media (max-width: 768px) {
@@ -858,53 +1012,91 @@ Shop {{ single_product.product_name }} from Bathelicious. Plant-powered personal
 
       <!-- Customer Reviews -->
 
-      <div class="mt-4">
+      <div class="product-detail-reviews-section">
 
-        <h4>
+        <h4 class="product-detail-reviews-heading">
           Customer Reviews
         </h4>
 
-        {% for review in reviews %}
+        {% if reviews %}
 
-          <div class="border rounded p-3 mb-3">
+          <div class="product-detail-reviews-slider-wrap">
 
-            <div class="d-flex justify-content-between">
+            <button
+              type="button"
+              class="product-detail-review-arrow product-detail-review-prev"
+              id="productDetailReviewPrev"
+              aria-label="Previous review"
+            >
+              <i class="fas fa-chevron-left"></i>
+            </button>
 
-              <strong>
-                {{ review.user.full_name }}
-              </strong>
 
-              <small class="text-muted">
-                {{ review.updated_at }}
-              </small>
+            <div
+              class="product-detail-reviews-track"
+              id="productDetailReviewsTrack"
+            >
 
-            </div>
+              {% for review in reviews %}
 
-            <div class="rating-star">
+                <div class="product-detail-review-card">
 
-              {% for i in 1|make_range:5 %}
+                  <div class="product-detail-review-top">
 
-                <i class="fa fa-star{% if review.rating < i %}-o{% endif %}"></i>
+                    <strong class="product-detail-review-name">
+                      {{ review.user.full_name }}
+                    </strong>
+
+                    <small class="text-muted product-detail-review-date">
+                      {{ review.updated_at }}
+                    </small>
+
+                  </div>
+
+
+                  <div class="rating-star">
+
+                    {% for i in 1|make_range:5 %}
+
+                      <i class="fa fa-star{% if review.rating < i %}-o{% endif %}"></i>
+
+                    {% endfor %}
+
+                  </div>
+
+
+                  <p class="product-detail-review-text">
+                    {{ review.review }}
+                  </p>
+
+                </div>
 
               {% endfor %}
 
             </div>
 
-            <p class="mt-2">
-              {{ review.review }}
-            </p>
+
+            <button
+              type="button"
+              class="product-detail-review-arrow product-detail-review-next"
+              id="productDetailReviewNext"
+              aria-label="Next review"
+            >
+              <i class="fas fa-chevron-right"></i>
+            </button>
 
           </div>
 
-        {% empty %}
+        {% else %}
 
           <p>
             No reviews yet.
           </p>
 
-        {% endfor %}
+        {% endif %}
 
       </div>
+
 
     </div>
   </div>
@@ -987,6 +1179,97 @@ Shop {{ single_product.product_name }} from Bathelicious. Plant-powered personal
       });
 
     });
+
+
+    /* ================= PRODUCT DETAIL CUSTOMER REVIEWS MOBILE SLIDER ================= */
+
+    const productDetailReviewsTrack =
+      document.getElementById("productDetailReviewsTrack");
+
+    const productDetailReviewPrev =
+      document.getElementById("productDetailReviewPrev");
+
+    const productDetailReviewNext =
+      document.getElementById("productDetailReviewNext");
+
+
+    if (
+      productDetailReviewsTrack &&
+      productDetailReviewPrev &&
+      productDetailReviewNext
+    ) {
+
+      function getProductDetailReviewScrollAmount() {
+
+        const reviewCard =
+          productDetailReviewsTrack.querySelector(".product-detail-review-card");
+
+        if (!reviewCard) {
+          return productDetailReviewsTrack.clientWidth;
+        }
+
+        const trackStyle = window.getComputedStyle(productDetailReviewsTrack);
+
+        const gap = parseFloat(
+          trackStyle.columnGap ||
+          trackStyle.gap ||
+          0
+        );
+
+        return reviewCard.getBoundingClientRect().width + gap;
+      }
+
+
+      productDetailReviewNext.addEventListener("click", function () {
+
+        const reachedEnd =
+          productDetailReviewsTrack.scrollLeft +
+          productDetailReviewsTrack.clientWidth >=
+          productDetailReviewsTrack.scrollWidth - 8;
+
+        if (reachedEnd) {
+
+          productDetailReviewsTrack.scrollTo({
+            left: 0,
+            behavior: "smooth"
+          });
+
+        } else {
+
+          productDetailReviewsTrack.scrollBy({
+            left: getProductDetailReviewScrollAmount(),
+            behavior: "smooth"
+          });
+
+        }
+
+      });
+
+
+      productDetailReviewPrev.addEventListener("click", function () {
+
+        const reachedStart =
+          productDetailReviewsTrack.scrollLeft <= 8;
+
+        if (reachedStart) {
+
+          productDetailReviewsTrack.scrollTo({
+            left: productDetailReviewsTrack.scrollWidth,
+            behavior: "smooth"
+          });
+
+        } else {
+
+          productDetailReviewsTrack.scrollBy({
+            left: -getProductDetailReviewScrollAmount(),
+            behavior: "smooth"
+          });
+
+        }
+
+      });
+
+    }
 
 
   });
