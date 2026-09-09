@@ -1,5 +1,6 @@
 from django.contrib import admin
 from django import forms
+
 from .models import BlogPost
 
 
@@ -53,11 +54,20 @@ class BlogPostAdmin(admin.ModelAdmin):
     # ==============================
 
     list_display = (
+    "display_order",
+    "title",
+    "category",
+    "is_published",
+    "published_at",
+    "updated_at",
+    )
+
+    list_display_links = (
         "title",
-        "category",
-        "is_published",
-        "published_at",
-        "updated_at",
+    )
+
+    list_editable = (
+        "display_order",
     )
 
     list_filter = (
@@ -83,6 +93,7 @@ class BlogPostAdmin(admin.ModelAdmin):
     )
 
     ordering = (
+        "display_order",
         "-published_at",
         "-created_at",
     )
@@ -101,6 +112,7 @@ class BlogPostAdmin(admin.ModelAdmin):
                 "fields": (
                     "is_published",
                     "published_at",
+                    "display_order",
                 )
             },
         ),

@@ -7,17 +7,28 @@ from .models import BlogPost
 
 
 def blog_list(request):
-    posts = BlogPost.objects.filter(
-        is_published=True
-    ).filter(
-        models.Q(published_at__lte=timezone.now()) |
-        models.Q(published_at__isnull=True)
+    posts = (
+        BlogPost.objects.filter(
+            is_published=True
+        )
+        .filter(
+            models.Q(published_at__lte=timezone.now())
+            |
+            models.Q(published_at__isnull=True)
+        )
+        .order_by(
+            "display_order",
+            "-published_at",
+            "-created_at",
+        )
     )
 
     return render(
         request,
         "blog/blog_list.html",
-        {"posts": posts},
+        {
+            "posts": posts,
+        },
     )
 
 
@@ -34,5 +45,7 @@ def blog_detail(request, slug):
     return render(
         request,
         "blog/blog_detail.html",
-        {"post": post},
+        {
+            "post": post,
+        },
     )

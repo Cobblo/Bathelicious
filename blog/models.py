@@ -51,6 +51,14 @@ class BlogPost(models.Model):
         )
     )
 
+    # ==============================
+    # MANUAL BLOG ORDER
+    # ==============================
+    display_order = models.PositiveIntegerField(
+        default=0,
+        help_text="1 = first blog, 2 = second blog, 3 = third blog, etc.",
+    )
+
     is_published = models.BooleanField(default=True)
     published_at = models.DateTimeField(null=True, blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
@@ -60,7 +68,11 @@ class BlogPost(models.Model):
     meta_description = models.CharField(max_length=320, blank=True)
 
     class Meta:
-        ordering = ["-published_at", "-created_at"]
+        ordering = [
+            "display_order",
+            "-published_at",
+            "-created_at",
+        ]
         verbose_name = "Blog Post"
         verbose_name_plural = "Blog Posts"
 
@@ -82,4 +94,9 @@ class BlogPost(models.Model):
         super().save(*args, **kwargs)
 
     def get_absolute_url(self):
-        return reverse("blog_detail", kwargs={"slug": self.slug})
+        return reverse(
+            "blog_detail",
+            kwargs={
+                "slug": self.slug,
+            },
+        )
