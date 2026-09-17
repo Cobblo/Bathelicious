@@ -1,6 +1,7 @@
 from django.db import models
 from django.urls import reverse
 from django.utils.text import slugify
+from store.models import Product
 
 
 class BlogPost(models.Model):
@@ -49,6 +50,13 @@ class BlogPost(models.Model):
             "Paste the article HTML here. Do not include <!DOCTYPE>, "
             "<html>, <head>, <body>, or <style>. Only paste the article content."
         )
+    )
+
+    related_products = models.ManyToManyField(
+        Product,
+        blank=True,
+        related_name="related_blogs",
+        help_text="Select the products related to this blog.",
     )
 
     # ==============================

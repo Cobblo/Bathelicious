@@ -313,6 +313,71 @@ Shop {{ single_product.product_name }} from Bathelicious. Plant-powered personal
         }
 
 
+
+
+        /* ================= RELATED BLOGS ================= */
+
+        .related-blogs-section {
+            width: 100%;
+            max-width: 1050px;
+            margin: 45px auto 35px;
+        }
+
+        .related-blogs-title {
+            text-align: center;
+            margin: 0 0 22px;
+            color: #222;
+            font-size: 26px;
+            font-weight: 700;
+        }
+
+        .related-blogs-grid {
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .related-blog-card {
+            width: 100%;
+            min-height: 75px;
+            padding: 18px 24px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 20px;
+            background: #fff;
+            border: 1px solid #e7e7e7;
+            border-radius: 12px;
+            text-decoration: none !important;
+            color: inherit !important;
+            box-shadow: 0 4px 14px rgba(0,0,0,0.05);
+            transition: 0.25s ease;
+        }
+
+        .related-blog-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 7px 18px rgba(0,0,0,0.08);
+            text-decoration: none !important;
+        }
+
+        .related-blog-title {
+            flex: 1;
+            margin: 0;
+            color: #243c2c;
+            font-size: 19px;
+            font-weight: 700;
+            line-height: 1.4;
+        }
+
+        .related-blog-read {
+            flex: 0 0 auto;
+            color: #B87333;
+            font-size: 14px;
+            font-weight: 700;
+            white-space: nowrap;
+        }
+
         /* ================= TABLET VIEW ================= */
 
         @media (min-width: 577px) and (max-width: 992px) {
@@ -398,6 +463,40 @@ Shop {{ single_product.product_name }} from Bathelicious. Plant-powered personal
             .related-product-button {
                 padding: 8px 4px;
                 font-size: 12px;
+            }
+
+
+            /* RELATED BLOGS - MOBILE */
+
+            .related-blogs-section {
+                width: 100%;
+                margin: 30px auto;
+            }
+
+            .related-blogs-title {
+                margin-bottom: 16px;
+                font-size: 21px;
+            }
+
+            .related-blogs-grid {
+                gap: 10px;
+            }
+
+            .related-blog-card {
+                width: 100%;
+                min-height: 0;
+                padding: 13px 14px;
+                gap: 10px;
+                border-radius: 10px;
+            }
+
+            .related-blog-title {
+                font-size: 14px;
+                line-height: 1.35;
+            }
+
+            .related-blog-read {
+                font-size: 11px;
             }
         }
 
@@ -685,6 +784,49 @@ Shop {{ single_product.product_name }} from Bathelicious. Plant-powered personal
           </div>
         </section>
       {% endif %}
+
+
+      <!-- ================= RELATED BLOGS ================= -->
+
+      {% with product_blogs=single_product.related_blogs.all %}
+
+        {% if product_blogs %}
+
+          <section class="related-blogs-section">
+
+            <h4 class="related-blogs-title">
+              Know Your Product Better
+            </h4>
+
+            <div class="related-blogs-grid">
+
+              {% for blog in product_blogs %}
+
+                {% if blog.is_published %}
+
+                  <a href="{{ blog.get_absolute_url }}" class="related-blog-card">
+
+                    <h5 class="related-blog-title">
+                      {{ blog.title }}
+                    </h5>
+
+                    <span class="related-blog-read">
+                      Read article →
+                    </span>
+
+                  </a>
+
+                {% endif %}
+
+              {% endfor %}
+
+            </div>
+
+          </section>
+
+        {% endif %}
+
+      {% endwith %}
 
 
       {% if single_product.key_ingredients.all %}

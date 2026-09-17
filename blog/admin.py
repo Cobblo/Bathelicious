@@ -50,16 +50,25 @@ class BlogPostAdmin(admin.ModelAdmin):
 
 
     # ==============================
+    # RELATED PRODUCTS SELECTOR
+    # ==============================
+
+    filter_horizontal = (
+        "related_products",
+    )
+
+
+    # ==============================
     # BLOG LIST
     # ==============================
 
     list_display = (
-    "display_order",
-    "title",
-    "category",
-    "is_published",
-    "published_at",
-    "updated_at",
+        "display_order",
+        "title",
+        "category",
+        "is_published",
+        "published_at",
+        "updated_at",
     )
 
     list_display_links = (
@@ -131,6 +140,7 @@ class BlogPostAdmin(admin.ModelAdmin):
                     "meta_text_1",
                     "meta_text_2",
                     "excerpt",
+                    "related_products",
                     "content_html",
                 )
             },
